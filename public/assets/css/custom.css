@@ -5,3 +5,7 @@ body.login .box-resetpassword { background: #ffffff; border-radius: 5px; box-sha
 
 .form-login .alert { text-align: center; }
 .form-login .alert ul { padding: 0; list-style: none; }
+
+/* sweet-alert */
+.sweet-alert .alert ul,
+    .sweet-alert .errors ul { list-style: none; padding: 0; margin: 0; }

@@ -8,7 +8,8 @@ class Auth extends \IonAuth\Controllers\Auth {
         $this->ionAuth = new \IonAuth\Libraries\IonAuth();
         $this->validation = \Config\Services::validation();
         helper(['form', 'url']);
-        $this->configIonAuth = config('IonAuth');
+        $this->configIonAuth = new \Config\IonAuth();
+
         $this->session = \Config\Services::session();
 
         if (! empty($this->configIonAuth->templates['errors']['list']))
@@ -55,5 +56,111 @@ class Auth extends \IonAuth\Controllers\Auth {
 
             return $this->renderPage($this->viewsFolder . DIRECTORY_SEPARATOR . 'login', $this->data);
         }
+    }
+
+    public function create_user() {
+        $tables                        = $this->configIonAuth->tables;
+        $identityColumn                = $this->configIonAuth->identity;
+        $this->data['identity_column'] = $identityColumn;
+
+        if ($this->request->getPost())
+        {
+            $email    = strtolower($this->request->getPost('email'));
+            $identity = ($identityColumn === 'email') ? $email : $this->request->getPost('identity');
+            $password = $this->request->getPost('password');
+
+            $additionalData = [
+                'first_name' => $this->request->getPost('first_name'),
+                'last_name'  => $this->request->getPost('last_name'),
+                'company'    => $this->request->getPost('company'),
+                'phone'      => $this->request->getPost('phone'),
+            ];
+
+            $user_id = $this->ionAuth->register($identity, $password, $email, $additionalData);
+            if ($user_id)
+            {
+                return json_encode([
+                        'error' => false,
+                        'message' => $this->ionAuth->messages()
+                    ]);
+            } else {
+                return json_encode([
+                        'error' => true,
+                        'message' => $this->ionAuth->errors()
+                    ]);
+            }
+        }
+    }
+
+    public function forgot_password() {
+        if ($this->request->getPost())
+        {
+            $identityColumn = $this->configIonAuth->identity;
+            $identity = $this->ionAuth->where($identityColumn, $this->request->getPost('email'))->users()->row();
+
+            if (empty($identity))
+            {
+                if ($this->configIonAuth->identity !== 'email')
+                {
+                    $this->ionAuth->setError('Auth.forgot_password_identity_not_found');
+                }
+                else
+                {
+                    $this->ionAuth->setError('Auth.forgot_password_email_not_found');
+                }
+
+                $this->session->setFlashdata('message', $this->ionAuth->errors($this->validationListTemplate));
+                return redirect()->to('/auth/forgot_password');
+            }
+
+            // run the forgotten password method to email an activation code to the user
+            $forgotten = $this->ionAuth->forgottenPassword($identity->{$this->configIonAuth->identity});
+
+            if ($forgotten)
+            {
+                // if there were no errors
+                return json_encode([
+                    'error' => false,
+                    'message' => $this->ionAuth->messages()
+                ]);
+            }
+            else
+            {
+                return json_encode([
+                    'error' => true,
+                    'message' => $this->ionAuth->errors()
+                ]);
+            }
+        }
+    }
+
+    public function activate(int $id, string $code = ''): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $activation = false;
+
+        if ($code)
+        {
+            $activation = $this->ionAuth->activate($id, $code);
+        }
+        else if ($this->ionAuth->isAdmin())
+        {
+            $activation = $this->ionAuth->activate($id);
+        }
+
+        if ($activation)
+        {
+            $this->session->setFlashdata('message', $this->ionAuth->messages());
+        }
+        else
+        {
+            $this->session->setFlashdata('message', $this->ionAuth->errors());
+        }
+
+        return redirect()->to('/auth/login');
+    }
+
+    public function config() {
+        $config = new \Config\IonAuth();
+        echo '<pre>' , var_dump($config) , '</pre>';
     }
 }
