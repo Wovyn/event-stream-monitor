@@ -10,7 +10,6 @@ class Filters extends BaseConfig
 		'csrf'     => \CodeIgniter\Filters\CSRF::class,
 		'toolbar'  => \CodeIgniter\Filters\DebugToolbar::class,
 		'honeypot' => \CodeIgniter\Filters\Honeypot::class,
-		'IonAuthFilter' => \App\Filters\IonAuthFilter::class,
 	];
 
 	// Always applied before every request
@@ -33,9 +32,5 @@ class Filters extends BaseConfig
 	// List filter aliases and any before/after uri patterns
 	// that they should run on, like:
 	//    'isLoggedIn' => ['before' => ['account/*', 'profiles/*']],
-	public $filters = [
-		'IonAuthFilter' => [
-			'before' => ['home']
-		]
-	];
+	public $filters = [];
 }

@@ -29,14 +29,6 @@ class BaseController extends Controller
 	protected $helpers = [];
 
 	/**
-	 * IonAuth library
-	 *
-	 * @var \IonAuth\Libraries\IonAuth
-	 */
-	protected $ionAuth;
-	protected $data;
-
-	/**
 	 * Constructor.
 	 */
 	public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
@@ -49,16 +41,6 @@ class BaseController extends Controller
 		//--------------------------------------------------------------------
 		// E.g.:
 		// $this->session = \Config\Services::session();
-
-		helper(['form', 'url']);
-
-		$this->session = \Config\Services::session();
-		$this->ionAuth = new \IonAuth\Libraries\IonAuth();
-		$this->data['user'] = $this->ionAuth->user()->row();
-
-		$this->data['css'] = [];
-        $this->data['scripts'] = [];
-
-        $this->data['page_title'] = 'Simstat.us';
 	}
+
 }
