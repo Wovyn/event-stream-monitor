@@ -1,6 +1,6 @@
 var Login = function () {
     var runLoginButtons = function () {
-        /*$('.forgot').bind('click', function () {
+        $('.forgot').bind('click', function () {
             $('.box-login').hide();
             $('.box-forgot').show();
         });
@@ -9,30 +9,29 @@ var Login = function () {
             $('.box-register').show();
         });
         $('.go-back').click(function () {
-            $('.box-login').show();
-            $('.box-forgot').hide();
-            $('.box-register').hide();
-        });*/
-       
-       var el = $('.box-login');
-		if (getParameterByName('box').length) {
-			switch(getParameterByName('box')) {
-				case "register" :
-					el = $('.box-register');
-					break;
-				case "forgot" :
-					el = $('.box-forgot');
-					break;
-				default :
-					el = $('.box-login');
-					break;
-			}
-		}
-		el.show();
-       
-       
-       
-       
+            resetBoxes();
+        });
+
+        var el = $('.box-login');
+        if (getParameterByName('box').length) {
+            switch(getParameterByName('box')) {
+                case "register" :
+                    el = $('.box-register');
+                    break;
+                case "forgot" :
+                    el = $('.box-forgot');
+                    break;
+                default :
+                    el = $('.box-login');
+                    break;
+            }
+        }
+        el.show();
+    };
+    var resetBoxes = function() {
+        $('.box-login').show();
+        $('.box-forgot').hide();
+        $('.box-register').hide();
     };
     var runSetDefaultValidation = function () {
         $.validator.setDefaults({
@@ -81,12 +80,12 @@ var Login = function () {
         var errorHandler = $('.errorHandler', form);
         form.validate({
             rules: {
-                username: {
+                identity: {
                     minlength: 2,
                     required: true
                 },
                 password: {
-                    minlength: 6,
+                    // minlength: 6,
                     required: true
                 }
             },
@@ -110,7 +109,25 @@ var Login = function () {
             },
             submitHandler: function (form) {
                 errorHandler2.hide();
-                form2.submit();
+
+                $.ajax({
+                    url: form2.attr('action'),
+                    method: 'POST',
+                    data: form2.serialize(),
+                    dataType: 'json',
+                    success: function(response, status, xhr, $form) {
+                        swal({
+                            html: true,
+                            type: response.error !== true ? 'success' : 'error',
+                            title: response.error !== true ? 'Success' : 'Error',
+                            text: response.message
+                        }, function() {
+                            if(response.error !== true) {
+                                resetBoxes();
+                            }
+                        });
+                    }
+                });
             },
             invalidHandler: function (event, validator) { //display error alert on form submit
                 errorHandler2.show();
@@ -122,19 +139,16 @@ var Login = function () {
         var errorHandler3 = $('.errorHandler', form3);
         form3.validate({
             rules: {
-                full_name: {
+                first_name: {
                     minlength: 2,
                     required: true
                 },
-                address: {
+                last_name: {
                     minlength: 2,
                     required: true
                 },
-                city: {
+                phone: {
                     minlength: 2,
-                    required: true
-                },
-                gender: {
                     required: true
                 },
                 email: {
@@ -144,10 +158,10 @@ var Login = function () {
                     minlength: 6,
                     required: true
                 },
-                password_again: {
+                password_confirm: {
                     required: true,
                     minlength: 5,
-                    equalTo: "#password"
+                    equalTo: "#register_password"
                 },
                 agree: {
                     minlength: 1,
@@ -156,22 +170,65 @@ var Login = function () {
             },
             submitHandler: function (form) {
                 errorHandler3.hide();
-                form3.submit();
+
+                $.ajax({
+                    url: form3.attr('action'),
+                    method: 'POST',
+                    data: form3.serialize(),
+                    dataType: 'json',
+                    success: function(response, status, xhr, $form) {
+                        swal({
+                            html: true,
+                            type: response.error !== true ? 'success' : 'error',
+                            title: response.error !== true ? 'Success' : 'Error',
+                            text: response.message
+                        }, function() {
+                            if(response.error !== true) {
+                                resetBoxes();
+                            }
+                        });
+                    }
+                });
             },
             invalidHandler: function (event, validator) { //display error alert on form submit
                 errorHandler3.show();
             }
         });
     };
-    
+
+    var runResetPasswordValidator = function() {
+        var form4 = $('.form-resetpassword');
+        var errorHandler4 = $('.errorHandler', form4);
+        form4.validate({
+            rules: {
+                new: {
+                    minlength: 6,
+                    required: true
+                },
+                new_confirm: {
+                    required: true,
+                    minlength: 6,
+                    equalTo: "#new"
+                }
+            },
+            submitHandler: function (form) {
+                errorHandler4.hide();
+                form4.submit();
+            },
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                errorHandler4.show();
+            }
+        });
+    }
+
     //function to return the querystring parameter with a given name.
-	var getParameterByName = function(name) {
-		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-		return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-	};
-    
-    
+    var getParameterByName = function(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    };
+
+
     return {
         //main function to initiate template pages
         init: function () {
@@ -180,6 +237,7 @@ var Login = function () {
             runLoginValidator();
             runForgotValidator();
             runRegisterValidator();
+            runResetPasswordValidator();
         }
     };
 }();
