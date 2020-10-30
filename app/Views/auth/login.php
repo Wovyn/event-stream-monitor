@@ -88,7 +88,7 @@
             <p>
                 Enter your personal details below:
             </p>
-            <form class="form-register" action="/auth/create_user" method="post">
+            <form class="form-register" action="/auth/register" method="post">
                 <div class="errorHandler alert alert-danger no-display">
                     <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
                 </div>

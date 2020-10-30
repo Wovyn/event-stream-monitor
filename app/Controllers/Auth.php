@@ -57,7 +57,7 @@ class Auth extends \IonAuth\Controllers\Auth {
         }
     }
 
-    public function create_user() {
+    public function register() {
         $tables                        = $this->configIonAuth->tables;
         $identityColumn                = $this->configIonAuth->identity;
         $this->data['identity_column'] = $identityColumn;
