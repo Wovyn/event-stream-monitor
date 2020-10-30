@@ -32,7 +32,7 @@ class Auth extends \IonAuth\Controllers\Auth {
                 //if the login is successful
                 //redirect them back to the home page
                 $this->session->setFlashdata('message', $this->ionAuth->messages());
-                return redirect()->to('/dashboard');
+                return redirect()->to('/home');
             }
             else
             {
@@ -46,7 +46,7 @@ class Auth extends \IonAuth\Controllers\Auth {
         else
         {
             if($this->ionAuth->loggedIn()) {
-                return redirect()->to('/dashboard');
+                return redirect()->to('/home');
             }
 
             // the user is not logging in so display the login page
@@ -167,7 +167,7 @@ class Auth extends \IonAuth\Controllers\Auth {
 
             if($isValid) {
                 $this->session->remove('lockscreen');
-                return redirect()->to('/dashboard');
+                return redirect()->to('/home');
             } else {
                 $this->data['has_error'] = true;
             }

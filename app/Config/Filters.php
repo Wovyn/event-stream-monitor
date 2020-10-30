@@ -10,11 +10,21 @@ class Filters extends BaseConfig
 		'csrf'     => \CodeIgniter\Filters\CSRF::class,
 		'toolbar'  => \CodeIgniter\Filters\DebugToolbar::class,
 		'honeypot' => \CodeIgniter\Filters\Honeypot::class,
+
+		// custom
+		'IonAuthFilter' => \App\Filters\IonAuthFilter::class,
+		'LockscreenFilter' => \App\Filters\LockscreenFilter::class
 	];
 
 	// Always applied before every request
 	public $globals = [
 		'before' => [
+			'LockscreenFilter' => [
+				'except' => [
+					'auth/lockscreen',
+					'auth/logout'
+				]
+			]
 			//'honeypot'
 			// 'csrf',
 		],
@@ -32,5 +42,11 @@ class Filters extends BaseConfig
 	// List filter aliases and any before/after uri patterns
 	// that they should run on, like:
 	//    'isLoggedIn' => ['before' => ['account/*', 'profiles/*']],
-	public $filters = [];
+	public $filters = [
+		'IonAuthFilter' => [
+			'before' => [
+				'home'
+			]
+		]
+	];
 }

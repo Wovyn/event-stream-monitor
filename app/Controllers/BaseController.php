@@ -26,7 +26,15 @@ class BaseController extends Controller
 	 *
 	 * @var array
 	 */
-	protected $helpers = [];
+	protected $helpers = ['form', 'url'];
+
+	/**
+	 * IonAuth library
+	 *
+	 * @var \IonAuth\Libraries\IonAuth
+	 */
+	protected $ionAuth;
+	protected $data;
 
 	/**
 	 * Constructor.
@@ -41,6 +49,15 @@ class BaseController extends Controller
 		//--------------------------------------------------------------------
 		// E.g.:
 		// $this->session = \Config\Services::session();
+
+		$this->session = \Config\Services::session();
+		$this->ionAuth = new \IonAuth\Libraries\IonAuth();
+		$this->data['user'] = $this->ionAuth->user()->row();
+
+		$this->data['css'] = [];
+        $this->data['scripts'] = [];
+
+        $this->data['page_title'] = 'Event Stream Monitor';
 	}
 
 }
