@@ -87,7 +87,7 @@
 # ENCRYPTION
 #--------------------------------------------------------------------
 
-# encryption.key = 
+# encryption.key =
 # encryption.driver = OpenSSL
 
 #--------------------------------------------------------------------
@@ -99,3 +99,12 @@
 # honeypot.name = 'honeypot'
 # honeypot.template = '<label>{label}</label><input type="text" name="{name}" value=""/>'
 # honeypot.container = '<div style="display:none">{template}</div>'
+
+email.default.fromEmail = 'no-reply@eventstreammonitor.com'
+email.default.fromName = 'Admin'
+email.default.protocol = 'smtp'
+email.default.SMTPHost = 'smtp.gmail.com'
+email.default.SMTPUser = ''
+email.default.SMTPPass = ''
+email.default.SMTPPort = 465
+email.default.SMTPCrypto = 'ssl'
