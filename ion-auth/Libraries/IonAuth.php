@@ -31,14 +31,14 @@ class IonAuth
 	 *
 	 * @var \IonAuth\Config\IonAuth
 	 */
-	private $config;
+	protected $config;
 
 	/**
 	 * IonAuth model
 	 *
 	 * @var \IonAuth\Models\IonAuthModel
 	 */
-	private $ionAuthModel;
+	protected $ionAuthModel;
 
 	/**
 	 * Email class
@@ -252,7 +252,7 @@ class IonAuth
 				return false;
 			}
 
-			$activationCode = $this->ionAuthModel->activation_code;
+			$activationCode = $this->ionAuthModel->activationCode;
 			$identity       = $this->config->identity;
 			$user           = $this->ionAuthModel->user($id)->row();
 

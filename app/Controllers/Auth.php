@@ -5,7 +5,7 @@ class Auth extends \IonAuth\Controllers\Auth {
 
     public function __construct()
     {
-        $this->ionAuth = new \IonAuth\Libraries\IonAuth();
+        $this->ionAuth = new \App\Libraries\IonAuth();
         $this->validation = \Config\Services::validation();
         helper(['form', 'url']);
         $this->configIonAuth = config('IonAuth');
@@ -177,5 +177,19 @@ class Auth extends \IonAuth\Controllers\Auth {
 
         $this->data['page_title'] = 'Lockscreen | ' . $this->data['page_title'];
         return view('auth/lockscreen', $this->data);
+    }
+
+    public function emailTest() {
+        $email = \Config\Services::email();
+
+        $email->setFrom('admin@eventstreammonitor.com', 'Admin');
+        $email->setTo('rj@humanxtensions.com');
+
+        $email->setSubject('Email Test');
+        $email->setMessage('Testing the email class.');
+
+        if(!$email->send()) {
+            echo 'error';
+        }
     }
 }
