@@ -3,8 +3,7 @@
 <body class="login">
     <div class="main-login col-sm-4 col-sm-offset-4">
         <div class="logo">
-            <!-- CLIP<i class="clip-clip"></i>ONE -->
-            <img src="/assets/images/logo.png" alt="Simstat.us" width="1200" height="400">
+            CLIP<i class="clip-clip"></i>ONE
         </div>
         <!-- start: RESETPASSWORD BOX -->
         <div class="box-resetpassword">
