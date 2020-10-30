@@ -30,7 +30,15 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Auth::login');
+
+// IonAuth Routes
+$routes->group('auth', ['namespace' => 'IonAuth\Controllers'], function ($routes) {
+    $routes->get('/', 'Auth::index');
+    // $routes->add('login', 'Auth::login');
+    $routes->get('logout', 'Auth::logout');
+    $routes->add('reset_password', 'Auth::reset_password');
+});
 
 /**
  * --------------------------------------------------------------------

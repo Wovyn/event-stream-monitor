@@ -168,4 +168,16 @@ class Email extends BaseConfig
 	 */
 	public $DSN = false;
 
+	public function __construct()
+	{
+		$this->fromEmail = getenv('email.default.fromEmail');
+		$this->fromName = getenv('email.default.fromName');
+		$this->protocol = getenv('email.default.protocol');
+		$this->SMTPHost = getenv('email.default.SMTPHost');
+		$this->SMTPUser = getenv('email.default.SMTPUser');
+		$this->SMTPPass = getenv('email.default.SMTPPass');
+		$this->SMTPPort = getenv('email.default.SMTPPort');
+		$this->SMTPCrypto = getenv('email.default.SMTPCrypto');
+	}
+
 }
