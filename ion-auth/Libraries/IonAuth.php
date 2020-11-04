@@ -57,7 +57,7 @@ class IonAuth
 		// Check compat first
 		$this->checkCompatibility();
 
-		$this->config = config('IonAuth\\Config\\IonAuth');
+		$this->config = config('IonAuth');
 
 		$this->email = \Config\Services::email();
 		helper('cookie');
@@ -377,7 +377,7 @@ class IonAuth
 
 		$adminGroup = $this->config->adminGroup;
 
-		return $this->ionAuthModel->inGroup($adminGroup, $id);
+		return $this->loggedIn() && $this->ionAuthModel->inGroup($adminGroup, $id);
 	}
 
 	/**

@@ -15,7 +15,7 @@ namespace IonAuth\Models;
  * @package    CodeIgniter-Ion-Auth
  * @author     Ben Edmunds <ben.edmunds@gmail.com>
  * @author     Phil Sturgeon
- * @author     Benoit VRIGNAUD <benoit.vrignaud@zaclys.net>
+ * @author     Benoit VRIGNAUD <benoit.vrignaud@tangue.fr>
  * @license    https://opensource.org/licenses/MIT	MIT License
  * @link       http://github.com/benedmunds/CodeIgniter-Ion-Auth
  * @filesource
@@ -45,14 +45,14 @@ class IonAuthModel
 	 *
 	 * @var Config\IonAuth
 	 */
-	private $config;
+	protected $config;
 
 	/**
 	 * CodeIgniter session
 	 *
 	 * @var \CodeIgniter\Session\Session
 	 */
-	private $session;
+	protected $session;
 
 	/**
 	 * Holds an array of tables used
@@ -207,7 +207,7 @@ class IonAuthModel
 	 */
 	public function __construct()
 	{
-		$this->config = config('IonAuth\\Config\\IonAuth');
+		$this->config = config('IonAuth');
 		helper(['cookie', 'date']);
 		$this->session = session();
 
@@ -374,7 +374,7 @@ class IonAuthModel
 	 * Validates and removes activation code.
 	 *
 	 * @param integer|string $id   The user identifier
-	 * @param boolean        $code The *user* activation code
+	 * @param string         $code The *user* activation code
 	 *                             if omitted, simply activate the user without check
 	 *
 	 * @return boolean
@@ -431,7 +431,7 @@ class IonAuthModel
 			$this->setError('IonAuth.deactivate_unsuccessful');
 			return false;
 		}
-		else if ((new \IonAuth\Libraries\IonAuth())->loggedIn() && $this->user()->row()->id === $id)
+		else if ((new \IonAuth\Libraries\IonAuth())->loggedIn() && $this->user()->row()->id == $id)
 		{
 			$this->setError('IonAuth.deactivate_current_user_unsuccessful');
 			return false;
@@ -558,20 +558,21 @@ class IonAuthModel
 
 		$this->triggerEvents('extra_where');
 
-		$query = $this->db->select('id, password')
-						  ->where($this->identityColumn, $identity)
-						  ->limit(1)
-						  ->orderBy('id', 'desc')
-						  ->get($this->tables['users']);
+		$builder = $this->db->table($this->tables['users']);
+		$query   = $builder
+					   ->select('id, password')
+					   ->where($this->identityColumn, $identity)
+					   ->limit(1)
+					   ->get()->getResult();
 
-		if ($query->numRows() !== 1)
+		if (empty($query))
 		{
 			$this->triggerEvents(['post_change_password', 'post_change_password_unsuccessful']);
 			$this->setError('IonAuth.password_change_unsuccessful');
 			return false;
 		}
 
-		$user = $query->row();
+		$user = $query[0];
 
 		if ($this->verifyPassword($old, $user->password, $identity))
 		{
@@ -614,9 +615,10 @@ class IonAuthModel
 
 		$this->triggerEvents('extra_where');
 
-		return $this->db->where('username', $username)
-						->limit(1)
-						->count_all_results($this->tables['users']) > 0;
+		return $this->db->table($this->tables['users'])
+			->where('username', $username)
+			->limit(1)
+			->countAllResults() > 0;
 	}
 
 	/**
@@ -906,7 +908,7 @@ class IonAuthModel
 		{
 			if ($this->verifyPassword($password, $user->password, $identity))
 			{
-				if ($user->active === 0)
+				if ($user->active == 0)
 				{
 					$this->triggerEvents('post_login_unsuccessful');
 					$this->setError('IonAuth.login_unsuccessful_not_active');
@@ -1867,7 +1869,7 @@ class IonAuthModel
 		$this->removeFromGroup(null, $id);
 
 		// delete user from users table should be placed after remove from group
-		$this->db->delete($this->tables['users'], ['id' => $id]);
+		$this->db->table($this->tables['users'])->delete(['id' => $id]);
 
 		if ($this->db->transStatus() === false)
 		{
@@ -2253,7 +2255,7 @@ class IonAuthModel
 	 */
 	public function setHook(string $event, string $name, string $class, string $method, array $arguments=[]): self
 	{
-		$this->ionHooks->{$event}[$name]            = new stdClass;
+		$this->ionHooks->{$event}[$name]            = new \stdClass;
 		$this->ionHooks->{$event}[$name]->class     = $class;
 		$this->ionHooks->{$event}[$name]->method    = $method;
 		$this->ionHooks->{$event}[$name]->arguments = $arguments;
