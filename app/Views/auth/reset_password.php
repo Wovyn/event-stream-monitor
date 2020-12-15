@@ -3,7 +3,8 @@
 <body class="login">
     <div class="main-login col-sm-4 col-sm-offset-4">
         <div class="logo">
-            CLIP<i class="clip-clip"></i>ONE
+            <!-- CLIP<i class="clip-clip"></i>ONE -->
+            <img src="/assets/images/logo-1020x300.png" width="1020" height="300" alt="EventStreamMonitor">
         </div>
         <!-- start: RESETPASSWORD BOX -->
         <div class="box-resetpassword">
