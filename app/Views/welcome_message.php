@@ -34,6 +34,8 @@
     <!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
     <link href="/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
     <!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
+
+    <link type="text/css" rel="stylesheet" href="/assets/css/custom.css" />
 </head>
 
 <body>
@@ -50,8 +52,8 @@
                 <!-- end: RESPONSIVE MENU TOGGLER -->
                 <!-- start: LOGO -->
                 <a class="navbar-brand" href="index.html">
-                CLIP<i class="clip-clip"></i>ONE
-            </a>
+                    <img class="logo" src="/assets/images/logo-1020x220.png" width="1020" height="220" alt="EventStreamMonitor">
+                </a>
                 <!-- end: LOGO -->
             </div>
             <div class="navbar-tools">
@@ -396,7 +398,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="login_example1.html">
+                                    <a href="/auth/logout">
                                         <i class="clip-exit"></i> &nbsp;Log Out
                                     </a>
                                 </li>

@@ -6,6 +6,10 @@ body.login .box-resetpassword { background: #ffffff; border-radius: 5px; box-sha
 .form-login .alert { text-align: center; }
 .form-login .alert ul { padding: 0; list-style: none; }
 
+/* header */
+.navbar > .container .navbar-brand { padding: 0; }
+.navbar-brand > img.logo { width: 210px; height: auto; padding: 5px 0; }
+
 /* sweet-alert */
 .sweet-alert .alert ul,
     .sweet-alert .errors ul { list-style: none; padding: 0; margin: 0; }
