@@ -7,7 +7,7 @@
 
 <head>
     <title><?php echo $page_title ?></title>
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/assets/images/favicon.png" />
     <!-- start: META -->
     <meta charset="utf-8" />
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1" /><![endif]-->
