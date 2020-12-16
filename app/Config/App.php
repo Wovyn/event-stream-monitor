@@ -265,4 +265,15 @@ class App extends BaseConfig
 	|   - http://www.w3.org/TR/CSP/
 	*/
 	public $CSPEnabled = false;
+	
+	public function __construct()
+	{
+	    parent::__construct();
+	    
+	    if(!empty($_SERVER['HTTPS'])) {
+	        $this->baseURL = 'https://'.$_SERVER['HTTP_HOST'];
+	    } else {
+	        $this->baseURL = 'http://'.$_SERVER['HTTP_HOST'];
+	    }
+	}
 }
