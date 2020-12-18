@@ -33,25 +33,12 @@
     <script type="text/javascript" src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="/assets/js/min/main.min.js"></script>
     <!-- end: MAIN JAVASCRIPTS -->
+
     <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-    <script src="/bower_components/Flot/jquery.flot.js"></script>
-    <script src="/bower_components/Flot/jquery.flot.pie.js"></script>
-    <script src="/bower_components/Flot/jquery.flot.resize.js"></script>
-    <script src="/assets/plugin/jquery.sparkline.min.js"></script>
-    <script src="/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js"></script>
-    <script src="/bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
-    <script src="/bower_components/moment/min/moment.min.js"></script>
-    <script src="/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-    <script src="/assets/js/min/index.min.js"></script>
+    <?php foreach($scripts as $path): ?>
+         <script type="text/javascript" src="<?php echo $path; ?>"></script>
+    <?php endforeach; ?>
     <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-
-    <script>
-        jQuery(document).ready(function() {
-            Main.init();
-            Index.init();
-        });
-    </script>
-
 </body>
 
 </html>

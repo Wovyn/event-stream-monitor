@@ -32,7 +32,9 @@
 
     <!-- end: MAIN CSS -->
     <!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
-    <link href="/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
+    <?php foreach($css as $path): ?>
+        <link href="<?php echo $path; ?>" rel="stylesheet" type="text/css" />
+    <?php endforeach; ?>
     <!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
 
     <link type="text/css" rel="stylesheet" href="/assets/css/custom.css" />
