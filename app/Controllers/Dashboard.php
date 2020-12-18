@@ -4,9 +4,7 @@ class Dashboard extends BaseController
 {
 	public function index()
 	{
-		return view('dashboard', $this->data);
+		return view('dashboard/index', $this->data);
 	}
-
-	//--------------------------------------------------------------------
 
 }
