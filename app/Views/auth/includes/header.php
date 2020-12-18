@@ -6,7 +6,7 @@
 <!--<![endif]-->
 
 <head>
-    <title><?php echo $page_title ?></title>
+    <title><?php echo $meta['title'] ?></title>
     <link rel="shortcut icon" href="/assets/images/favicon.png" />
     <!-- start: META -->
     <meta charset="utf-8" />

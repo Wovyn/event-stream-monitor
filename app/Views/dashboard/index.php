@@ -1,4 +1,4 @@
-<?php echo view('includes/_header') ?>
+<?php echo view('includes/header') ?>
 
 <div class="main-content">
     <div class="container">
@@ -27,9 +27,7 @@
                         </form>
                     </li>
                 </ol>
-                <div class="page-header">
-                    <h1>Dashboard <small>overview &amp; stats </small></h1>
-                </div>
+                <?php echo view('includes/page_header') ?>
                 <!-- end: PAGE TITLE & BREADCRUMB -->
             </div>
         </div>
@@ -653,4 +651,4 @@
     </div>
 </div>
 
-<?php echo view('includes/_footer') ?>
+<?php echo view('includes/footer') ?>
