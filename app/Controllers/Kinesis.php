@@ -4,7 +4,10 @@ class Kinesis extends BaseController
 {
     public function index()
     {
-        return view('dashboard/index', $this->data);
+        $this->data['meta']['header'] = 'AWS Kinesis';
+        $this->data['meta']['subheader'] = 'data streams';
+
+        return view('kinesis/index', $this->data);
     }
 
 }

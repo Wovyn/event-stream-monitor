@@ -6,7 +6,7 @@
 <!--<![endif]-->
 
 <head>
-    <title><?php echo $page_title ?></title>
+    <title><?php echo $meta['title'] ?></title>
     <link rel="shortcut icon" href="/assets/images/favicon.png" />
     <!-- start: META -->
     <meta charset="utf-8" />
@@ -117,7 +117,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="/kinesis">
                             <i class="clip-data"></i>
                             <span class="title"> AWS Kinesis </span>
                             <span class="selected"></span>

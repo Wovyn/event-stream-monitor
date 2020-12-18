@@ -57,7 +57,11 @@ class BaseController extends Controller
 		$this->data['css'] = [];
         $this->data['scripts'] = [];
 
-        $this->data['page_title'] = 'Event Stream Monitor';
+        $this->data['meta'] = [
+        	'title' => 'Event Stream Monitor',
+        	'header' => null,
+        	'subheader' => null
+        ];
 	}
 
 }
