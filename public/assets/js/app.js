@@ -297,6 +297,9 @@ var App = function () {
         init: function() {
             console.log('App.init');
 
+            // from clip-one theme
+            Main.init();
+
             customs.inputCounterInit();
 
             dt.extend();

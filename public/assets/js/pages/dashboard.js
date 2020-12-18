@@ -4,7 +4,6 @@ var Dashboard = function() {
         init: function() {
             console.log('Dashboard.init');
 
-            Main.init();
             Index.init();
         }
     }
