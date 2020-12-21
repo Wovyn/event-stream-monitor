@@ -21,8 +21,7 @@ class Dashboard extends BaseController
             '/bower_components/moment/min/moment.min.js',
             '/bower_components/fullcalendar/dist/fullcalendar.min.js',
             '/assets/js/min/index.min.js',
-            '/assets/js/pages/dashboard.js',
-            '/assets/js/app.js'
+            '/assets/js/pages/dashboard.js'
         );
 
 		return view('dashboard/index', $this->data);

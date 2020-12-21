@@ -25,7 +25,9 @@
                         </form>
                     </li>
                 </ol>
-                <?php echo view('includes/page_header') ?>
+                <div class="page-header">
+                    <?php echo view('includes/page_header') ?>
+                </div>
                 <!-- end: PAGE TITLE & BREADCRUMB -->
             </div>
         </div>

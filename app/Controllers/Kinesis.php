@@ -19,8 +19,7 @@ class Kinesis extends BaseController
             '/bower_components/datatables/media/js/jquery.dataTables.min.js',
             '/bower_components/datatables/media/js/dataTables.bootstrap.js',
             '/assets/js/min/table-data.min.js',
-            '/assets/js/pages/kinesis.js',
-            '/assets/js/app.js'
+            '/assets/js/pages/kinesis.js'
         );
 
         return view('kinesis/index', $this->data);

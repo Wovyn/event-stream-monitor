@@ -32,6 +32,8 @@
     <script type="text/javascript" src="/bower_components/jquery.cookie/jquery.cookie.js"></script>
     <script type="text/javascript" src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="/assets/js/min/main.min.js"></script>
+    <script type="text/javascript" src="/assets/js/lodash.min.js"></script>
+    <script type="text/javascript" src="/assets/js/app.js"></script>
     <!-- end: MAIN JAVASCRIPTS -->
 
     <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->

@@ -17,7 +17,7 @@ var PagesUserProfile = function () {
             overwriteInitial: true,
             maxFileSize: 2000,
             showClose: false,
-            showCaption: false,            
+            showCaption: false,
             browseLabel: '',
             removeLabel: '',
             browseIcon: '<i class="fa fa-pencil"></i>',
@@ -27,7 +27,7 @@ var PagesUserProfile = function () {
             removeTitle: 'Cancel or reset changes',
             elErrorContainer: '#kv-avatar-errors',
             msgErrorClass: 'alert alert-block alert-danger',
-            defaultPreviewContent: '<img src="assets/images/avatar-1-xl.jpg" alt="avatar" >',
+            defaultPreviewContent: '<img src="/assets/images/avatar-1-xl.jpg" alt="avatar" >',
             layoutTemplates: { main2: '{preview} {browse} {remove}' },
             allowedFileExtensions: ["jpg", "png", "gif"]
         });
@@ -46,7 +46,7 @@ var PagesUserProfile = function () {
             removeTitle: 'Cancel or reset changes',
             elErrorContainer: '#kv-avatar-errors-2',
             msgErrorClass: 'alert alert-block alert-danger',
-            defaultPreviewContent: '<img src="assets/images/avatar-1-xl.jpg" alt="avatar" >',
+            defaultPreviewContent: '<img src="/assets/images/avatar-1-xl.jpg" alt="avatar" >',
             layoutTemplates: { main2: '{preview} {browse} {remove}' },
             allowedFileExtensions: ["jpg", "png", "gif"]
         });
@@ -59,3 +59,7 @@ var PagesUserProfile = function () {
         }
     };
 }();
+
+jQuery(document).ready(function() {
+    PagesUserProfile.init();
+});
