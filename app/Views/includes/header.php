@@ -64,8 +64,8 @@
                     <!-- start: USER DROPDOWN -->
                     <li class="dropdown current-user">
                         <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
-                            <img src="/assets/images/avatar-1-small.jpg" class="circle-img" alt="">
-                            <span class="username">Peter Clark</span>
+                            <img src="/assets/images/twilio-logo-30x30.png" class="circle-img" alt="<?php echo $user->first_name . ' ' . $user->last_name ?>" width="30" height="30">
+                            <span class="username"><?php echo $user->first_name . ' ' . $user->last_name ?></span>
                             <i class="clip-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
