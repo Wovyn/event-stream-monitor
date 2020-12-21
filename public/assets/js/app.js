@@ -293,6 +293,11 @@ var App = function () {
         }
     }
 
+    customs.navInit = function() {
+        let activeLink = $('ul.main-navigation-menu a[href^="' + window.location.pathname + '"]');
+        activeLink.parent().addClass('active');
+    }
+
     return {
         init: function() {
             console.log('App.init');
@@ -300,6 +305,7 @@ var App = function () {
             // from clip-one theme
             Main.init();
 
+            customs.navInit();
             customs.inputCounterInit();
 
             dt.extend();

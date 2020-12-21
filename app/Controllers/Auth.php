@@ -16,7 +16,9 @@ class Auth extends \IonAuth\Controllers\Auth {
             $this->validationListTemplate = $this->configIonAuth->templates['errors']['list'];
         }
 
-        $this->data['page_title'] = 'Event Stream Monitor';
+        $this->data['meta'] = [
+            'title' => 'Event Stream Monitor'
+        ];
     }
 
     public function login()
