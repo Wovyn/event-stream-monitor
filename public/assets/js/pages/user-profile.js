@@ -37,6 +37,8 @@ var UserProfile = function() {
         init: function() {
             console.log('UserProfile.init');
 
+            App.validationSetDefault();
+
             handleUpdateProfileForm();
         }
     }

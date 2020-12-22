@@ -309,11 +309,10 @@ var App = function () {
             customs.inputCounterInit();
 
             dt.extend();
-
-            validationSetDefault();
         },
         modal: modal,
-        dt: dt
+        dt: dt,
+        validationSetDefault: validationSetDefault
     }
 }();
 
