@@ -45,7 +45,9 @@ class Filters extends BaseConfig
 	public $filters = [
 		'IonAuthFilter' => [
 			'before' => [
-				'home'
+				'dashboard', 'dashboard/*',
+				'kinesis', 'kinesis/*',
+				'user', 'user/*'
 			]
 		]
 	];
