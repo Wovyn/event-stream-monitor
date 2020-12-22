@@ -4,6 +4,14 @@ use App\Controllers\BaseController;
 
 class Profile extends BaseController
 {
+    protected $usersModel;
+    protected $ionAuthModel;
+
+    public function __construct() {
+        $this->usersModel = new \App\Models\UsersModel();
+        $this->ionAuthModel = new \IonAuth\Models\IonAuthModel();
+    }
+
     public function index()
     {
         $this->data['meta']['title'] = 'User Profile | ' . $this->data['meta']['title'];
@@ -27,5 +35,26 @@ class Profile extends BaseController
         return view('user/profile', $this->data);
     }
 
+    public function update() {
+        if($this->request->getPost()) {
+            $data = [
+                'first_name' => $this->request->getPost('first_name'),
+                'last_name' => $this->request->getPost('last_name'),
+                'email' => $this->request->getPost('email'),
+                'phone' => $this->request->getPost('phone'),
+                'company' => $this->request->getPost('company')
+            ];
 
+            if($this->request->getPost('password') != '') {
+                $data['password'] = $this->ionAuthModel->hashPassword($this->request->getPost('password'), $this->request->getPost('email'));
+            }
+
+            $result = $this->usersModel->update($this->data['user']->id, $data);
+
+            return json_encode([
+                'error' => !$result,
+                'message' => ($result ? 'Successfully updated user profile!' : 'Something went wrong.')
+            ]);
+        }
+    }
 }
