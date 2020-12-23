@@ -1,5 +1,4 @@
 <?php echo view('includes/header') ?>
-
 <div class="main-content">
     <div class="container">
         <!-- start: PAGE HEADER -->
@@ -35,85 +34,85 @@
         <!-- start: PAGE CONTENT -->
         <div class="row">
             <div class="col-sm-12">
-                <form action="/user/profile/update" role="form" id="update-profile-form">
-                    <div class="tabbable">
-                        <ul class="nav nav-tabs tab-padding tab-space-3 tab-blue" id="myTab4">
-                            <li class="active"><a data-toggle="tab" href="#panel_overview">Overview</a></li>
-                            <li><a data-toggle="tab" href="#panel_edit_account">Edit Account</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="panel_overview" class="tab-pane in active">
-                                <div class="row">
-                                    <div class="col-sm-5 col-md-4">
-                                        <div class="user-left">
-                                            <div class="center">
-                                                <h4><?php echo $user->first_name . ' ' . $user->last_name ?></h4>
-                                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                                    <div class="user-image">
-                                                        <div id="kv-avatar-errors" class="center-block" style="display:none"></div>
-                                                        <div class="kv-avatar ">
-                                                            <input id="avatar" name="avatar" type="file" class="file-loading">
-                                                        </div>
+                <div class="tabbable">
+                    <ul class="nav nav-tabs tab-padding tab-space-3 tab-blue" id="myTab4">
+                        <li class="active"><a data-toggle="tab" href="#panel_overview">Overview</a></li>
+                        <li><a data-toggle="tab" href="#panel_edit_account">Edit Account</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="panel_overview" class="tab-pane in active">
+                            <div class="row">
+                                <div class="col-sm-5 col-md-4">
+                                    <div class="user-left">
+                                        <div class="center">
+                                            <h4><?php echo $user->first_name . ' ' . $user->last_name ?></h4>
+                                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                <div class="user-image">
+                                                    <div id="kv-avatar-errors" class="center-block" style="display:none"></div>
+                                                    <div class="kv-avatar ">
+                                                        <input id="avatar" name="avatar" type="file" class="file-loading">
                                                     </div>
                                                 </div>
-                                                <hr>
-                                                <p>
-                                                    <a class="btn btn-social-icon btn-twitter">
-                                                        <i class="fa fa-twitter"></i>
-                                                    </a>
-                                                    <a class="btn btn-social-icon btn-linkedin">
-                                                        <i class="fa fa-linkedin"></i>
-                                                    </a>
-                                                    <a class="btn btn-social-icon btn-google">
-                                                        <i class="fa fa-google-plus"></i>
-                                                    </a>
-                                                    <a class="btn btn-social-icon btn-github">
-                                                        <i class="fa fa-github"></i>
-                                                    </a>
-                                                </p>
-                                                <hr>
                                             </div>
-                                            <table class="table table-condensed table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="3">Contact Information</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>email:</td>
-                                                        <td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
-                                                        <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>phone:</td>
-                                                        <td><a href="tel:<?php echo $user->phone ?>"><?php echo $user->phone ?></a></td>
-                                                        <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <table class="table table-condensed table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="3">General information</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Company</td>
-                                                        <td><?php echo $user->company ?></td>
-                                                        <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Last Logged In</td>
-                                                        <td><?php echo $user->last_login ?></td>
-                                                        <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <hr>
+                                            <p>
+                                                <a class="btn btn-social-icon btn-twitter">
+                                                    <i class="fa fa-twitter"></i>
+                                                </a>
+                                                <a class="btn btn-social-icon btn-linkedin">
+                                                    <i class="fa fa-linkedin"></i>
+                                                </a>
+                                                <a class="btn btn-social-icon btn-google">
+                                                    <i class="fa fa-google-plus"></i>
+                                                </a>
+                                                <a class="btn btn-social-icon btn-github">
+                                                    <i class="fa fa-github"></i>
+                                                </a>
+                                            </p>
+                                            <hr>
                                         </div>
+                                        <table class="table table-condensed table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">Contact Information</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>email:</td>
+                                                    <td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
+                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>phone:</td>
+                                                    <td><a href="tel:<?php echo $user->phone ?>"><?php echo $user->phone ?></a></td>
+                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="table table-condensed table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">General information</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Company</td>
+                                                    <td><?php echo $user->company ?></td>
+                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Last Logged In</td>
+                                                    <td><?php echo $user->last_login ?></td>
+                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="col-sm-7 col-md-8">
+                                </div>
+                                <div class="col-sm-7 col-md-8">
+                                    <form action="/user/profile/update_keys" role="form" id="update-keys-form">
                                         <fieldset>
                                             <legend>Twilio API Keys</legend>
 
@@ -121,13 +120,13 @@
                                                 <label class="control-label">
                                                     SID
                                                 </label>
-                                                <input type="text" placeholder="SID" class="form-control" id="twilio_sid" name="twilio_sid" value="">
+                                                <input type="text" placeholder="SID" class="form-control" id="twilio_sid" name="twilio_sid" required value="<?php echo isset($auth_keys->twilio_sid) ? $auth_keys->twilio_sid : '' ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">
                                                     Secret
                                                 </label>
-                                                <input type="text" placeholder="Secret" class="form-control" id="twilio_secret" name="twilio_secret" value="">
+                                                <input type="text" placeholder="Secret" class="form-control" id="twilio_secret" name="twilio_secret" required value="<?php echo isset($auth_keys->twilio_secret) ? $auth_keys->twilio_secret : '' ?>">
                                             </div>
                                         </fieldset>
                                         <br>
@@ -138,13 +137,13 @@
                                                 <label class="control-label">
                                                     Access Key
                                                 </label>
-                                                <input type="text" placeholder="Access Key" class="form-control" id="aws_access" name="aws_access" value="">
+                                                <input type="text" placeholder="Access Key" class="form-control" id="aws_access" name="aws_access" required value="<?php echo isset($auth_keys->aws_access) ? $auth_keys->aws_access : '' ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">
                                                     Secret Key
                                                 </label>
-                                                <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" value="">
+                                                <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" required value="<?php echo isset($auth_keys->aws_secret) ? $auth_keys->aws_secret : '' ?>">
                                             </div>
                                         </fieldset>
 
@@ -155,10 +154,12 @@
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
-                            <div id="panel_edit_account" class="tab-pane">
+                        </div>
+                        <div id="panel_edit_account" class="tab-pane">
+                            <form action="/user/profile/update" role="form" id="update-profile-form">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h3>Profile Info</h3>
@@ -234,10 +235,10 @@
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

@@ -4,11 +4,11 @@ use App\Controllers\BaseController;
 
 class Profile extends BaseController
 {
-    protected $usersModel;
-    protected $ionAuthModel;
+    protected $usersModel, $authKeysModel, $ionAuthModel;
 
     public function __construct() {
         $this->usersModel = new \App\Models\UsersModel();
+        $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->ionAuthModel = new \IonAuth\Models\IonAuthModel();
     }
 
@@ -32,6 +32,8 @@ class Profile extends BaseController
             "/assets/js/pages/user-profile.js"
         );
 
+        $this->data['auth_keys'] = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();
+
         return view('user/profile', $this->data);
     }
 
@@ -54,6 +56,31 @@ class Profile extends BaseController
             return json_encode([
                 'error' => !$result,
                 'message' => ($result ? 'Successfully updated user profile!' : 'Something went wrong.')
+            ]);
+        }
+    }
+
+    public function update_keys() {
+        if($this->request->getPost()) {
+            $data = [
+                'twilio_sid' => $this->request->getPost('twilio_sid'),
+                'twilio_secret' => $this->request->getPost('twilio_secret'),
+                'aws_access' => $this->request->getPost('aws_access'),
+                'aws_secret' => $this->request->getPost('aws_secret')
+            ];
+
+            if($this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
+                // update
+                $result = $this->authKeysModel->where('user_id', $this->data['user']->id)->update(null, $data);
+            } else {
+                // save
+                $data['user_id'] = $this->data['user']->id;
+                $result = $this->authKeysModel->save($data);
+            }
+
+            return json_encode([
+                'error' => !$result,
+                'message' => ($result ? 'Successfully updated auth keys!' : 'Something went wrong.')
             ]);
         }
     }

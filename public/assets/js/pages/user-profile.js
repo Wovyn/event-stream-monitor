@@ -33,6 +33,29 @@ var UserProfile = function() {
         });
     }
 
+    var handleUpdateKeysForm = function() {
+        let $form = $('#update-keys-form');
+
+        $form.validate({
+            submitHandler: function (form) {
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: 'POST',
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    success: function(response, status, xhr, $form) {
+                        swal({
+                            html: true,
+                            type: response.error !== true ? 'success' : 'error',
+                            title: response.error !== true ? 'Success' : 'Error',
+                            text: response.message
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     return {
         init: function() {
             console.log('UserProfile.init');
@@ -40,6 +63,7 @@ var UserProfile = function() {
             App.validationSetDefault();
 
             handleUpdateProfileForm();
+            handleUpdateKeysForm();
         }
     }
 }();
