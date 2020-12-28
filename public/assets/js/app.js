@@ -298,6 +298,24 @@ var App = function () {
         activeLink.parent().addClass('active');
     }
 
+    var checkUserAuthKeys = function() {
+        let keys;
+
+        $.ajax({
+            type: 'get',
+            url: '/user/profile/auth_keys',
+            dataType: 'json',
+            success: function(response) {
+                if(!response.keys) {
+                    // Swal.fire({
+                    //     text: response.message,
+                    //     icon: 'warning'
+                    // })
+                }
+            }
+        });
+    }
+
     return {
         init: function() {
             console.log('App.init');
@@ -312,7 +330,8 @@ var App = function () {
         },
         modal: modal,
         dt: dt,
-        validationSetDefault: validationSetDefault
+        validationSetDefault: validationSetDefault,
+        checkUserAuthKeys: checkUserAuthKeys
     }
 }();
 

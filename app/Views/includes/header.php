@@ -24,7 +24,7 @@
     <link type="text/css" rel="stylesheet" href="/assets/fonts/clip-font.min.css" />
     <link type="text/css" rel="stylesheet" href="/bower_components/iCheck/skins/all.css" />
     <link type="text/css" rel="stylesheet" href="/bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css" />
-    <link type="text/css" rel="stylesheet" href="/bower_components/sweetalert/dist/sweetalert.css" />
+    <!-- <link type="text/css" rel="stylesheet" href="/bower_components/sweetalert2/sweetalert2.min.css" /> -->
     <link type="text/css" rel="stylesheet" href="/assets/css/main.min.css" />
     <link type="text/css" rel="stylesheet" href="/assets/css/main-responsive.min.css" />
     <link type="text/css" rel="stylesheet" media="print" href="/assets/css/print.min.css" />

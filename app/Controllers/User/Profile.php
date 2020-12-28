@@ -84,4 +84,37 @@ class Profile extends BaseController
             ]);
         }
     }
+
+    public function auth_keys() {
+        // $result = [
+        //     'has_keys' => true
+        // ];
+
+        // if($this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
+        //     $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+
+        //     $result['keys'] = [
+        //         'twilio_sid' => $keys['twilio_sid'],
+        //         'twilio_secret' => $keys['twilio_secret'],
+        //         'aws_access' => $keys['aws_access'],
+        //         'aws_secret' => $keys['aws_secret']
+        //     ];
+        // } else {
+        //     $result['has_keys'] = false;
+        //     $result['message'] = 'Before using the portal, you must enter your API Keys for Twilio and AWS.';
+        // }
+
+        // return json_encode($result);
+
+        $result = [
+            'keys' => true
+        ];
+
+        if(!$this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
+            $result['keys'] = false;
+            $result['message'] = 'Before using the portal, you must enter your API Keys for Twilio and AWS.';
+        }
+
+        return json_encode($result);
+    }
 }

@@ -5,6 +5,7 @@ var Dashboard = function() {
             console.log('Dashboard.init');
 
             Index.init();
+            App.checkUserAuthKeys();
         }
     }
 }();
