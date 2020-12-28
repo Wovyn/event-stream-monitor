@@ -270,8 +270,8 @@ class App extends BaseConfig
 	{
 	    parent::__construct();
 	    
-	    if($_SERVER){
-    	    if(!empty($_SERVER['HTTPS'])) {
+	    if($_SERVER &&  !empty($_SERVER['HTTP_HOST'])){
+	        if(!empty($_SERVER['HTTPS'])) {
     	        $this->baseURL = 'https://'.$_SERVER['HTTP_HOST'];
     	    } else {
     	        $this->baseURL = 'http://'.$_SERVER['HTTP_HOST'];
