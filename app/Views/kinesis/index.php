@@ -26,6 +26,10 @@
                     </li>
                 </ol>
                 <div class="page-header">
+                    <div class="toolbar">
+                        <a class="btn btn-primary add-stream-btn" href="#">Create Kinesis Data Stream</a>
+                    </div>
+
                     <?php echo view('includes/page_header') ?>
                 </div>
                 <!-- end: PAGE TITLE & BREADCRUMB -->

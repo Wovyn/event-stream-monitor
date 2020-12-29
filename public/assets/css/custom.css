@@ -10,5 +10,33 @@ body.login .box-resetpassword { background: #ffffff; border-radius: 5px; box-sha
 .navbar > .container .navbar-brand { padding: 0; }
 .navbar-brand > img.logo { width: 210px; height: auto; padding: 5px 0; }
 
+/* page header toolbar */
+.page-header .toolbar { float: right; }
+
+/* datatables */
+.dataTables_wrapper .dataTables_pager { text-align: right; }
+.dataTables_wrapper .dataTables_pager .dataTables_length,
+    .dataTables_wrapper .dataTables_pager .dataTables_paginate { display: inline-block; vertical-align: middle; }
+div.dataTables_wrapper div.dataTables_filter { text-align: left; }
+div.dataTables_wrapper div.dataTables_filter input { margin-left: 0; }
+.dataTables_wrapper .dataTables_pager .dataTables_length { margin-right: 0.5rem; }
+
+table.dataTable tbody td.select-checkbox:before, table.dataTable tbody td.select-checkbox:after, table.dataTable tbody th.select-checkbox:before, table.dataTable tbody th.select-checkbox:after { top: auto; }
+
+.dt-toolbar > div { margin-left: 5px; }
+.dt-toolbar > div:first-child { margin-left: 0; }
+
+/* extend */
+table.dataTable thead th.select-checkbox { position: relative; }
+table.dataTable thead th.select-checkbox:before,
+    table.dataTable thead th.select-checkbox:after {
+        display: block; position: absolute; top: 1.2em; left: 50%; width: 12px; height: 12px; -webkit-box-sizing: border-box; box-sizing: border-box;
+    }
+table.dataTable thead th.select-checkbox:before { content: ' '; margin-top: -6px; margin-left: -6px; border: 1px solid black; border-radius: 3px; }
+table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; margin-top: -11px; margin-left: -4px; text-align: center; text-shadow: none; }
+
+.dt-toolbar { display: inline-block; margin-left: 15px; vertical-align: middle; }
+.dt-toolbar .dropdown { display: inline-block; }
+
 /* sweetalert2 */
 .swal2-popup { font-size: 1.5rem; }
