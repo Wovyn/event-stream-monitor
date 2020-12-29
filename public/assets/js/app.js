@@ -309,8 +309,13 @@ var App = function () {
                 if(!response.keys) {
                     Swal.fire({
                         text: response.message,
-                        icon: 'warning'
-                    })
+                        icon: 'warning',
+                        showCloseButton: true
+                    }).then((result) => {
+                        if(result.isConfirmed) {
+                            window.location = '/user/profile';
+                        }
+                    });
                 }
             }
         });
