@@ -10,6 +10,5 @@ body.login .box-resetpassword { background: #ffffff; border-radius: 5px; box-sha
 .navbar > .container .navbar-brand { padding: 0; }
 .navbar-brand > img.logo { width: 210px; height: auto; padding: 5px 0; }
 
-/* sweet-alert */
-.sweet-alert .alert ul,
-    .sweet-alert .errors ul { list-style: none; padding: 0; margin: 0; }
+/* sweetalert2 */
+.swal2-popup { font-size: 1.5rem; }

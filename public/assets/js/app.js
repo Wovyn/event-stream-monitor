@@ -307,10 +307,10 @@ var App = function () {
             dataType: 'json',
             success: function(response) {
                 if(!response.keys) {
-                    // Swal.fire({
-                    //     text: response.message,
-                    //     icon: 'warning'
-                    // })
+                    Swal.fire({
+                        text: response.message,
+                        icon: 'warning'
+                    })
                 }
             }
         });

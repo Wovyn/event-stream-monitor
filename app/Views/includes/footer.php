@@ -30,7 +30,7 @@
     <script type="text/javascript" src="/bower_components/iCheck/icheck.min.js"></script>
     <script type="text/javascript" src="/bower_components/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js"></script>
     <script type="text/javascript" src="/bower_components/jquery.cookie/jquery.cookie.js"></script>
-    <!-- <script type="text/javascript" src="/bower_components/sweetalert2/sweetalert2.min.js"></script> -->
+    <script type="text/javascript" src="/bower_components/sweetalert2/sweetalert2.min.js"></script>
     <script type="text/javascript" src="/assets/js/min/main.min.js"></script>
     <script type="text/javascript" src="/assets/js/lodash.min.js"></script>
     <script type="text/javascript" src="/assets/js/app.js"></script>
