@@ -16,12 +16,11 @@ var UserProfile = function() {
                     data: $form.serialize(),
                     dataType: 'json',
                     success: function(response, status, xhr, $form) {
-                        swal({
-                            html: true,
-                            type: response.error !== true ? 'success' : 'error',
+                        Swal.fire({
+                            icon: response.error !== true ? 'success' : 'error',
                             title: response.error !== true ? 'Success' : 'Error',
                             text: response.message
-                        }, function() {
+                        }).then((result) => {
                             if(response.error !== true) {
                                 // reset password and confirm_password field
                                 $('#password, #confirm_password', $form).val('');
@@ -44,9 +43,8 @@ var UserProfile = function() {
                     data: $form.serialize(),
                     dataType: 'json',
                     success: function(response, status, xhr, $form) {
-                        swal({
-                            html: true,
-                            type: response.error !== true ? 'success' : 'error',
+                        Swal.fire({
+                            icon: response.error !== true ? 'success' : 'error',
                             title: response.error !== true ? 'Success' : 'Error',
                             text: response.message
                         });
