@@ -1,5 +1,13 @@
 var Kinesis = function() {
 
+    var handleAddStream = function() {
+        $('.add-stream-btn').on('click', function(e) {
+            e.preventDefault();
+
+            App.modal();
+        });
+    }
+
     return {
         init: function() {
             console.log('Kinesis.init');
@@ -31,6 +39,8 @@ var Kinesis = function() {
                     ]
                 }
             });
+
+            handleAddStream();
         }
     }
 }();

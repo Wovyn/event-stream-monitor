@@ -18,11 +18,14 @@ class Kinesis extends BaseController
             '/bower_components/select2/dist/js/select2.min.js',
             '/bower_components/datatables/media/js/jquery.dataTables.min.js',
             '/bower_components/datatables/media/js/dataTables.bootstrap.js',
-            '/assets/js/min/table-data.min.js',
+            '/bower_components/jQuery-Smart-Wizard/js/jquery.smartWizard.js',
             '/assets/js/pages/kinesis.js'
         );
 
         return view('kinesis/index', $this->data);
     }
 
+    public function add() {
+
+    }
 }
