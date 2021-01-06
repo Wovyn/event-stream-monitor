@@ -40,3 +40,11 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 
 /* sweetalert2 */
 .swal2-popup { font-size: 1.5rem; }
+
+/* smartwizard */
+.swMain .nav:before, .swMain .nav:after { display: none; }
+.swMain .nav > li > a { padding: 0; }
+.swMain .nav > li > a:focus,
+    .swMain .nav > li > a:hover { background-color: transparent; }
+.swMain .tab-content { border: 0; padding: 15px 0 30px; }
+.swMain.sw-modal .toolbar { margin: 0 -15px -15px -15px; padding: 15px; }
