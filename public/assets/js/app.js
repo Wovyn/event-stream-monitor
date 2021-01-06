@@ -145,6 +145,7 @@ var App = function () {
         var $settings = $.extend(true, {
             title: 'Confirmation Modal',
             body: 'Are you sure you want to continue?',
+            footer: true,
             width: 500,
             ajax: false,
             onShow: function() {},
@@ -189,6 +190,10 @@ var App = function () {
                     $appModal.modal('hide');
                 }
             };
+
+        if(!$settings.footer) {
+            $appModal.find('.modal-footer').remove();
+        }
 
         // set default callback
         $callbacks.add(defaultCall);

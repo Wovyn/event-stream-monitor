@@ -27,7 +27,7 @@
                 </ol>
                 <div class="page-header">
                     <div class="toolbar">
-                        <a class="btn btn-primary add-stream-btn" href="#">Create Kinesis Data Stream</a>
+                        <a class="btn btn-primary add-stream-btn" href="/kinesis/add">Create Kinesis Data Stream</a>
                     </div>
 
                     <?php echo view('includes/page_header') ?>
