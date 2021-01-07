@@ -9,13 +9,29 @@ var Kinesis = function() {
             wizard.smartWizard({
                 selected: 0,
                 justified: true,
-                enableURLhash: false
+                enableURLhash: false,
+                toolbarSettings: {
+                    toolbarExtraButtons: [
+                        $('<button></button>').text('Finish')
+                            .addClass('btn btn-finish btn-success disabled')
+                            .on('click', function(){
+                                alert('Finish button click');
+                            })
+                    ]
+                }
             });
 
             // html class fix
             $('.toolbar', wizard).addClass('modal-footer');
-            $('.toolbar .sw-btn-prev', wizard).addClass('btn-default');
-            $('.toolbar .sw-btn-next', wizard).addClass('btn-blue');
+
+            // on leaveSte
+            wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+               return confirm('Do you want to leave the step ' + currentStepIndex + '?');
+            });
+
+            wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
+               // alert('You are on step ' + stepIndex + ' now');
+            });
         }
 
         return {
@@ -36,7 +52,7 @@ var Kinesis = function() {
                 ajax: {
                     url: $btn.attr('href')
                 },
-                onShow: function(form) {
+                onShown: function(form) {
                     console.log('initialize wizard');
 
                     FormWizard.init(form);

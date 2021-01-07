@@ -149,6 +149,7 @@ var App = function () {
             width: 500,
             ajax: false,
             onShow: function() {},
+            onShown: function() {},
             onHide: function() {},
             btn: {
                 confirm: {
@@ -222,6 +223,10 @@ var App = function () {
         // on.show
         $appModal.on('show.bs.modal', function() {
             $settings.onShow($appModalForm);
+        });
+
+        $appModal.on('shown.bs.modal', function() {
+            $settings.onShown($appModalForm);
         });
 
         // on.hide

@@ -66,7 +66,7 @@
 
 .sw > .nav .nav-link {
     display: block;
-    padding: .5rem 1rem;
+    /*padding: .5rem 1rem;*/
     text-decoration: none;
 }
 
@@ -175,7 +175,8 @@
 }
 
 .sw-theme-default > .nav {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1) !important;
+    /*box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1) !important;*/
+    margin-bottom: 30px;
 }
 
 .sw-theme-default > .nav .nav-link {
@@ -185,33 +186,33 @@
 }
 
 .sw-theme-default > .nav .nav-link::after {
-    content: "";
+    /*content: "";
     position: absolute;
     height: 2px;
     width: 0;
     left: 0px;
     bottom: -1px;
     background: #999999;
-    transition: all .35s ease .15s;
+    transition: all .35s ease .15s;*/
 }
 
 .sw-theme-default > .nav .nav-link.inactive {
-    color: #999999;
+    /*color: #999999;*/
     cursor: not-allowed;
 }
 
 .sw-theme-default > .nav .nav-link.active {
-    color: #17a2b8 !important;
+    /*color: #17a2b8 !important;*/
     cursor: pointer;
 }
 
 .sw-theme-default > .nav .nav-link.active::after {
-    background: #17a2b8 !important;
+    /*background: #17a2b8 !important;*/
     width: 100%;
 }
 
 .sw-theme-default > .nav .nav-link.done {
-    color: #5cb85c !important;
+    /*color: #5cb85c !important;*/
     cursor: pointer;
 }
 

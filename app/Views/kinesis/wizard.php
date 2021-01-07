@@ -50,26 +50,56 @@
        </li>
     </ul>
 
-    <!--
     <div class="progress progress-striped active progress-sm">
         <div aria-valuemax="100" aria-valuemin="0" role="progressbar" class="progress-bar progress-bar-success step-bar">
             <span class="sr-only">0% Complete (success)</span>
         </div>
     </div>
-    -->
 
-    <div class="tab-content">
-       <div id="step-1" class="tab-pane" role="tabpanel">
-          Step content 1
+    <div class="tab-content form-horizontal">
+       <div id="step-1" class="tab-pane" role="tabpanel" style="display: block;">
+            <h2 class="StepTitle">Step 1 Content</h2>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">
+                    Username <span class="symbol required"></span>
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
+                </div>
+            </div>
        </div>
        <div id="step-2" class="tab-pane" role="tabpanel">
-          Step content 2
+            <h2 class="StepTitle">Step 2 Content</h2>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">
+                    Username <span class="symbol required"></span>
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
+                </div>
+            </div>
        </div>
        <div id="step-3" class="tab-pane" role="tabpanel">
-          Step content 3
+            <h2 class="StepTitle">Step 3 Content</h2>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">
+                    Username <span class="symbol required"></span>
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
+                </div>
+            </div>
        </div>
        <div id="step-4" class="tab-pane" role="tabpanel">
-          Step content 4
+            <h2 class="StepTitle">Step 4 Content</h2>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">
+                    Username <span class="symbol required"></span>
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
+                </div>
+            </div>
        </div>
     </div>
 </div>
