@@ -56,49 +56,51 @@
         </div>
     </div>
 
-    <div class="tab-content form-horizontal">
-       <div id="step-1" class="tab-pane" role="tabpanel" style="display: block;">
-            <h2 class="StepTitle">Step 1 Content</h2>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">
-                    Username <span class="symbol required"></span>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
+    <div class="tab-content">
+        <div id="step-1" class="tab-pane" role="tabpanel" style="display: block;">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h3 class="StepTitle">Step 1</h3>
+                    <div class="form-group">
+                        <label class="control-label sr-only" for="region">Region</label>
+                        <select name="region" id="region" class="form-control select2">
+                            <option value="">Select Region</option>
+                            <option value="us-east-2">US East (Ohio)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
        </div>
+
        <div id="step-2" class="tab-pane" role="tabpanel">
-            <h2 class="StepTitle">Step 2 Content</h2>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">
-                    Username <span class="symbol required"></span>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h3 class="StepTitle">Step 2</h3>
+                    <div class="form-group">
+                        <label class="control-label sr-only" for="name">Data Stream Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Data Stream Name">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label sr-only" for="description">Description</label>
+                        <textarea name="description" id="description" class="form-control" cols="30" rows="5" placeholder="Description"></textarea>
+                    </div>
                 </div>
             </div>
        </div>
+
        <div id="step-3" class="tab-pane" role="tabpanel">
-            <h2 class="StepTitle">Step 3 Content</h2>
+            <h3 class="StepTitle">Step 3 Content</h3>
             <div class="form-group">
-                <label class="col-sm-3 control-label">
-                    Username <span class="symbol required"></span>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
-                </div>
+                <label class="control-label">Username <span class="symbol required"></span></label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
             </div>
        </div>
+
        <div id="step-4" class="tab-pane" role="tabpanel">
-            <h2 class="StepTitle">Step 4 Content</h2>
+            <h3 class="StepTitle">Step 4 Content</h3>
             <div class="form-group">
-                <label class="col-sm-3 control-label">
-                    Username <span class="symbol required"></span>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
-                </div>
+                <label class="control-label">Username <span class="symbol required"></span></label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
             </div>
        </div>
     </div>

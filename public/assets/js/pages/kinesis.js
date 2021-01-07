@@ -12,8 +12,7 @@ var Kinesis = function() {
                 enableURLhash: false,
                 toolbarSettings: {
                     toolbarExtraButtons: [
-                        $('<button></button>').text('Finish')
-                            .addClass('btn btn-finish btn-success disabled')
+                        $('<button class="btn btn-finish btn-success disabled">Finish</button>')
                             .on('click', function(){
                                 alert('Finish button click');
                             })
@@ -26,7 +25,7 @@ var Kinesis = function() {
 
             // on leaveSte
             wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
-               return confirm('Do you want to leave the step ' + currentStepIndex + '?');
+               console.log('left step ' + currentStepIndex);
             });
 
             wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
