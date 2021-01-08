@@ -40,7 +40,6 @@ var Kinesis = function() {
         };
     }();
 
-
     var handleAddStream = function() {
         $('.add-stream-btn').on('click', function(e) {
             e.preventDefault();
@@ -55,6 +54,17 @@ var Kinesis = function() {
                     console.log('initialize wizard');
 
                     FormWizard.init(form);
+
+                    $('#shards', form).on('change', function() {
+                        let shards = $(this).val(),
+                            writeMiB = shards * 1,
+                            writeData = shards * 1000,
+                            readMiB = shards * 2;
+
+                        $('.write-calculated-mib', form).html(writeMiB);
+                        $('.write-calculated-data', form).html(writeData);
+                        $('.read-calculated-mib', form).html(readMiB);
+                    })
                 },
                 width: '960',
                 footer: false

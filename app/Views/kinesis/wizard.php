@@ -59,10 +59,10 @@
     <div class="tab-content">
         <div id="step-1" class="tab-pane" role="tabpanel" style="display: block;">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-6 col-md-offset-3">
                     <h3 class="StepTitle">Step 1</h3>
                     <div class="form-group">
-                        <label class="control-label sr-only" for="region">Region</label>
+                        <label class="control-label" for="region">Region</label>
                         <select name="region" id="region" class="form-control select2">
                             <option value="">Select Region</option>
                             <option value="us-east-2">US East (Ohio)</option>
@@ -74,14 +74,14 @@
 
        <div id="step-2" class="tab-pane" role="tabpanel">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-6 col-md-offset-3">
                     <h3 class="StepTitle">Step 2</h3>
                     <div class="form-group">
-                        <label class="control-label sr-only" for="name">Data Stream Name</label>
+                        <label class="control-label" for="name">Data Stream Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Data Stream Name">
                     </div>
                     <div class="form-group">
-                        <label class="control-label sr-only" for="description">Description</label>
+                        <label class="control-label" for="description">Description</label>
                         <textarea name="description" id="description" class="form-control" cols="30" rows="5" placeholder="Description"></textarea>
                     </div>
                 </div>
@@ -89,10 +89,26 @@
        </div>
 
        <div id="step-3" class="tab-pane" role="tabpanel">
-            <h3 class="StepTitle">Step 3 Content</h3>
-            <div class="form-group">
-                <label class="control-label">Username <span class="symbol required"></span></label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Text Field">
+           <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3 class="StepTitle">Step 3</h3>
+                    <div class="form-group">
+                        <label class="control-label" for="shards">Number of open shards</label>
+                        <input type="number" class="form-control" id="shards" name="shards" placeholder="Number of open shards" value="1">
+                        <span class="help-block">Minimum: 1, Maximum: 500, Account limit: 500.</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="description">Calculated Rates:</label>
+                        <span class="help-block">Total data stream capacity is calculated based on the number of shards entered above.</span>
+                        <p>
+                            <b>Write</b><br>
+                            <span class="write-calculated-mib">1</span> MiB/second, <span class="write-calculated-data">1000</span> Data records/second
+                            <br><br>
+                            <b>Read</b><br>
+                            <span class="read-calculated-mib">2</span> MiB/second
+                        </p>
+                    </div>
+                </div>
             </div>
        </div>
 

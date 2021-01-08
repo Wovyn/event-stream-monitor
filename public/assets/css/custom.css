@@ -3,8 +3,10 @@
 
 body.login .box-resetpassword { background: #ffffff; border-radius: 5px; box-shadow: -30px 30px 50px rgba(0, 0, 0, 0.32); overflow: hidden; padding: 15px; }
 
-.form-login .alert { text-align: center; }
-.form-login .alert ul { padding: 0; list-style: none; }
+.form-login .errors { padding: 15px; margin-bottom: 20px; border: 1px solid #ebccd1; border-radius: 4px; color: #a94442; background-color: #f2dede; }
+.form-login .errors p, .form-login .errors ul { margin-bottom: 0; }
+.form-login .alert, .form-login .errors { text-align: center; }
+.form-login .alert ul, .form-login .errors ul { padding: 0; list-style: none; }
 
 /* header */
 .navbar > .container .navbar-brand { padding: 0; }
