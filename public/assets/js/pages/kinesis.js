@@ -10,9 +10,10 @@ var Kinesis = function() {
                 selected: 0,
                 justified: true,
                 enableURLhash: false,
+                autoAdjustHeight: false,
                 toolbarSettings: {
                     toolbarExtraButtons: [
-                        $('<button class="btn btn-finish btn-success disabled">Finish</button>')
+                        $('<button class="btn btn-finish btn-success disabled">Create Data Stream</button>')
                             .on('click', function(){
                                 alert('Finish button click');
                             })
@@ -25,11 +26,21 @@ var Kinesis = function() {
 
             // on leaveSte
             wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
-               console.log('left step ' + currentStepIndex);
+                // show/hide create data stream btn
+                if(nextStepIndex == 3) {
+                    $('.btn-finish', form).removeClass('disabled');
+                } else {
+                    $('.btn-finish', form).addClass('disabled');
+                }
+
+                // validate current step
+                if(!form.valid()) {
+                    return false;
+                }
             });
 
             wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
-               // alert('You are on step ' + stepIndex + ' now');
+
             });
         }
 
@@ -104,6 +115,7 @@ var Kinesis = function() {
                 }
             });
 
+            App.validationSetDefault();
             handleAddStream();
         }
     }

@@ -52,7 +52,7 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 .swMain .progress { margin: 0; }
 .swMain .tab-content { border: 0; padding: 0; }
 .swMain.sw-modal .toolbar { margin: 0 -15px -15px -15px; padding: 15px; }
-.swMain.sw-modal .toolbar .btn.disabled { pointer-events: none; cursor: not-allowed; }
+.swMain.sw-modal .toolbar .btn.disabled { pointer-events: none; cursor: not-allowed; display: none; }
 
 .sw-theme-default > .nav .nav-link.active .stepNumber { border-color: #5293c4; }
 .sw-theme-default > .nav .nav-link.active:before { border-color: #5293c4; }

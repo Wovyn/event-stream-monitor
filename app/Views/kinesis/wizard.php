@@ -63,7 +63,7 @@
                     <h3 class="StepTitle">Step 1</h3>
                     <div class="form-group">
                         <label class="control-label" for="region">Region</label>
-                        <select name="region" id="region" class="form-control select2">
+                        <select name="region" id="region" class="form-control select2" required>
                             <option value="">Select Region</option>
                             <option value="us-east-2">US East (Ohio)</option>
                         </select>
@@ -78,7 +78,7 @@
                     <h3 class="StepTitle">Step 2</h3>
                     <div class="form-group">
                         <label class="control-label" for="name">Data Stream Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Data Stream Name">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Data Stream Name" required>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="description">Description</label>
@@ -94,7 +94,7 @@
                     <h3 class="StepTitle">Step 3</h3>
                     <div class="form-group">
                         <label class="control-label" for="shards">Number of open shards</label>
-                        <input type="number" class="form-control" id="shards" name="shards" placeholder="Number of open shards" value="1">
+                        <input type="number" class="form-control" id="shards" name="shards" placeholder="Number of open shards" value="1" min="1" max="500">
                         <span class="help-block">Minimum: 1, Maximum: 500, Account limit: 500.</span>
                     </div>
                     <div class="form-group">
