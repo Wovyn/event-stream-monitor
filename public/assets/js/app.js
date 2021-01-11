@@ -249,6 +249,8 @@ var App = function () {
         } else {
             $appModal.modal($settings.others);
         }
+
+        return $appModal;
     }
 
     // jquery validation default

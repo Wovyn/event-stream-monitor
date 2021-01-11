@@ -1,5 +1,5 @@
 var Kinesis = function() {
-
+    var appModal;
     var FormWizard = function() {
         let wizard, wizardForm;
 
@@ -13,9 +13,31 @@ var Kinesis = function() {
                 autoAdjustHeight: false,
                 toolbarSettings: {
                     toolbarExtraButtons: [
-                        $('<button class="btn btn-finish btn-success disabled">Create Data Stream</button>')
+                        $('<button type="button" class="btn btn-finish btn-success disabled">Create Data Stream</button>')
                             .on('click', function(){
-                                alert('Finish button click');
+                                $.ajax({
+                                    url: '/kinesis/add',
+                                    method: 'POST',
+                                    data: form.serialize(),
+                                    // dataType: 'json',
+                                    dataType: 'html',
+                                    success: function(response) {
+                                        // Swal.fire({
+                                        //     icon: response.error !== true ? 'success' : 'error',
+                                        //     title: response.error !== true ? 'Success' : 'Error',
+                                        //     text: response.message
+                                        // }).then((result) => {
+                                        //     if(response.error !== true) {
+                                        //         // reset password and confirm_password field
+                                        //         $('#password, #confirm_password', $form).val('');
+                                        //     }
+                                        // });
+
+                                        console.log(response);
+
+                                        appModal.modal('hide');
+                                    }
+                                });
                             })
                     ]
                 }
@@ -100,7 +122,7 @@ var Kinesis = function() {
 
             let $btn = $(this);
 
-            App.modal({
+            appModal = App.modal({
                 ajax: {
                     url: $btn.attr('href')
                 },

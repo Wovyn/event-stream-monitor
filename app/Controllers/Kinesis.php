@@ -28,6 +28,11 @@ class Kinesis extends BaseController
     }
 
     public function add() {
+        if($this->request->getPost()) {
+
+            // return;
+        }
+
         return view('kinesis/wizard');
     }
 }
