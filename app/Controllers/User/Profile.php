@@ -29,7 +29,7 @@ class Profile extends BaseController
             "/bower_components/bootstrap-fileinput/js/fileinput.min.js",
             "/bower_components/jquery-validation/dist/jquery.validate.min.js",
             "/assets/js/pages-user-profile.js",
-            "/assets/js/pages/user-profile.js"
+            "/assets/js/pages/user/profile.js"
         );
 
         $this->data['auth_keys'] = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();

@@ -26,22 +26,65 @@ var Kinesis = function() {
 
             // on leaveSte
             wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+                // validate current step
+                if(!form.valid()) {
+                    return false;
+                }
+
                 // show/hide create data stream btn
                 if(nextStepIndex == 3) {
+                    generateSummary(form);
+
                     $('.btn-finish', form).removeClass('disabled');
                 } else {
                     $('.btn-finish', form).addClass('disabled');
                 }
 
-                // validate current step
-                if(!form.valid()) {
-                    return false;
-                }
+                animateBar(nextStepIndex);
             });
 
             wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
 
             });
+
+            // initialize animateBar
+            animateBar();
+        }
+
+        var animateBar = function(step) {
+            if (_.isUndefined(step)) {
+                step = 0;
+            };
+
+            numberOfSteps = $('.swMain > .nav > li').length;
+            var valueNow = Math.floor(100 / numberOfSteps * (step + 1));
+            $('.step-bar').css('width', valueNow + '%');
+        };
+
+        var generateSummary = function(form) {
+            // console.log(form.serializeArray());
+            let summaryEl = $('.summary', form),
+                formValues = form.serializeArray(),
+                summary = '';
+
+            summaryEl.empty();
+
+            _.forEach(formValues, function(data) {
+
+                switch(data.name) {
+                    case 'region':
+                        data.value = $('#region option:selected', form).html() + ' | ' + data.value;
+
+                        break;
+                }
+
+                summary += '<div class="form-group">' +
+                    '<label class="control-label text-capitalize">' + data.name + ':</label>' +
+                    '<p class="form-control-static display-value">' + data.value + '</p>' +
+                    '</div>';
+            });
+
+            $('.summary', form).append(summary);
         }
 
         return {

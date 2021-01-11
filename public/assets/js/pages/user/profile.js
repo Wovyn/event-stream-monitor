@@ -1,4 +1,4 @@
-var UserProfile = function() {
+var Profile = function() {
 
     var handleUpdateProfileForm = function() {
         let $form = $('#update-profile-form');
@@ -56,7 +56,7 @@ var UserProfile = function() {
 
     return {
         init: function() {
-            console.log('UserProfile.init');
+            console.log('Profile.init');
 
             App.validationSetDefault();
 
@@ -67,5 +67,5 @@ var UserProfile = function() {
 }();
 
 jQuery(document).ready(function() {
-    UserProfile.init();
+    Profile.init();
 });
