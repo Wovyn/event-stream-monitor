@@ -2,6 +2,12 @@
 
 class Kinesis extends BaseController
 {
+    protected $authKeysModel;
+
+    public function __construct() {
+        $this->authKeysModel = new \App\Models\AuthKeysModel();
+    }
+
     public function index()
     {
         $this->data['meta']['header'] = 'AWS Kinesis';
@@ -34,5 +40,14 @@ class Kinesis extends BaseController
         }
 
         return view('kinesis/wizard');
+    }
+
+    public function verify() {
+        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();
+
+        $aws = new \App\Libraries\AmazonSDK([
+            'access' => $keys->aws_access,
+            'secret' => $keys->aws_secret
+        ]);
     }
 }
