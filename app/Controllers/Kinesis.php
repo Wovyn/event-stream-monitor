@@ -45,9 +45,22 @@ class Kinesis extends BaseController
     public function verify() {
         $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();
 
-        $aws = new \App\Libraries\AmazonSDK([
-            'access' => $keys->aws_access,
-            'secret' => $keys->aws_secret
+        $aws = new \App\Libraries\Aws([
+            'region' => 'us-east-2',
+            'access' => 'AKIAZVFXZ7OTRDK2JFAP',
+            'secret' => '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'
         ]);
+
+        try {
+            $result = $aws->kinesis->createStream([
+                'ShardCount' => 1,
+                'StreamName' => 'Sample_Data_Stream'
+            ]);
+
+            echo '<pre>' , var_dump($result) , '</pre>';
+        } catch (Exception $e) {
+            echo '<pre>' , var_dump($e) , '</pre>';
+        }
     }
+
 }

@@ -143,7 +143,8 @@ var Kinesis = function() {
                     })
                 },
                 width: '960',
-                footer: false
+                footer: false,
+                others: { backdrop: 'static', keyboard: false }
             });
         });
     }
