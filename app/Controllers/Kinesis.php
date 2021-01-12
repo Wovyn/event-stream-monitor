@@ -47,14 +47,14 @@ class Kinesis extends BaseController
 
         $aws = new \App\Libraries\Aws([
             'region' => 'us-east-2',
-            'access' => 'AKIAZVFXZ7OTRDK2JFAP',
-            'secret' => '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'
+            'access' => $keys->aws_access,
+            'secret' => $keys->aws_secret
         ]);
 
         try {
             $result = $aws->kinesis->createStream([
                 'ShardCount' => 1,
-                'StreamName' => 'Sample_Data_Stream'
+                'StreamName' => 'Sample_Data_Stream2'
             ]);
 
             echo '<pre>' , var_dump($result) , '</pre>';

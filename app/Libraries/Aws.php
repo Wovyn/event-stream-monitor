@@ -1,7 +1,7 @@
 <?php
 namespace App\Libraries;
 
-require_once APPPATH . '../vendor/autoload.php';
+require_once APPPATH . '../aws/aws-autoloader.php';
 
 class Aws {
 
@@ -19,6 +19,7 @@ class Aws {
             'region' => $args['region']
         ]);
 
+        // testing purposes
         return $this->aws;
     }
 
