@@ -2,10 +2,11 @@
 
 class Kinesis extends BaseController
 {
-    protected $authKeysModel;
+    protected $authKeysModel, $kinesisDataStreamsModel;
 
     public function __construct() {
         $this->authKeysModel = new \App\Models\AuthKeysModel();
+        $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
     }
 
     public function index()
@@ -34,9 +35,42 @@ class Kinesis extends BaseController
     }
 
     public function add() {
-        if($this->request->getPost()) {
+        if($_POST) {
+            $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();
 
-            // return;
+            $aws = new \App\Libraries\Aws([
+                'region' => $_POST['region'],
+                'access' => $keys->aws_access,
+                'secret' => $keys->aws_secret
+            ]);
+
+            $result = false;
+
+            // aws createStream
+            try {
+                $result = $aws->kinesis->createStream([
+                    'ShardCount' => (int) $_POST['shards'],
+                    'StreamName' => str_replace(' ', '_', $_POST['name'])
+                ]);
+            } catch (Exception $e) {
+                return $e;
+            }
+
+            // insert to database
+            if($result) {
+                $this->kinesisDataStreamsModel->save([
+                    'user_id' => $this->data['user']->id,
+                    'region' => $_POST['region'],
+                    'name' => $_POST['name'],
+                    'description' => $_POST['description'],
+                    'shards' => $_POST['shards']
+                ]);
+            }
+
+            return json_encode([
+                'error' => !$result,
+                'message' => ($result ? 'Successfully created Data Stream!' : 'Something went wrong.')
+            ]);
         }
 
         return view('kinesis/wizard');

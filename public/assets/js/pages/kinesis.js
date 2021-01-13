@@ -22,18 +22,11 @@ var Kinesis = function() {
                                     // dataType: 'json',
                                     dataType: 'html',
                                     success: function(response) {
-                                        // Swal.fire({
-                                        //     icon: response.error !== true ? 'success' : 'error',
-                                        //     title: response.error !== true ? 'Success' : 'Error',
-                                        //     text: response.message
-                                        // }).then((result) => {
-                                        //     if(response.error !== true) {
-                                        //         // reset password and confirm_password field
-                                        //         $('#password, #confirm_password', $form).val('');
-                                        //     }
-                                        // });
-
-                                        console.log(response);
+                                        Swal.fire({
+                                            icon: response.error !== true ? 'success' : 'error',
+                                            title: response.error !== true ? 'Success' : 'Error',
+                                            text: response.message
+                                        });
 
                                         appModal.modal('hide');
                                     }
