@@ -1,4 +1,5 @@
-<?php namespace App\Controllers;
+<?php
+namespace App\Controllers;
 
 class Kinesis extends BaseController
 {
@@ -34,9 +35,30 @@ class Kinesis extends BaseController
         return view('kinesis/index', $this->data);
     }
 
+    public function get_dt_listing() {
+        $order = $_POST['columns'][$_POST['order'][0]['column']]['name'];
+        $sort = $_POST['order'][0]['dir'];
+        $offset = $_POST['start'];
+        $limit = $_POST['length'];
+        // $search = $_POST['search']['value'];
+
+        $rows = $this->kinesisDataStreamsModel
+            ->orderBy($order, $sort)
+            ->findAll($limit, $offset);
+
+        $total = $this->kinesisDataStreamsModel->countAll();
+        $tbl = array(
+            "iTotalRecords"=> $total,
+            "iTotalDisplayRecords"=> $total,
+            "aaData"=> $rows
+        );
+
+        return json_encode($tbl);
+    }
+
     public function add() {
         if($_POST) {
-            $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();
+            $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
 
             $aws = new \App\Libraries\Aws([
                 'region' => $_POST['region'],

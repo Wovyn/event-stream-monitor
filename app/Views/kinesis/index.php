@@ -44,32 +44,14 @@
                     <thead>
                         <tr>
                             <th>Region</th>
-                            <th>Data Stream Name</th>
-                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Shards</th>
+                            <th>Created</th>
+                            <th>Last Updated</th>
                             <th>Options</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- sample data -->
-                        <tr>
-                            <td>Sample Region</td>
-                            <td>Sample Name</td>
-                            <td>Sample State</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>Sample Region</td>
-                            <td>Sample Name</td>
-                            <td>Sample State</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>Sample Region</td>
-                            <td>Sample Name</td>
-                            <td>Sample State</td>
-                            <td>3</td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
                 <!-- end: DYNAMIC TABLE PANEL -->
             </div>

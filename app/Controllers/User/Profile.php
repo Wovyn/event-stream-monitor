@@ -32,7 +32,7 @@ class Profile extends BaseController
             "/assets/js/pages/user/profile.js"
         );
 
-        $this->data['auth_keys'] = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();
+        $this->data['auth_keys'] = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
 
         return view('user/profile', $this->data);
     }

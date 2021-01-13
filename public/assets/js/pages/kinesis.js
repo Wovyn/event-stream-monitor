@@ -29,6 +29,7 @@ var Kinesis = function() {
                                         });
 
                                         appModal.modal('hide');
+                                        $dtTables['kinesis-table'].ajax.reload();
                                     }
                                 });
                             })
@@ -150,15 +151,22 @@ var Kinesis = function() {
                 id: 'kinesis-table',
                 settings: {
                     processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '/kinesis/get_dt_listing',
+                        type: 'post'
+                    },
                     columns: [
                         { name: 'region', data: 'region' },
                         { name: 'name', data: 'name' },
-                        { name: 'status', data: 'status' },
+                        { name: 'shards', data: 'shards' },
+                        { name: 'create_date', data: 'create_date' },
+                        { name: 'last_update', data: 'last_update' },
                         { name: 'options', data: 'id', searchable: false, sortable: false }
                     ],
                     columnDefs: [
                         {
-                            targets: 3,
+                            targets: 5,
                             width: '10%',
                             render: function(data, type, full, meta) {
                                 let options =
