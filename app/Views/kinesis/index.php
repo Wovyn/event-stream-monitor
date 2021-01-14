@@ -51,7 +51,11 @@
                             <th>Options</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        <tr>
+                            <td class="dataTables_empty" colspan="6">Loading data from database.</td>
+                        </tr>
+                    </tbody>
                 </table>
                 <!-- end: DYNAMIC TABLE PANEL -->
             </div>

@@ -70,7 +70,7 @@ class Kinesis extends BaseController
 
             // aws createStream
             try {
-                $result = $aws->kinesis->createStream([
+                $result['createStream'] = $aws->kinesis->createStream([
                     'ShardCount' => (int) $_POST['shards'],
                     'StreamName' => str_replace(' ', '_', $_POST['name'])
                 ]);
@@ -80,7 +80,7 @@ class Kinesis extends BaseController
 
             // insert to database
             if($result) {
-                $this->kinesisDataStreamsModel->save([
+                $result['save'] = $this->kinesisDataStreamsModel->save([
                     'user_id' => $this->data['user']->id,
                     'region' => $_POST['region'],
                     'name' => $_POST['name'],
@@ -91,6 +91,7 @@ class Kinesis extends BaseController
 
             return json_encode([
                 'error' => !$result,
+                'result' => $result,
                 'message' => ($result ? 'Successfully created Data Stream!' : 'Something went wrong.')
             ]);
         }
@@ -98,25 +99,17 @@ class Kinesis extends BaseController
         return view('kinesis/wizard');
     }
 
-    public function verify() {
-        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->asObject()->first();
+    public function delete($id) {
+        // hook aws deleteStream API
+        // $result = $client->deleteStream([
+        //     'EnforceConsumerDeletion' => true || false,
+        //     'StreamName' => '<string>', // REQUIRED
+        // ]);
 
-        $aws = new \App\Libraries\Aws([
-            'region' => 'us-east-2',
-            'access' => $keys->aws_access,
-            'secret' => $keys->aws_secret
-        ]);
+        // $result = $this->kinesisDataStreamsModel->where('id', $id)->delete();
 
-        try {
-            $result = $aws->kinesis->createStream([
-                'ShardCount' => 1,
-                'StreamName' => 'Sample_Data_Stream2'
-            ]);
-
-            echo '<pre>' , var_dump($result) , '</pre>';
-        } catch (Exception $e) {
-            echo '<pre>' , var_dump($e) , '</pre>';
-        }
+        // return json_encode([
+        //     'result' => $result
+        // ]);
     }
-
 }

@@ -143,9 +143,49 @@ var Kinesis = function() {
         });
     }
 
+    var handleDeleteStream = function() {
+        console.log('init handleDeleteStream');
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this);
+
+            Swal.fire({
+                icon: 'warning',
+                text: 'Are you sure you want to delete this Data Stream?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                // console.log(result);
+                if(result.isConfirmed) {
+                    $.ajax({
+                        url: $btn.attr('href'),
+                        method: 'POST',
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                            if(response) {
+                                Swal.fire({
+                                    icon: response.error !== true ? 'success' : 'error',
+                                    title: response.error !== true ? 'Successfully Deleted Stream.' : 'Error',
+                                    text: response.message
+                                });
+
+                                $dtTables['kinesis-table'].ajax.reload();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    }
+
     return {
         init: function() {
             console.log('Kinesis.init');
+
+            App.checkUserAuthKeys();
 
             App.dt.init({
                 id: 'kinesis-table',
@@ -171,7 +211,7 @@ var Kinesis = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>' +
+                                        // '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>' +
                                         '<a href="/kinesis/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 
@@ -184,6 +224,7 @@ var Kinesis = function() {
 
             App.validationSetDefault();
             handleAddStream();
+            handleDeleteStream();
         }
     }
 }();
