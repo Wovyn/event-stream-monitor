@@ -66,20 +66,14 @@ class Kinesis extends BaseController
                 'secret' => $keys->aws_secret
             ]);
 
-            $result = false;
-
             // aws createStream
-            try {
-                $result['createStream'] = $aws->kinesis->createStream([
-                    'ShardCount' => (int) $_POST['shards'],
-                    'StreamName' => str_replace(' ', '_', $_POST['name'])
-                ]);
-            } catch (Exception $e) {
-                return $e;
-            }
+            $result['kinesisCreateStream'] = $aws->kinesisCreateStream([
+                'ShardCount' => (int) $_POST['shards'],
+                'StreamName' => str_replace(' ', '_', $_POST['name'])
+            ]);
 
             // insert to database
-            if($result) {
+            if(!$result['kinesisCreateStream']['error']) {
                 $result['save'] = $this->kinesisDataStreamsModel->save([
                     'user_id' => $this->data['user']->id,
                     'region' => $_POST['region'],
@@ -90,9 +84,9 @@ class Kinesis extends BaseController
             }
 
             return json_encode([
-                'error' => !$result,
-                'result' => $result,
-                'message' => ($result ? 'Successfully created Data Stream!' : 'Something went wrong.')
+                'error' => $result['kinesisCreateStream']['error'],
+                'message' => ($result['kinesisCreateStream']['error'] ? $result['kinesisCreateStream']['message'] : 'Successfully created Data Stream!'),
+                'result' => $result
             ]);
         }
 
@@ -125,5 +119,22 @@ class Kinesis extends BaseController
         return json_encode([
             'result' => $result
         ]);
+    }
+
+    public function verify() {
+        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+
+        $aws = new \App\Libraries\Aws([
+            'region' => 'us-east-2',
+            'access' => $keys->aws_access,
+            'secret' => $keys->aws_secret
+        ]);
+
+        $result = $aws->kinesisCreateStream([
+            'ShardCount' => 1,
+            'StreamName' => 'Sample_Data_Stream'
+        ]);
+
+        var_dump($result);
     }
 }

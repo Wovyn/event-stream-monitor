@@ -19,8 +19,7 @@ var Kinesis = function() {
                                     url: '/kinesis/add',
                                     method: 'POST',
                                     data: form.serialize(),
-                                    // dataType: 'json',
-                                    dataType: 'html',
+                                    dataType: 'json',
                                     success: function(response) {
                                         Swal.fire({
                                             icon: response.error !== true ? 'success' : 'error',
@@ -28,8 +27,12 @@ var Kinesis = function() {
                                             text: response.message
                                         });
 
-                                        appModal.modal('hide');
-                                        $dtTables['kinesis-table'].ajax.reload();
+                                        if(!response.error) {
+                                            appModal.modal('hide');
+                                            $dtTables['kinesis-table'].ajax.reload();
+                                        } else {
+                                            console.log(response);
+                                        }
                                     }
                                 });
                             })
