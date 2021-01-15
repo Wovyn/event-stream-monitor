@@ -9,7 +9,7 @@ use \Aws\Kinesis\Exception\KinesisException;
 class Aws {
 
     // protected $aws;
-    public $aws, $kinesis, $ec2;
+    protected $aws, $kinesis;
 
     public function __construct($args) {
         $this->aws = new \Aws\Sdk([
@@ -21,6 +21,7 @@ class Aws {
             'version' => '2013-12-02',
             'region' => $args['region']
         ]);
+
 
         // testing purposes
         // return $this->aws;
@@ -39,7 +40,15 @@ class Aws {
     }
 
     public function kinesisDeleteStream($args) {
+        $result['error'] = false;
+        try {
+            $result['deleteStream'] = $this->kinesis->deleteStream($args);
+        } catch (AwsException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->toArray()['message'];
+        }
 
+        return $result;
     }
 }
 

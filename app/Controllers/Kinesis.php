@@ -104,21 +104,20 @@ class Kinesis extends BaseController
             'secret' => $keys->aws_secret
         ]);
 
-        $result = false;
-        try {
-            $result['deleteStream'] = $aws->kinesis->deleteStream([
-                'EnforceConsumerDeletion' => true,
-                'StreamName' => str_replace(' ', '_', $stream->name)
-            ]);
+        $result['kinesisDeleteStream'] = $aws->kinesisDeleteStream([
+            'EnforceConsumerDeletion' => true,
+            'StreamName' => str_replace(' ', '_', $stream->name)
+        ]);
 
+        if(!$result['kinesisDeleteStream']['error']) {
             $result['delete'] = $this->kinesisDataStreamsModel->where('id', $id)->delete();
-        } catch (Exception $e) {
-            return $e;
         }
 
         return json_encode([
-            'result' => $result
-        ]);
+                'error' => $result['kinesisDeleteStream']['error'],
+                'message' => ($result['kinesisDeleteStream']['error'] ? $result['kinesisDeleteStream']['message'] : 'Successfully deleted Data Stream!'),
+                'result' => $result
+            ]);
     }
 
     public function verify() {

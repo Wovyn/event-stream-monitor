@@ -171,11 +171,15 @@ var Kinesis = function() {
                             if(response) {
                                 Swal.fire({
                                     icon: response.error !== true ? 'success' : 'error',
-                                    title: response.error !== true ? 'Successfully Deleted Stream.' : 'Error',
+                                    title: response.error !== true ? 'Successfully Deleted Data Stream.' : 'Error Deleting Data Stream',
                                     text: response.message
                                 });
 
-                                $dtTables['kinesis-table'].ajax.reload();
+                                if(!response.error) {
+                                    $dtTables['kinesis-table'].ajax.reload();
+                                } else {
+                                    console.log(response);
+                                }
                             }
                         }
                     });
