@@ -101,15 +101,29 @@ class Kinesis extends BaseController
 
     public function delete($id) {
         // hook aws deleteStream API
-        // $result = $client->deleteStream([
-        //     'EnforceConsumerDeletion' => true || false,
-        //     'StreamName' => '<string>', // REQUIRED
-        // ]);
+        $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
+        $keys = $this->authKeysModel->where('user_id', $stream->user_id)->first();
 
-        // $result = $this->kinesisDataStreamsModel->where('id', $id)->delete();
+        $aws = new \App\Libraries\Aws([
+            'region' => $stream->region,
+            'access' => $keys->aws_access,
+            'secret' => $keys->aws_secret
+        ]);
 
-        // return json_encode([
-        //     'result' => $result
-        // ]);
+        $result = false;
+        try {
+            $result['deleteStream'] = $aws->kinesis->deleteStream([
+                'EnforceConsumerDeletion' => true,
+                'StreamName' => str_replace(' ', '_', $stream->name)
+            ]);
+
+            $result['delete'] = $this->kinesisDataStreamsModel->where('id', $id)->delete();
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        return json_encode([
+            'result' => $result
+        ]);
     }
 }
