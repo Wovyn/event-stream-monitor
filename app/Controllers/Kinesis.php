@@ -3,11 +3,20 @@ namespace App\Controllers;
 
 class Kinesis extends BaseController
 {
-    protected $authKeysModel, $kinesisDataStreamsModel;
+    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $aws;
 
     public function __construct() {
+        parent::__construct();
+
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
+
+        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+
+        $this->aws = new \App\Libraries\Aws([
+            'access' => $keys->aws_access,
+            'secret' => $keys->aws_secret
+        ]);
     }
 
     public function index()
@@ -58,16 +67,9 @@ class Kinesis extends BaseController
 
     public function add() {
         if($_POST) {
-            $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
-
-            $aws = new \App\Libraries\Aws([
-                'region' => $_POST['region'],
-                'access' => $keys->aws_access,
-                'secret' => $keys->aws_secret
-            ]);
-
             // aws createStream
-            $result['kinesisCreateStream'] = $aws->kinesisCreateStream([
+            $this->aws->kinesisClient($_POST['region']);
+            $result['kinesisCreateStream'] = $this->aws->kinesisCreateStream([
                 'ShardCount' => (int) $_POST['shards'],
                 'StreamName' => str_replace(' ', '_', $_POST['name'])
             ]);
@@ -96,15 +98,9 @@ class Kinesis extends BaseController
     public function delete($id) {
         // hook aws deleteStream API
         $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
-        $keys = $this->authKeysModel->where('user_id', $stream->user_id)->first();
 
-        $aws = new \App\Libraries\Aws([
-            'region' => $stream->region,
-            'access' => $keys->aws_access,
-            'secret' => $keys->aws_secret
-        ]);
-
-        $result['kinesisDeleteStream'] = $aws->kinesisDeleteStream([
+        $this->aws->kinesisClient($stream->region);
+        $result['kinesisDeleteStream'] = $this->aws->kinesisDeleteStream([
             'EnforceConsumerDeletion' => true,
             'StreamName' => str_replace(' ', '_', $stream->name)
         ]);
@@ -124,16 +120,12 @@ class Kinesis extends BaseController
         $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
 
         $aws = new \App\Libraries\Aws([
-            'region' => 'us-east-2',
             'access' => $keys->aws_access,
             'secret' => $keys->aws_secret
         ]);
 
-        $result = $aws->kinesisCreateStream([
-            'ShardCount' => 1,
-            'StreamName' => 'Sample_Data_Stream'
-        ]);
+        $aws->kinesisClient('us-east-2');
 
-        var_dump($result);
+        var_dump($aws->describeRegions());
     }
 }

@@ -7,6 +7,8 @@ class Profile extends BaseController
     protected $usersModel, $authKeysModel, $ionAuthModel;
 
     public function __construct() {
+        parent::__construct();
+
         $this->usersModel = new \App\Models\UsersModel();
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->ionAuthModel = new \IonAuth\Models\IonAuthModel();

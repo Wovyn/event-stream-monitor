@@ -23,8 +23,7 @@ var Kinesis = function() {
                                     success: function(response) {
                                         Swal.fire({
                                             icon: response.error !== true ? 'success' : 'error',
-                                            title: response.error !== true ? 'Success' : 'Error',
-                                            text: response.message
+                                            title: response.message
                                         });
 
                                         if(!response.error) {
@@ -167,12 +166,10 @@ var Kinesis = function() {
                         method: 'POST',
                         dataType: 'json',
                         success: function(response) {
-                            console.log(response);
                             if(response) {
                                 Swal.fire({
                                     icon: response.error !== true ? 'success' : 'error',
-                                    title: response.error !== true ? 'Successfully Deleted Data Stream.' : 'Error Deleting Data Stream',
-                                    text: response.message
+                                    title: response.message
                                 });
 
                                 if(!response.error) {
@@ -218,7 +215,7 @@ var Kinesis = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
-                                        // '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>' +
+                                        '<a href="/kinesis/view/' +  data + '" class="btn btn-primary view-btn"><i class="fa fa-eye"></i></a>' +
                                         '<a href="/kinesis/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 

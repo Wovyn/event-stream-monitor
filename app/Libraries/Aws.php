@@ -13,18 +13,18 @@ class Aws {
 
     public function __construct($args) {
         $this->aws = new \Aws\Sdk([
-            'region' => $args['region'],
+            'region' => 'us-east-2',
             'credentials' => new \Aws\Credentials\Credentials($args['access'], $args['secret'])
         ]);
+    }
 
-        $this->kinesis = $this->aws->createKinesis([
-            'version' => '2013-12-02',
-            'region' => $args['region']
-        ]);
+    public function kinesisClient($region = null) {
+        $config = [ 'version' => '2013-12-02' ];
+        if($region) {
+            $config['region'] = $region;
+        }
 
-
-        // testing purposes
-        // return $this->aws;
+        $this->kinesis = $this->aws->createKinesis($config);
     }
 
     public function kinesisCreateStream($args) {
@@ -50,6 +50,7 @@ class Aws {
 
         return $result;
     }
+
 }
 
 ?>
