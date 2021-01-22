@@ -9,8 +9,8 @@ class BaseModel extends Model {
     protected $returnType = 'object';
 
     protected $useTimestamps = true;
-    protected $createdField  = '';
-    protected $updatedField  = 'last_update';
+    // protected $createdField  = '';
+    // protected $updatedField  = 'last_update';
     protected $deletedField  = '';
 }
 ?>

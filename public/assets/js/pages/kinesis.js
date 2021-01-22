@@ -204,8 +204,8 @@ var Kinesis = function() {
                         { name: 'region', data: 'region' },
                         { name: 'name', data: 'name' },
                         { name: 'shards', data: 'shards' },
-                        { name: 'create_date', data: 'create_date' },
-                        { name: 'last_update', data: 'last_update' },
+                        { name: 'created_at', data: 'created_at' },
+                        { name: 'updated_at', data: 'updated_at' },
                         { name: 'options', data: 'id', searchable: false, sortable: false }
                     ],
                     columnDefs: [
