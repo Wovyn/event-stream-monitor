@@ -99,7 +99,7 @@ class App extends BaseConfig
 	| dates with the date helper, and can be retrieved through app_timezone()
 	|
 	*/
-	public $appTimezone = 'America/Chicago';
+	public $appTimezone = 'UTC';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -265,11 +265,11 @@ class App extends BaseConfig
 	|   - http://www.w3.org/TR/CSP/
 	*/
 	public $CSPEnabled = false;
-	
+
 	public function __construct()
 	{
 	    parent::__construct();
-	    
+
 	    if($_SERVER &&  !empty($_SERVER['HTTP_HOST'])){
 	        if(!empty($_SERVER['HTTPS'])) {
     	        $this->baseURL = 'https://'.$_SERVER['HTTP_HOST'];
