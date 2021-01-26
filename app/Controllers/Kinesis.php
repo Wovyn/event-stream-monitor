@@ -92,7 +92,37 @@ class Kinesis extends BaseController
             ]);
         }
 
-        return view('kinesis/wizard');
+        return view('kinesis/wizard_modal');
+    }
+
+    public function edit($id) {
+        if($_POST) {
+            // aws createStream
+            $this->aws->kinesisClient($_POST['region']);
+            $result['kinesisCreateStream'] = $this->aws->kinesisCreateStream([
+                'ShardCount' => (int) $_POST['shards'],
+                'StreamName' => str_replace(' ', '_', $_POST['name'])
+            ]);
+
+            // insert to database
+            if(!$result['kinesisCreateStream']['error']) {
+                $result['save'] = $this->kinesisDataStreamsModel->save([
+                    'user_id' => $this->data['user']->id,
+                    'region' => $_POST['region'],
+                    'name' => $_POST['name'],
+                    'description' => $_POST['description'],
+                    'shards' => $_POST['shards']
+                ]);
+            }
+
+            return json_encode([
+                'error' => $result['kinesisCreateStream']['error'],
+                'message' => ($result['kinesisCreateStream']['error'] ? $result['kinesisCreateStream']['message'] : 'Successfully created Data Stream!'),
+                'result' => $result
+            ]);
+        }
+
+        return view('kinesis/edit_modal');
     }
 
     public function delete($id) {
@@ -116,16 +146,13 @@ class Kinesis extends BaseController
             ]);
     }
 
-    public function verify() {
-        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+    public function stream() {
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
 
-        $aws = new \App\Libraries\Aws([
-            'access' => $keys->aws_access,
-            'secret' => $keys->aws_secret
-        ]);
+        ob_flush();
+        flush();
+        // $eventSource = new \App\Libraries\EventSource();
 
-        $aws->kinesisClient('us-east-2');
-
-        var_dump($aws->describeRegions());
     }
 }

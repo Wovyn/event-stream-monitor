@@ -26,7 +26,7 @@ var App = function () {
                     lengthMenu: "Display _MENU_",
                     search: "_INPUT_",
                     searchPlaceholder: "Search"
-                },
+                }
             });
         }
     };
@@ -334,6 +334,8 @@ var App = function () {
         });
     }
 
+    var timezone = jstz.determine().name();
+
     return {
         init: function() {
             console.log('App.init');
@@ -349,7 +351,8 @@ var App = function () {
         modal: modal,
         dt: dt,
         validationSetDefault: validationSetDefault,
-        checkUserAuthKeys: checkUserAuthKeys
+        checkUserAuthKeys: checkUserAuthKeys,
+        timezone: timezone,
     }
 }();
 

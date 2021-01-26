@@ -1,3 +1,4 @@
+var source;
 var Kinesis = function() {
     var appModal;
     var FormWizard = function() {
@@ -210,11 +211,30 @@ var Kinesis = function() {
                     ],
                     columnDefs: [
                         {
+                            targets:[3,4],
+                            render: function(data, type, full, meta) {
+                                let utcTime = moment.tz(data, 'UTC'),
+                                    localTime = moment.tz(data, 'UTC').tz(App.timezone),
+                                    tooltip =
+                                        '<div class=\'text-left\'>' +
+                                            '<b>UTC:</b> ' + utcTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
+                                            '<b>Local:</b> ' + localTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
+                                        '</div>';
+
+                                if(data) {
+                                    return '<span data-html="true" title="' + tooltip + '" class="tip">' + localTime.fromNow() + '</span>';
+                                } else {
+                                    return '';
+                                }
+                            }
+                        },
+                        {
                             targets: 5,
-                            width: '10%',
+                            width: '12.5%',
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
+                                        '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary view-btn"><i class="fa fa-pencil"></i></a>' +
                                         '<a href="/kinesis/view/' +  data + '" class="btn btn-primary view-btn"><i class="fa fa-eye"></i></a>' +
                                         '<a href="/kinesis/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
@@ -222,7 +242,11 @@ var Kinesis = function() {
                                 return options;
                             }
                         }
-                    ]
+                    ],
+                    fnCreatedRow: function (nRow, aData, iDataIndex) {
+                        console.log('fnCreatedRow');
+                        $('.tip', nRow).tooltip();
+                    }
                 }
             });
 
@@ -235,4 +259,9 @@ var Kinesis = function() {
 
 jQuery(document).ready(function() {
     Kinesis.init();
+
+    var source = new EventSource('/kinesis/stream');
+    source.onmessage = function(event) {
+        console.log(event);
+    };
 });
