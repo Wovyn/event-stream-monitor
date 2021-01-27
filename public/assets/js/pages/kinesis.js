@@ -260,8 +260,24 @@ var Kinesis = function() {
 jQuery(document).ready(function() {
     Kinesis.init();
 
-    var source = new EventSource('/kinesis/stream');
-    source.onmessage = function(event) {
-        console.log(event);
-    };
+    var stream = EventStream.init({
+        url: '/kinesis/stream',
+        events: [
+            {
+                type: 'message',
+                listener: function(data) {
+                    if(_.isEmpty(data)) {
+                        stream.close();
+                    }
+                }
+            },
+            {
+                type: 'new',
+                listener: function(data) {
+                    console.log(data);
+                }
+            }
+        ],
+        timeout: 10000
+    });
 });
