@@ -322,8 +322,6 @@ var App = function () {
 
             customs.navInit();
             customs.inputCounterInit();
-
-            dt.extend();
         },
         modal: modal,
         dt: dt,

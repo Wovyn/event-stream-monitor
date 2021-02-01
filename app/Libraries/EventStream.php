@@ -5,8 +5,6 @@ class EventStream {
 
     private $defaultPayload;
 
-    protected $lastID;
-
     public function __construct() {
         $this->defaultPayload = [
             'id' => 'ES' . uniqid(),
@@ -18,8 +16,6 @@ class EventStream {
 
     private function formatPayload($data) {
         $payload = [];
-
-        $this->lastID = $data['id'];
 
         foreach ($data as $key => $value) {
             $payload[] = sprintf('%s: %s', $key, $value);

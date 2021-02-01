@@ -1,4 +1,3 @@
-var source;
 var Kinesis = function() {
     var appModal;
     var FormWizard = function() {
@@ -192,6 +191,7 @@ var Kinesis = function() {
 
             App.checkUserAuthKeys();
 
+            App.dt.extend();
             App.dt.init({
                 id: 'kinesis-table',
                 settings: {
@@ -260,24 +260,17 @@ var Kinesis = function() {
 jQuery(document).ready(function() {
     Kinesis.init();
 
-    var stream = EventStream.init({
-        url: '/kinesis/stream',
-        events: [
-            {
-                type: 'message',
-                listener: function(data) {
-                    if(_.isEmpty(data)) {
-                        stream.close();
-                    }
-                }
-            },
-            {
-                type: 'new',
-                listener: function(data) {
-                    console.log(data);
-                }
-            }
-        ],
-        timeout: 10000
-    });
+    // EventStream.init('stream', {
+    //     url: '/kinesis/stream',
+    //     events: [
+    //         {
+    //             type: 'message',
+    //             listener: function(data) {
+
+    //             }
+    //         }
+    //     ],
+    //     timeout: 60000
+    // });
+
 });
