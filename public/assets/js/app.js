@@ -142,7 +142,31 @@ var App = function () {
 
     // modal
     var modal = function(options) {
-        var $settings = $.extend(true, {}, options);
+        var $settings = $.extend(true, {
+            title: 'Confirmation Modal',
+            body: 'Are you sure you want to continue?',
+            footer: true,
+            width: 500,
+            ajax: false,
+            onShow: function() {},
+            onShown: function() {},
+            onHide: function() {},
+            btn: {
+                confirm: {
+                    text: 'Confirm',
+                    class: 'btn btn-blue',
+                    onClick: function() {}
+                },
+                cancel: {
+                    text: 'Cancel',
+                    class: 'btn btn-default',
+                    onClick: function() {}
+                }
+            },
+            validate: false,
+            others: {}
+        }, options);
+
 
         var $appModal = $('<div class="modal fade" id="app-modal" tabindex="-1" role="dialog" data-width="' + $settings.width + '" aria-hidden="true"></div>');
         $appModal.html(
