@@ -13,10 +13,12 @@ class Kinesis extends BaseController
 
         $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
 
-        $this->aws = new \App\Libraries\Aws([
-            'access' => $keys->aws_access,
-            'secret' => $keys->aws_secret
-        ]);
+        if($keys) {
+            $this->aws = new \App\Libraries\Aws([
+                'access' => $keys->aws_access,
+                'secret' => $keys->aws_secret
+            ]);
+        }
     }
 
     public function index()
