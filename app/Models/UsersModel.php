@@ -6,5 +6,5 @@ class UsersModel extends BaseModel {
     protected $primaryKey = 'id';
 
     protected $allowedFields = ['first_name', 'last_name', 'email', 'phone', 'company', 'password'];
-
+    protected $useTimestamps = false;
 }
