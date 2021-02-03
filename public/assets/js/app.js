@@ -1,4 +1,4 @@
-var $dtTables = [];
+var $dtTables = [], $hasAuthKey = false;
 var App = function () {
 
     // datatables
@@ -330,6 +330,8 @@ var App = function () {
                             window.location = '/user/profile';
                         }
                     });
+                } else {
+                    $hasAuthKey = true;
                 }
             }
         });

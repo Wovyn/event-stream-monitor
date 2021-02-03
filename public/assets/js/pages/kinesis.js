@@ -116,6 +116,11 @@ var Kinesis = function() {
         $('.add-stream-btn').on('click', function(e) {
             e.preventDefault();
 
+            if(!$hasAuthKey) {
+                App.checkUserAuthKeys();
+                return false;
+            }
+
             let $btn = $(this);
 
             appModal = App.modal({
