@@ -150,6 +150,14 @@ var Kinesis = function() {
         });
     }
 
+    var handleEditStream = function() {
+        console.log('init handleEditStream');
+        $(document).on('click', '.edit-btn', function(e) {
+            e.preventDefault();
+
+        });
+    }
+
     var handleDeleteStream = function() {
         console.log('init handleDeleteStream');
         $(document).on('click', '.delete-btn', function(e) {
@@ -239,7 +247,7 @@ var Kinesis = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary view-btn"><i class="fa fa-pencil"></i></a>' +
+                                        // '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>' +
                                         '<a href="/kinesis/view/' +  data + '" class="btn btn-primary view-btn"><i class="fa fa-eye"></i></a>' +
                                         '<a href="/kinesis/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
@@ -258,6 +266,7 @@ var Kinesis = function() {
             App.validationSetDefault();
             handleAddStream();
             handleDeleteStream();
+            handleEditStream();
         }
     }
 }();

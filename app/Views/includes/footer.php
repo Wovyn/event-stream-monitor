@@ -35,7 +35,7 @@
     <script type="text/javascript" src="/bower_components/sweetalert2/sweetalert2.min.js"></script>
     <script type="text/javascript" src="/bower_components/moment/moment.js"></script>
     <script type="text/javascript" src="/bower_components/moment/moment-timezone.js"></script>
-    <script type="text/javascript" src="/bower_components/jstz/dist/jstz.min.js"></script>
+    <script type="text/javascript" src="/bower_components/jstz/jstz.min.js"></script>
     <script type="text/javascript" src="/assets/js/min/main.min.js"></script>
     <script type="text/javascript" src="/assets/js/lodash.min.js"></script>
 
