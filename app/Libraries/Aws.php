@@ -33,7 +33,9 @@ class Aws {
             $result['createStream'] = $this->kinesis->createStream($args);
         } catch (AwsException $e) {
             $result['error'] = true;
-            $result['message'] = $e->toArray()['message'];
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'kinesisCreateStream: ' . $e->getMessage());
         }
 
         return $result;
@@ -45,7 +47,9 @@ class Aws {
             $result['deleteStream'] = $this->kinesis->deleteStream($args);
         } catch (AwsException $e) {
             $result['error'] = true;
-            $result['message'] = $e->toArray()['message'];
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'kinesisDeleteStream: ' . $e->getMessage());
         }
 
         return $result;

@@ -23,7 +23,7 @@ var Kinesis = function() {
                                     success: function(response) {
                                         Swal.fire({
                                             icon: response.error !== true ? 'success' : 'error',
-                                            title: response.message
+                                            text: response.message
                                         });
 
                                         if(!response.error) {
@@ -182,7 +182,7 @@ var Kinesis = function() {
                             if(response) {
                                 Swal.fire({
                                     icon: response.error !== true ? 'success' : 'error',
-                                    title: response.message
+                                    text: response.message
                                 });
 
                                 if(!response.error) {
