@@ -1,8 +1,7 @@
 <?php
 namespace App\Controllers\User;
-use App\Controllers\BaseController;
 
-class Profile extends BaseController
+class Profile extends \App\Controllers\BaseController
 {
     protected $usersModel, $authKeysModel, $ionAuthModel;
 

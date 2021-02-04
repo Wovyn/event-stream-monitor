@@ -142,19 +142,9 @@ class Kinesis extends BaseController
         }
 
         return json_encode([
-                'error' => $result['kinesisDeleteStream']['error'],
-                'message' => ($result['kinesisDeleteStream']['error'] ? $result['kinesisDeleteStream']['message'] : 'Successfully deleted Data Stream!'),
-                'result' => $result
-            ]);
-    }
-
-    public function stream() {
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-
-        ob_flush();
-        flush();
-        // $eventSource = new \App\Libraries\EventSource();
-
+            'error' => $result['kinesisDeleteStream']['error'],
+            'message' => ($result['kinesisDeleteStream']['error'] ? $result['kinesisDeleteStream']['message'] : 'Successfully deleted Data Stream!'),
+            'result' => $result
+        ]);
     }
 }
