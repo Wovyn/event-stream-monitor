@@ -14,7 +14,8 @@ var Kinesis = function() {
                 toolbarSettings: {
                     toolbarExtraButtons: [
                         $('<button type="button" class="btn btn-finish btn-success hidden">Create Data Stream</button>')
-                            .on('click', function(){
+                            .on('click', function() {
+                                App.loading();
                                 $(this).addClass('disabled');
 
                                 $.ajax({
@@ -23,12 +24,15 @@ var Kinesis = function() {
                                     data: form.serialize(),
                                     dataType: 'json',
                                     success: function(response) {
+                                        App.loading(false);
+
                                         Swal.fire({
                                             icon: response.error !== true ? 'success' : 'error',
                                             text: response.message
                                         });
 
                                         if(!response.error) {
+                                            document.body.style.cursor = 'default';
                                             appModal.modal('hide');
                                             $dtTables['kinesis-table'].ajax.reload();
                                         } else {
