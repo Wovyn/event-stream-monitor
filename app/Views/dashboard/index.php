@@ -39,7 +39,7 @@
             <div class="col-sm-4">
                 <div class="core-box">
                     <div class="heading">
-                        <i class="clip-barcode circle-icon circle-red"></i>
+                        <i class="clip-barcode circle-icon circle-bricky"></i>
                         <h2>Manage Event Streams</h2>
                     </div>
                     <div class="content">
@@ -53,7 +53,7 @@
             <div class="col-sm-4">
                 <div class="core-box">
                     <div class="heading">
-                        <i class="clip-windy circle-icon circle-orange"></i>
+                        <i class="clip-windy circle-icon circle-teal"></i>
                         <h2>Manage Kinesis Data Streams</h2>
                     </div>
                     <div class="content">
