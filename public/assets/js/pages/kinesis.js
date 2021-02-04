@@ -13,8 +13,10 @@ var Kinesis = function() {
                 autoAdjustHeight: false,
                 toolbarSettings: {
                     toolbarExtraButtons: [
-                        $('<button type="button" class="btn btn-finish btn-success disabled">Create Data Stream</button>')
+                        $('<button type="button" class="btn btn-finish btn-success hidden">Create Data Stream</button>')
                             .on('click', function(){
+                                $(this).addClass('disabled');
+
                                 $.ajax({
                                     url: '/kinesis/add',
                                     method: 'POST',
@@ -49,24 +51,32 @@ var Kinesis = function() {
                     return false;
                 }
 
-                // show/hide create data stream btn
+                // set prev button hidden on first step
+                if(nextStepIndex == 0) {
+                    $('.sw-btn-prev', form).addClass('hidden');
+                } else {
+                    $('.sw-btn-prev', form).removeClass('hidden');
+                }
+
+                // show/hide create data stream btn and next button
                 if(nextStepIndex == 3) {
                     generateSummary(form);
 
-                    $('.btn-finish', form).removeClass('disabled');
+                    $('.sw-btn-next', form).addClass('hidden');
+                    $('.btn-finish', form).removeClass('hidden');
                 } else {
-                    $('.btn-finish', form).addClass('disabled');
+                    $('.sw-btn-next', form).removeClass('hidden');
+                    $('.btn-finish', form).addClass('hidden');
                 }
 
                 animateBar(nextStepIndex);
             });
 
-            wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
-
-            });
-
             // initialize animateBar
             animateBar();
+
+            // set prev button hidden on first step
+            $('.sw-btn-prev', form).addClass('hidden');
         }
 
         var animateBar = function(step) {
@@ -170,29 +180,26 @@ var Kinesis = function() {
                 text: 'Are you sure you want to delete this Data Stream?',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
+                cancelButtonText: 'No',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch($btn.attr('href')).
+                        then(response => {
+                            return response.json();
+                        });
+                }
             }).then((result) => {
-                // console.log(result);
                 if(result.isConfirmed) {
-                    $.ajax({
-                        url: $btn.attr('href'),
-                        method: 'POST',
-                        dataType: 'json',
-                        success: function(response) {
-                            if(response) {
-                                Swal.fire({
-                                    icon: response.error !== true ? 'success' : 'error',
-                                    text: response.message
-                                });
-
-                                if(!response.error) {
-                                    $dtTables['kinesis-table'].ajax.reload();
-                                } else {
-                                    console.log(response);
-                                }
-                            }
-                        }
+                    Swal.fire({
+                        icon: result.value.error !== true ? 'success' : 'error',
+                        text: result.value.message
                     });
+
+                    if(!result.value.error) {
+                        $dtTables['kinesis-table'].ajax.reload();
+                    } else {
+                        console.log(result.value);
+                    }
                 }
             });
         });
@@ -223,6 +230,12 @@ var Kinesis = function() {
                         { name: 'options', data: 'id', searchable: false, sortable: false }
                     ],
                     columnDefs: [
+                        {
+                            targets: 0,
+                            render: function(data, type, full, meta) {
+                                return full.region_name + ' | ' + data;
+                            }
+                        },
                         {
                             targets:[3,4],
                             render: function(data, type, full, meta) {
@@ -273,18 +286,4 @@ var Kinesis = function() {
 
 jQuery(document).ready(function() {
     Kinesis.init();
-
-    // EventStream.init('stream', {
-    //     url: '/kinesis/stream',
-    //     events: [
-    //         {
-    //             type: 'message',
-    //             listener: function(data) {
-
-    //             }
-    //         }
-    //     ],
-    //     timeout: 60000
-    // });
-
 });

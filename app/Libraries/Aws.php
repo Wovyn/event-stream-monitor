@@ -8,7 +8,6 @@ use \Aws\Kinesis\Exception\KinesisException;
 
 class Aws {
 
-    // protected $aws;
     protected $aws, $kinesis;
 
     public function __construct($args) {

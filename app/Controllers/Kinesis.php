@@ -3,10 +3,13 @@ namespace App\Controllers;
 
 class Kinesis extends BaseController
 {
-    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $aws;
+    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $aws, $awsRegions;
 
     public function __construct() {
         parent::__construct();
+
+        $awsConfig = new \Config\Aws();
+        $this->awsRegions = $awsConfig->regions;
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
@@ -57,6 +60,10 @@ class Kinesis extends BaseController
             ->orderBy($order, $sort)
             ->findAll($limit, $offset);
 
+        foreach ($rows as $row) {
+            $row->region_name = $this->awsRegions[$row->region];
+        }
+
         $total = $this->kinesisDataStreamsModel->countAll();
         $tbl = array(
             "iTotalRecords"=> $total,
@@ -87,6 +94,7 @@ class Kinesis extends BaseController
                 ]);
             }
 
+            $this->response->setContentType('Content-Type: application/json');
             return json_encode([
                 'error' => $result['kinesisCreateStream']['error'],
                 'message' => ($result['kinesisCreateStream']['error'] ? $result['kinesisCreateStream']['message'] : 'Successfully created Data Stream!'),
@@ -95,36 +103,6 @@ class Kinesis extends BaseController
         }
 
         return view('kinesis/wizard_modal');
-    }
-
-    public function edit($id) {
-        if($_POST) {
-            // aws createStream
-            $this->aws->kinesisClient($_POST['region']);
-            $result['kinesisCreateStream'] = $this->aws->kinesisCreateStream([
-                'ShardCount' => (int) $_POST['shards'],
-                'StreamName' => str_replace(' ', '_', $_POST['name'])
-            ]);
-
-            // insert to database
-            if(!$result['kinesisCreateStream']['error']) {
-                $result['save'] = $this->kinesisDataStreamsModel->save([
-                    'user_id' => $this->data['user']->id,
-                    'region' => $_POST['region'],
-                    'name' => $_POST['name'],
-                    'description' => $_POST['description'],
-                    'shards' => $_POST['shards']
-                ]);
-            }
-
-            return json_encode([
-                'error' => $result['kinesisCreateStream']['error'],
-                'message' => ($result['kinesisCreateStream']['error'] ? $result['kinesisCreateStream']['message'] : 'Successfully created Data Stream!'),
-                'result' => $result
-            ]);
-        }
-
-        return view('kinesis/edit_modal');
     }
 
     public function delete($id) {
@@ -141,6 +119,7 @@ class Kinesis extends BaseController
             $result['delete'] = $this->kinesisDataStreamsModel->where('id', $id)->delete();
         }
 
+        $this->response->setContentType('Content-Type: application/json');
         return json_encode([
             'error' => $result['kinesisDeleteStream']['error'],
             'message' => ($result['kinesisDeleteStream']['error'] ? $result['kinesisDeleteStream']['message'] : 'Successfully deleted Data Stream!'),
