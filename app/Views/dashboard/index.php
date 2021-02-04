@@ -39,11 +39,11 @@
             <div class="col-sm-4">
                 <div class="core-box">
                     <div class="heading">
-                        <i class="clip-user-4 circle-icon circle-green"></i>
-                        <h2>Manage Users</h2>
+                        <i class="clip-barcode circle-icon circle-red"></i>
+                        <h2>Manage Event Streams</h2>
                     </div>
                     <div class="content">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                        This is where you can create a Sink Instance, validate the Sink Instance, and also create, update, and delete subscriptions.
                     </div>
                     <a class="view-more" href="#">
                         View More <i class="clip-arrow-right-2"></i>
@@ -53,11 +53,11 @@
             <div class="col-sm-4">
                 <div class="core-box">
                     <div class="heading">
-                        <i class="clip-clip circle-icon circle-teal"></i>
-                        <h2>Manage Orders</h2>
+                        <i class="clip-windy circle-icon circle-orange"></i>
+                        <h2>Manage Kinesis Data Streams</h2>
                     </div>
                     <div class="content">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                        This is where you can create, update, and delete AWS Kinesis Data Streams.  These are currently the primary Event Stream Sink types allowed.
                     </div>
                     <a class="view-more" href="#">
                         View More <i class="clip-arrow-right-2"></i>
@@ -67,11 +67,11 @@
             <div class="col-sm-4">
                 <div class="core-box">
                     <div class="heading">
-                        <i class="clip-database circle-icon circle-bricky"></i>
-                        <h2>Manage Data</h2>
+                        <i class="clip-database circle-icon circle-green"></i>
+                        <h2>Manage Consumers</h2>
                     </div>
                     <div class="content">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                        This is where you will be able to create, update, and delete AWS Kinesis consumers.  This will start with ElasticSearch instances.
                     </div>
                     <a class="view-more" href="#">
                         View More <i class="clip-arrow-right-2"></i>
