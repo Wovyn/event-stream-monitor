@@ -57,7 +57,7 @@
                         <h2>Manage Kinesis Data Streams</h2>
                     </div>
                     <div class="content">
-                        This is where you can create, update, and delete AWS Kinesis Data Streams.  These are currently the primary Event Stream Sink types allowed.
+                        This is where you can create, update, and delete AWS Kinesis Data Streams.  These are currently the primary Event Stream Sink types.
                     </div>
                     <a class="view-more" href="#">
                         View More <i class="clip-arrow-right-2"></i>
