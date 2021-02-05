@@ -98,7 +98,7 @@
                     <h3 class="StepTitle">Step 2</h3>
                     <div class="form-group">
                         <label class="control-label" for="name">Data Stream Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Data Stream Name" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Data Stream Name" data-rule-nospace required>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="description">Description</label>

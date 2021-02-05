@@ -285,6 +285,10 @@ var App = function () {
                 $(element).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
             }
         });
+
+        $.validator.addMethod('nospace', function (value, element) {
+            return /^[a-zA-Z0-9_.-]+$/.test(value);
+        }, 'Please remove spaces or use underscore instead.');
     }
 
     var customs = {};
