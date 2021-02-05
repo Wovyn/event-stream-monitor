@@ -127,7 +127,13 @@ class Kinesis extends BaseController
 
     public function view($id) {
         $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
-        $stream->name;
-        return 'view';
+
+        $this->kinesis->client($stream->region);
+        $result = $this->kinesis->DescribeStreamSummary([
+            'StreamName' => $stream->name
+        ]);
+
+        $data['stream'] = $result['describeStreamSummary']['StreamDescriptionSummary'];
+        return view('kinesis/view_modal', $data);
     }
 }

@@ -143,6 +143,7 @@ var Kinesis = function() {
             let $btn = $(this);
 
             appModal = App.modal({
+                title: 'Create Data Stream',
                 ajax: {
                     url: $btn.attr('href')
                 },
@@ -174,9 +175,12 @@ var Kinesis = function() {
         $(document).on('click', '.view-btn', function(e) {
             e.preventDefault();
 
-            let $btn = $(this);
+            let $btn = $(this),
+                $row = $btn.parents('tr').get(0),
+                data = $dtTables['kinesis-table'].row($row).data();
 
             App.modal({
+                title: data.name + ' Stream Summary',
                 ajax: {
                     url: $btn.attr('href')
                 }
