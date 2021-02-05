@@ -71,7 +71,7 @@ class Kinesis extends BaseController
             "aaData"=> $rows
         );
 
-        return json_encode($tbl);
+        return $this->response->setJSON(json_encode($tbl));
     }
 
     public function add() {
@@ -94,12 +94,11 @@ class Kinesis extends BaseController
                 ]);
             }
 
-            $this->response->setContentType('Content-Type: application/json');
-            return json_encode([
+            return $this->response->setJSON(json_encode([
                 'error' => $result['kinesisCreateStream']['error'],
                 'message' => ($result['kinesisCreateStream']['error'] ? $result['kinesisCreateStream']['message'] : 'Successfully created Data Stream!'),
                 'result' => $result
-            ]);
+            ]));
         }
 
         return view('kinesis/wizard_modal');
@@ -119,11 +118,15 @@ class Kinesis extends BaseController
             $result['delete'] = $this->kinesisDataStreamsModel->where('id', $id)->delete();
         }
 
-        $this->response->setContentType('Content-Type: application/json');
-        return json_encode([
+        return $this->response->setJSON(json_encode([
             'error' => $result['kinesisDeleteStream']['error'],
             'message' => ($result['kinesisDeleteStream']['error'] ? $result['kinesisDeleteStream']['message'] : 'Successfully deleted Data Stream!'),
             'result' => $result
-        ]);
+        ]));
+
+        // return $this->response->setJSON(json_encode([
+        //     'error' => true,
+        //     'message' => 'something went wrong'
+        // ]));
     }
 }

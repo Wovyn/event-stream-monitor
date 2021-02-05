@@ -353,16 +353,7 @@ var App = function () {
         dt: dt,
         validationSetDefault: validationSetDefault,
         checkUserAuthKeys: checkUserAuthKeys,
-        timezone: timezone,
-        loading: function(state=true) {
-            if(state) {
-                document.body.style.cursor = 'wait';
-                // document.body.style.pointerEvents = 'none';
-            } else {
-                document.body.style.cursor = 'default';
-                // document.body.style.pointerEvents = 'auto';
-            }
-        }
+        timezone: timezone
     }
 }();
 

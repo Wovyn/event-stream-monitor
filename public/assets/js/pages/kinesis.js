@@ -15,29 +15,34 @@ var Kinesis = function() {
                     toolbarExtraButtons: [
                         $('<button type="button" class="btn btn-finish btn-success hidden">Create Data Stream</button>')
                             .on('click', function() {
-                                App.loading();
                                 $(this).addClass('disabled');
 
-                                $.ajax({
-                                    url: '/kinesis/add',
-                                    method: 'POST',
-                                    data: form.serialize(),
-                                    dataType: 'json',
-                                    success: function(response) {
-                                        App.loading(false);
+                                Swal.fire({
+                                    title: 'Creating Data Stream',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
 
-                                        Swal.fire({
-                                            icon: response.error !== true ? 'success' : 'error',
-                                            text: response.message
+                                        $.ajax({
+                                            url: '/kinesis/add',
+                                            method: 'POST',
+                                            data: form.serialize(),
+                                            dataType: 'json',
+                                            success: function(response) {
+                                                Swal.fire({
+                                                    icon: response.error !== true ? 'success' : 'error',
+                                                    text: response.message
+                                                });
+
+                                                if(!response.error) {
+                                                    document.body.style.cursor = 'default';
+                                                    appModal.modal('hide');
+                                                    $dtTables['kinesis-table'].ajax.reload();
+                                                } else {
+                                                    console.log(response);
+                                                }
+                                            }
                                         });
-
-                                        if(!response.error) {
-                                            document.body.style.cursor = 'default';
-                                            appModal.modal('hide');
-                                            $dtTables['kinesis-table'].ajax.reload();
-                                        } else {
-                                            console.log(response);
-                                        }
                                     }
                                 });
                             })
@@ -183,8 +188,8 @@ var Kinesis = function() {
                 icon: 'warning',
                 text: 'Are you sure you want to delete this Data Stream?',
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
                     return fetch($btn.attr('href')).
