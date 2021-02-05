@@ -67,7 +67,9 @@ class Profile extends \App\Controllers\BaseController
                 'twilio_sid' => $this->request->getPost('twilio_sid'),
                 'twilio_secret' => $this->request->getPost('twilio_secret'),
                 'aws_access' => $this->request->getPost('aws_access'),
-                'aws_secret' => $this->request->getPost('aws_secret')
+                'aws_secret' => $this->request->getPost('aws_secret'),
+                'event_stream_role_arn' => $this->request->getPost('event_stream_role_arn'),
+                'external_id' => $this->request->getPost('external_id')
             ];
 
             if($this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {

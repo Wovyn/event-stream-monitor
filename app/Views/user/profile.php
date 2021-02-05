@@ -146,6 +146,23 @@
                                                 <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" required value="<?php echo isset($auth_keys->aws_secret) ? $auth_keys->aws_secret : '' ?>">
                                             </div>
                                         </fieldset>
+                                        <br>
+                                        <fieldset>
+                                            <legend>Others</legend>
+
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Event Stream Role ARN
+                                                </label>
+                                                <input type="text" placeholder="Event Stream Role ARN" class="form-control" id="event_stream_role_arn" name="event_stream_role_arn" required value="<?php echo isset($auth_keys->event_stream_role_arn) ? $auth_keys->event_stream_role_arn : '' ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    External ID
+                                                </label>
+                                                <input type="text" placeholder="External ID" class="form-control" id="external_id" name="external_id" required value="<?php echo isset($auth_keys->external_id) ? $auth_keys->external_id : '' ?>">
+                                            </div>
+                                        </fieldset>
 
                                         <div class="row">
                                             <div class="col-md-6 col-md-offset-6">
