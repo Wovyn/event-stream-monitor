@@ -169,11 +169,18 @@ var Kinesis = function() {
         });
     }
 
-    var handleEditStream = function() {
-        console.log('init handleEditStream');
-        $(document).on('click', '.edit-btn', function(e) {
+    var handleViewStream = function() {
+        console.log('init handleViewStream');
+        $(document).on('click', '.view-btn', function(e) {
             e.preventDefault();
 
+            let $btn = $(this);
+
+            App.modal({
+                ajax: {
+                    url: $btn.attr('href')
+                }
+            })
         });
     }
 
@@ -288,7 +295,7 @@ var Kinesis = function() {
             App.validationSetDefault();
             handleAddStream();
             handleDeleteStream();
-            handleEditStream();
+            handleViewStream();
         }
     }
 }();

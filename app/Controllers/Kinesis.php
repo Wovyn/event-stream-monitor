@@ -3,7 +3,7 @@ namespace App\Controllers;
 
 class Kinesis extends BaseController
 {
-    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $aws, $awsRegions;
+    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $kinesis, $awsRegions;
 
     public function __construct() {
         parent::__construct();
@@ -17,7 +17,7 @@ class Kinesis extends BaseController
         $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
 
         if($keys) {
-            $this->aws = new \App\Libraries\Aws([
+            $this->kinesis = new \App\Libraries\Kinesis([
                 'access' => $keys->aws_access,
                 'secret' => $keys->aws_secret
             ]);
@@ -77,14 +77,14 @@ class Kinesis extends BaseController
     public function add() {
         if($_POST) {
             // aws createStream
-            $this->aws->kinesisClient($_POST['region']);
-            $result['kinesisCreateStream'] = $this->aws->kinesisCreateStream([
+            $this->kinesis->client($_POST['region']);
+            $result['CreateStream'] = $this->kinesis->CreateStream([
                 'ShardCount' => (int) $_POST['shards'],
                 'StreamName' => str_replace(' ', '_', $_POST['name'])
             ]);
 
             // insert to database
-            if(!$result['kinesisCreateStream']['error']) {
+            if(!$result['CreateStream']['error']) {
                 $result['save'] = $this->kinesisDataStreamsModel->save([
                     'user_id' => $this->data['user']->id,
                     'region' => $_POST['region'],
@@ -95,8 +95,8 @@ class Kinesis extends BaseController
             }
 
             return $this->response->setJSON(json_encode([
-                'error' => $result['kinesisCreateStream']['error'],
-                'message' => ($result['kinesisCreateStream']['error'] ? $result['kinesisCreateStream']['message'] : 'Successfully created Data Stream!'),
+                'error' => $result['CreateStream']['error'],
+                'message' => ($result['CreateStream']['error'] ? $result['CreateStream']['message'] : 'Successfully created Data Stream!'),
                 'result' => $result
             ]));
         }
@@ -108,25 +108,26 @@ class Kinesis extends BaseController
         // hook aws deleteStream API
         $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
 
-        $this->aws->kinesisClient($stream->region);
-        $result['kinesisDeleteStream'] = $this->aws->kinesisDeleteStream([
+        $this->kinesis->client($stream->region);
+        $result['DeleteStream'] = $this->kinesis->DeleteStream([
             'EnforceConsumerDeletion' => true,
             'StreamName' => str_replace(' ', '_', $stream->name)
         ]);
 
-        if(!$result['kinesisDeleteStream']['error']) {
+        if(!$result['DeleteStream']['error']) {
             $result['delete'] = $this->kinesisDataStreamsModel->where('id', $id)->delete();
         }
 
         return $this->response->setJSON(json_encode([
-            'error' => $result['kinesisDeleteStream']['error'],
-            'message' => ($result['kinesisDeleteStream']['error'] ? $result['kinesisDeleteStream']['message'] : 'Successfully deleted Data Stream!'),
+            'error' => $result['DeleteStream']['error'],
+            'message' => ($result['DeleteStream']['error'] ? $result['DeleteStream']['message'] : 'Successfully deleted Data Stream!'),
             'result' => $result
         ]));
+    }
 
-        // return $this->response->setJSON(json_encode([
-        //     'error' => true,
-        //     'message' => 'something went wrong'
-        // ]));
+    public function view($id) {
+        $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
+        $stream->name;
+        return 'view';
     }
 }
