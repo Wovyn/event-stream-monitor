@@ -116,7 +116,7 @@ var Kinesis = function() {
                 }
 
                 summary += '<div class="form-group">' +
-                    '<label class="control-label text-capitalize">' + data.name + ':</label>' +
+                    '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
                     '<p class="form-control-static display-value">' + data.value + '</p>' +
                     '</div>';
             });
@@ -180,9 +180,17 @@ var Kinesis = function() {
                 data = $dtTables['kinesis-table'].row($row).data();
 
             App.modal({
-                title: data.name + ' Stream Summary',
+                title: data.name + ' - Stream Summary',
                 ajax: {
                     url: $btn.attr('href')
+                },
+                btn: {
+                    confirm: {
+                        class: 'hidden'
+                    },
+                    cancel: {
+                        text: 'Close'
+                    }
                 }
             })
         });

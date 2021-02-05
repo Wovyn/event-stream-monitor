@@ -114,7 +114,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="/eventstreams">
                             <i class="clip-stats"></i>
                             <span class="title"> Event Streams </span>
                             <span class="selected"></span>
