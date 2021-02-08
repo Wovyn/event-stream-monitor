@@ -1,7 +1,7 @@
 <?php
 namespace App\Libraries;
 
-require_once APPPATH . '../aws/aws-autoloader.php';
+require_once APPPATH . '../vendor/autoload.php';
 
 use \Aws\Exception\AwsException;
 use \Aws\Ec2\Exception;

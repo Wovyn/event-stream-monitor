@@ -12,7 +12,7 @@
                         <a href="/">Home</a>
                     </li>
                     <li class="active">
-
+                        Kinesis
                     </li>
                     <li class="search-box">
                         <form class="sidebar-search">

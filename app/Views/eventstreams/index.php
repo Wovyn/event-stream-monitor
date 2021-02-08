@@ -12,7 +12,7 @@
                         <a href="/">Home</a>
                     </li>
                     <li class="active">
-
+                        Event Streams
                     </li>
                     <li class="search-box">
                         <form class="sidebar-search">
@@ -27,7 +27,7 @@
                 </ol>
                 <div class="page-header">
                     <div class="toolbar">
-                        <a class="btn btn-primary add-stream-btn" href="/kinesis/add">Create Kinesis Data Stream</a>
+                        <a class="btn btn-primary add-stream-btn" href="/eventstreams/add">Create Sink Instance</a>
                     </div>
 
                     <?php echo view('includes/page_header') ?>
@@ -43,9 +43,10 @@
                 <table class="dt-table table table-striped table-bordered table-hover table-full-width" id="kinesis-table">
                     <thead>
                         <tr>
-                            <th>Region</th>
-                            <th>Name</th>
-                            <th>Shards</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Sink Type</th>
+                            <th>SID</th>
                             <th>Created</th>
                             <th>Last Updated</th>
                             <th>Options</th>
@@ -53,7 +54,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="dataTables_empty" colspan="6">Loading data from database.</td>
+                            <td class="dataTables_empty" colspan="7">Loading data from database.</td>
                         </tr>
                     </tbody>
                 </table>

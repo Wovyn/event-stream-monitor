@@ -4,8 +4,30 @@ var App = function () {
     // datatables
     var dt = {};
     dt.init = function(options) {
-        $dtTables[options.id] = $('#' + options.id).DataTable(options.settings);
+        let $settings = $.extend(true, {
+            autoUpdate: false
+        }, options);
+
+        $dtTables[$settings.id] = $('#' + $settings.id).DataTable($settings.settings);
+
+        if($settings.autoUpdate) {
+            setInterval(() => {
+                if(dt.autoUpdateRule()) {
+                    $dtTables[$settings.id].ajax.reload(null, false);
+                }
+            }, $settings.autoUpdate);
+        }
     };
+
+    dt.autoUpdateRule = function() {
+        let $body = $('body');
+
+        if($body.hasClass('modal-open')) {
+            return false;
+        }
+
+        return true;
+    }
 
     dt.extend = function() {
         if( typeof $.fn.dataTable !== 'undefined' ) {
@@ -30,7 +52,6 @@ var App = function () {
             });
         }
     };
-
 
     dt.custom = {};
 
@@ -123,7 +144,7 @@ var App = function () {
     }
 
     dt.custom.button = function(tableID, options) {
-        var $settings = $.extend(true, {
+        let $settings = $.extend(true, {
             label: 'Button',
             generate: function() {},
             initialize: function() {}
@@ -142,7 +163,7 @@ var App = function () {
 
     // modal
     var modal = function(options) {
-        var $settings = $.extend(true, {
+        let $settings = $.extend(true, {
             title: 'Confirmation Modal',
             body: 'Are you sure you want to continue?',
             footer: true,
@@ -357,7 +378,7 @@ var App = function () {
         dt: dt,
         validationSetDefault: validationSetDefault,
         checkUserAuthKeys: checkUserAuthKeys,
-        timezone: timezone
+        timezone: timezone,
     }
 }();
 

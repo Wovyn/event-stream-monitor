@@ -223,7 +223,21 @@ class Auth extends \IonAuth\Controllers\Auth {
                 }
             }
 
+            asort($regions, SORT_STRING);
             $this->session->set('regions', $regions);
         }
     }
+
+    // public function getSession() {
+    //     $session = $this->session->get();
+
+    //     unset(
+    //         $session['_ci_previous_url'],
+    //         $session['__ci_last_regenerate'],
+    //         $session['old_last_login'],
+    //         $session['last_check']
+    //     );
+
+    //     return $this->response->setJSON(json_encode($session));
+    // }
 }

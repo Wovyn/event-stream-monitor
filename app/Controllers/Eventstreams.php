@@ -27,7 +27,7 @@ class Eventstreams extends BaseController
             '/bower_components/datatables/media/js/dataTables.bootstrap.js',
             '/bower_components/jquery-validation/dist/jquery.validate.min.js',
             '/bower_components/jQuery-Smart-Wizard/js/jquery.smartWizard.js',
-            '/assets/js/pages/kinesis.js'
+            '/assets/js/pages/eventstreams.js'
         );
 
         return view('eventstreams/index', $this->data);

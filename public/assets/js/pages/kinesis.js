@@ -87,8 +87,11 @@ var Kinesis = function() {
             // set prev button hidden on first step
             $('.sw-btn-prev', form).addClass('hidden');
 
-            // init select2 elements
-            $('.select2', form).select2();
+            // init elements
+            $('#region', form).select2({
+                placeholder: 'Select a Region',
+                allowClear: true
+            });
         }
 
         var animateBar = function(step) {
@@ -245,6 +248,7 @@ var Kinesis = function() {
             App.dt.extend();
             App.dt.init({
                 id: 'kinesis-table',
+                autoUpdate: 60000,
                 settings: {
                     processing: true,
                     serverSide: true,
