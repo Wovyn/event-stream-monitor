@@ -1,4 +1,5 @@
-<?php namespace App\Controllers;
+<?php
+namespace App\Controllers;
 
 class Auth extends \IonAuth\Controllers\Auth {
     protected $viewsFolder = 'auth';
@@ -32,6 +33,9 @@ class Auth extends \IonAuth\Controllers\Auth {
             if ($this->ionAuth->login($this->request->getVar('identity'), $this->request->getVar('password'), $remember))
             {
                 //if the login is successful
+                // set Aws Regions
+                $this->setAwsRegions();
+
                 //redirect them back to the home page
                 $this->session->setFlashdata('message', $this->ionAuth->messages());
                 return redirect()->to('/dashboard');
@@ -192,6 +196,34 @@ class Auth extends \IonAuth\Controllers\Auth {
 
         if(!$email->send()) {
             echo 'error';
+        }
+    }
+
+    private function setAwsRegions() {
+        if(!$this->session->has('regions')) {
+            $aws = new \Config\Aws();
+            $authKeysModel = new \App\Models\AuthKeysModel();
+            $keys = $authKeysModel->where('user_id', $this->ionAuth->user()->row()->id)->first();
+
+            if($keys) {
+                $this->ec2 = new \App\Libraries\Ec2([
+                    'access' => $keys->aws_access,
+                    'secret' => $keys->aws_secret
+                ]);
+
+                $this->ec2->client();
+                $result = $this->ec2->DescribeRegions();
+
+                $regions = [];
+                if(!$result['error']) {
+                    foreach ($result['describeRegions']['Regions'] as $region) {
+                        $regions[$region['RegionName']] = $aws->regions[$region['RegionName']];
+                    }
+
+                }
+            }
+
+            $this->session->set('regions', $regions);
         }
     }
 }

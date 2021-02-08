@@ -8,7 +8,7 @@ use \Aws\Kinesis\Exception\KinesisException;
 
 class Kinesis {
 
-    protected $aws, $kinesis;
+    protected $aws, $kinesis, $version = '2013-12-02';
 
     public function __construct($args) {
         $this->aws = new \Aws\Sdk([
@@ -18,7 +18,8 @@ class Kinesis {
     }
 
     public function client($region = null) {
-        $config = [ 'version' => '2013-12-02' ];
+        $config = [ 'version' => $this->version ];
+
         if($region) {
             $config['region'] = $region;
         }
