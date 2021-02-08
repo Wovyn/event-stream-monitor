@@ -3,13 +3,10 @@ namespace App\Controllers;
 
 class Kinesis extends BaseController
 {
-    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $kinesis, $awsRegions;
+    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $kinesis, $regions;
 
     public function __construct() {
         parent::__construct();
-
-        $awsConfig = new \Config\Aws();
-        $this->awsRegions = $awsConfig->regions;
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
@@ -22,6 +19,8 @@ class Kinesis extends BaseController
                 'secret' => $keys->aws_secret
             ]);
         }
+
+        $this->regions = $this->session->get('regions');
     }
 
     public function index()
@@ -61,7 +60,7 @@ class Kinesis extends BaseController
             ->findAll($limit, $offset);
 
         foreach ($rows as $row) {
-            $row->region_name = $this->awsRegions[$row->region];
+            $row->region_name = $this->regions[$row->region];
         }
 
         $total = $this->kinesisDataStreamsModel->countAll();
@@ -101,7 +100,8 @@ class Kinesis extends BaseController
             ]));
         }
 
-        return view('kinesis/wizard_modal');
+        $data['regions'] = $this->regions;
+        return view('kinesis/wizard_modal', $data);
     }
 
     public function delete($id) {

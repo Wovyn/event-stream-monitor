@@ -86,6 +86,9 @@ var Kinesis = function() {
 
             // set prev button hidden on first step
             $('.sw-btn-prev', form).addClass('hidden');
+
+            // init select2 elements
+            $('.select2', form).select2();
         }
 
         var animateBar = function(step) {

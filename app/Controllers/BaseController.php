@@ -50,8 +50,6 @@ class BaseController extends Controller
 		// E.g.:
 		// $this->session = \Config\Services::session();
 
-		$this->session = \Config\Services::session();
-
 		$this->data['css'] = [];
         $this->data['scripts'] = [];
 
@@ -64,6 +62,8 @@ class BaseController extends Controller
 
 	// triggers first before initController
 	public function __construct() {
+		$this->session = \Config\Services::session();
+
 		$this->ionAuth = new \IonAuth\Libraries\IonAuth();
 		$this->data['user'] = $this->ionAuth->user()->row();
 	}
