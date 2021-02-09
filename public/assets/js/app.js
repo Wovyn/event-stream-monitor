@@ -366,6 +366,10 @@ var App = function () {
                     }
                 }
             });
+
+            return false;
+        } else {
+            return true;
         }
     }
 

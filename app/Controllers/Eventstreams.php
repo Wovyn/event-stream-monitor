@@ -4,9 +4,21 @@ namespace App\Controllers;
 class Eventstreams extends BaseController
 {
 
+    protected $authKeysModel, $iam;
+
     public function __construct() {
         parent::__construct();
 
+        $this->authKeysModel = new \App\Models\AuthKeysModel();
+
+        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+
+        if($keys) {
+            $this->iam = new \App\Libraries\Iam([
+                'access' => $keys->aws_access,
+                'secret' => $keys->aws_secret
+            ]);
+        }
     }
 
     public function index() {
@@ -31,6 +43,20 @@ class Eventstreams extends BaseController
         );
 
         return view('eventstreams/index', $this->data);
+    }
+
+    public function add() {
+
+    }
+
+    public function listRoles() {
+        $this->iam->client();
+        echo '<pre>' , var_dump($this->iam->ListRoles()) , '</pre>';
+    }
+
+    public function getUser() {
+        $this->iam->client();
+        echo '<pre>' , var_dump($this->iam->GetUser()) , '</pre>';
     }
 
 }

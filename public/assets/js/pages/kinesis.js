@@ -141,8 +141,7 @@ var Kinesis = function() {
         $('.add-stream-btn').on('click', function(e) {
             e.preventDefault();
 
-            if(!$hasAuthKey) {
-                App.checkUserAuthKeys();
+            if(!App.checkUserAuthKeys()) {
                 return false;
             }
 

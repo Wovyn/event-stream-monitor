@@ -200,6 +200,11 @@ class Auth extends \IonAuth\Controllers\Auth {
     }
 
     private function setAwsRegions() {
+        $authKeysModel = new \App\Models\AuthKeysModel();
+        if(!$authKeysModel->where('user_id', $this->ionAuth->user()->row()->id)->countAllResults()) {
+            return;
+        }
+
         if(!$this->session->has('regions')) {
             $aws = new \Config\Aws();
             $authKeysModel = new \App\Models\AuthKeysModel();
@@ -221,6 +226,9 @@ class Auth extends \IonAuth\Controllers\Auth {
                     }
 
                 }
+            } else {
+                // set to default
+                $regions = $aws->regions;
             }
 
             asort($regions, SORT_STRING);
