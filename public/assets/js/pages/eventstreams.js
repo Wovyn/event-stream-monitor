@@ -1,5 +1,26 @@
 var Eventstreams = function() {
 
+    var handleAddSink = function() {
+        $('.add-sink-btn').on('click', function(e) {
+            e.preventDefault();
+
+            if(!App.checkUserAuthKeys()) {
+                return false;
+            }
+
+            let $btn = $(this);
+
+            App.modal({
+                title: 'Create Sink Instance',
+                ajax: {
+                    url: $btn.attr('href')
+                },
+                // width: '960',
+                others: { backdrop: 'static', keyboard: false }
+            })
+        });
+    }
+
     return {
         init: function() {
             console.log('Eventstreams.init');
@@ -8,15 +29,15 @@ var Eventstreams = function() {
 
             App.dt.extend();
             App.dt.init({
-                id: 'eventstreams-table',
+                id: 'sink-table',
                 autoUpdate: 60000,
                 settings: {
                     processing: true,
                     serverSide: true,
-                    // ajax: {
-                    //     url: '/kinesis/get_dt_listing',
-                    //     type: 'post'
-                    // },
+                    ajax: {
+                        url: '/eventstreams/get_dt_listing',
+                        type: 'post'
+                    },
                     // columns: [
                     //     { name: 'region', data: 'region' },
                     //     { name: 'name', data: 'name' },
@@ -73,6 +94,7 @@ var Eventstreams = function() {
             });
 
             App.validationSetDefault();
+            handleAddSink();
         }
     }
 }();

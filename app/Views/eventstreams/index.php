@@ -27,7 +27,7 @@
                 </ol>
                 <div class="page-header">
                     <div class="toolbar">
-                        <a class="btn btn-primary add-stream-btn" href="/eventstreams/add">Create Sink Instance</a>
+                        <a class="btn btn-primary add-sink-btn" href="/eventstreams/add">Create Sink Instance</a>
                     </div>
 
                     <?php echo view('includes/page_header') ?>
@@ -40,7 +40,7 @@
         <div class="row">
             <div class="col-md-12">
                 <!-- start: DYNAMIC TABLE PANEL -->
-                <table class="dt-table table table-striped table-bordered table-hover table-full-width" id="kinesis-table">
+                <table class="dt-table table table-striped table-bordered table-hover table-full-width" id="sink-table">
                     <thead>
                         <tr>
                             <th>Description</th>

@@ -4,12 +4,13 @@ namespace App\Controllers;
 class Eventstreams extends BaseController
 {
 
-    protected $authKeysModel, $iam;
+    protected $authKeysModel, $eventstreamSinksModel, $iam;
 
     public function __construct() {
         parent::__construct();
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
+        $this->eventstreamSinksModel = new \App\Models\EventstreamSinksModel();
 
         $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
 
@@ -45,18 +46,39 @@ class Eventstreams extends BaseController
         return view('eventstreams/index', $this->data);
     }
 
+    public function get_dt_listing() {
+        $order = $_POST['columns'][$_POST['order'][0]['column']]['name'];
+        $sort = $_POST['order'][0]['dir'];
+        $offset = $_POST['start'];
+        $limit = $_POST['length'];
+        // $search = $_POST['search']['value'];
+
+        $rows = $this->eventstreamSinksModel
+            ->orderBy($order, $sort)
+            ->findAll($limit, $offset);
+
+        $total = $this->eventstreamSinksModel->countAll();
+        $tbl = array(
+            "iTotalRecords"=> $total,
+            "iTotalDisplayRecords"=> $total,
+            "aaData"=> $rows
+        );
+
+        return $this->response->setJSON(json_encode($tbl));
+    }
+
     public function add() {
-
+        return view('eventstreams/add_modal');
     }
 
-    public function listRoles() {
-        $this->iam->client();
-        echo '<pre>' , var_dump($this->iam->ListRoles()) , '</pre>';
-    }
+    // public function listRoles() {
+    //     $this->iam->client();
+    //     echo '<pre>' , var_dump($this->iam->ListRoles()) , '</pre>';
+    // }
 
-    public function getUser() {
-        $this->iam->client();
-        echo '<pre>' , var_dump($this->iam->GetUser()) , '</pre>';
-    }
+    // public function getUser() {
+    //     $this->iam->client();
+    //     echo '<pre>' , var_dump($this->iam->GetUser()) , '</pre>';
+    // }
 
 }
