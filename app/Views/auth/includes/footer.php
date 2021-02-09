@@ -26,6 +26,8 @@
         jQuery(document).ready(function() {
             Main.init();
             Login.init();
+
+            window.localStorage.clear();
         });
     </script>
 

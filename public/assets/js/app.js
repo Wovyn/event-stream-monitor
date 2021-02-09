@@ -1,4 +1,4 @@
-var $dtTables = [], $hasAuthKey = false;
+var $dtTables = [];
 var App = function () {
 
     // datatables
@@ -23,6 +23,10 @@ var App = function () {
         let $body = $('body');
 
         if($body.hasClass('modal-open')) {
+            return false;
+        }
+
+        if($body.hasClass('swal2-shown')) {
             return false;
         }
 
@@ -340,29 +344,30 @@ var App = function () {
     var checkUserAuthKeys = function() {
         let keys;
 
-        $.ajax({
-            type: 'get',
-            url: '/user/profile/auth_keys',
-            dataType: 'json',
-            success: function(response) {
-                if(!response.keys) {
-                    Swal.fire({
-                        text: response.message,
-                        icon: 'warning',
-                        showCloseButton: true
-                    }).then((result) => {
-                        if(result.isConfirmed) {
-                            window.location = '/user/profile';
-                        }
-                    });
-                } else {
-                    $hasAuthKey = true;
+        if(_.isNull(window.localStorage.getItem('HasAuthKeys'))) {
+            console.log('checkUserAuthKeys');
+            $.ajax({
+                type: 'get',
+                url: '/user/profile/auth_keys',
+                dataType: 'json',
+                success: function(response) {
+                    if(!response.keys) {
+                        Swal.fire({
+                            text: response.message,
+                            icon: 'warning',
+                            showCloseButton: true
+                        }).then((result) => {
+                            if(result.isConfirmed) {
+                                window.location = '/user/profile';
+                            }
+                        });
+                    } else {
+                        window.localStorage.setItem('HasAuthKeys', true);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
-
-    var timezone = jstz.determine().name();
 
     return {
         init: function() {
@@ -378,7 +383,7 @@ var App = function () {
         dt: dt,
         validationSetDefault: validationSetDefault,
         checkUserAuthKeys: checkUserAuthKeys,
-        timezone: timezone,
+        timezone: jstz.determine().name()
     }
 }();
 
