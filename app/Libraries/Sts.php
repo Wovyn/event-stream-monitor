@@ -1,11 +1,11 @@
 <?php
 namespace App\Libraries;
 
-use \Aws\Ec2\Exception;
+use \Aws\Sts\Exception\StsException;
 
-class Ec2 extends Aws {
+class Sts extends Aws {
 
-    protected $ec2, $version = '2016-11-15';
+    protected $sts, $version = '2011-06-15';
 
     public function __construct($args) {
         parent::__construct($args);
@@ -14,7 +14,7 @@ class Ec2 extends Aws {
             'version' => $this->version
         ];
 
-        $this->ec2 = $this->aws->createEc2($config);
+        $this->sts = $this->aws->createSts($config);
     }
 
     public function setRegion($region) {
@@ -23,22 +23,18 @@ class Ec2 extends Aws {
             'region' => $region
         ];
 
-        $this->ec2 = $this->aws->createEc2($config);
+        $this->sts = $this->aws->createSts($config);
     }
 
-    public function DescribeRegions($args = []) {
-        if(is_null($this->ec2)) {
-            $this->client();
-        }
-
+    public function GetCallerIdentity() {
         $result['error'] = false;
         try {
-            $result['describeRegions'] = $this->ec2->describeRegions($args);
+            $result['getCallerIdentity'] = $this->sts->getCallerIdentity();
         } catch (AwsException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DescribeRegions: ' . $e->getMessage());
+            log_message('debug', 'GetCallerIdentity: ' . $e->getMessage());
         }
 
         return $result;

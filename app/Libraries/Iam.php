@@ -1,28 +1,27 @@
 <?php
 namespace App\Libraries;
 
-require_once APPPATH . '../vendor/autoload.php';
-
-use \Aws\Exception\AwsException;
 use \Aws\Iam\Exception\IamException;
 
-class Iam {
+class Iam extends Aws {
 
-    protected $aws, $iam, $version = '2010-05-08';
+    protected $iam, $version = '2010-05-08';
 
     public function __construct($args) {
-        $this->aws = new \Aws\Sdk([
-            'region' => 'us-east-2',
-            'credentials' => new \Aws\Credentials\Credentials($args['access'], $args['secret'])
-        ]);
+        parent::__construct($args);
+
+        $config = [
+            'version' => $this->version
+        ];
+
+        $this->iam = $this->aws->createIam($config);
     }
 
-    public function client($region = null) {
-        $config = [ 'version' => $this->version ];
-
-        if($region) {
-            $config['region'] = $region;
-        }
+    public function setRegion($region) {
+        $config = [
+            'version' => $this->version,
+            'region' => $region
+        ];
 
         $this->iam = $this->aws->createIam($config);
     }

@@ -76,7 +76,7 @@ class Kinesis extends BaseController
     public function add() {
         if($_POST) {
             // aws createStream
-            $this->kinesis->client($_POST['region']);
+            $this->kinesis->setRegion($_POST['region']);
             $result['CreateStream'] = $this->kinesis->CreateStream([
                 'ShardCount' => (int) $_POST['shards'],
                 'StreamName' => str_replace(' ', '_', $_POST['name'])
@@ -108,7 +108,7 @@ class Kinesis extends BaseController
         // hook aws deleteStream API
         $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
 
-        $this->kinesis->client($stream->region);
+        $this->kinesis->setRegion($stream->region);
         $result['DeleteStream'] = $this->kinesis->DeleteStream([
             'EnforceConsumerDeletion' => true,
             'StreamName' => str_replace(' ', '_', $stream->name)
@@ -128,7 +128,7 @@ class Kinesis extends BaseController
     public function view($id) {
         $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
 
-        $this->kinesis->client($stream->region);
+        $this->kinesis->setRegion($stream->region);
         $result = $this->kinesis->DescribeStreamSummary([
             'StreamName' => $stream->name
         ]);

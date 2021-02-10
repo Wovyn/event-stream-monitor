@@ -1,28 +1,27 @@
 <?php
 namespace App\Libraries;
 
-require_once APPPATH . '../vendor/autoload.php';
-
-use \Aws\Exception\AwsException;
 use \Aws\Kinesis\Exception\KinesisException;
 
-class Kinesis {
+class Kinesis extends Aws {
 
-    protected $aws, $kinesis, $version = '2013-12-02';
+    protected $kinesis, $version = '2013-12-02';
 
     public function __construct($args) {
-        $this->aws = new \Aws\Sdk([
-            'region' => 'us-east-2',
-            'credentials' => new \Aws\Credentials\Credentials($args['access'], $args['secret'])
-        ]);
+        parent::__construct($args);
+
+        $config = [
+            'version' => $this->version
+        ];
+
+        $this->kinesis = $this->aws->createKinesis($config);
     }
 
-    public function client($region = null) {
-        $config = [ 'version' => $this->version ];
-
-        if($region) {
-            $config['region'] = $region;
-        }
+    public function setRegion($region) {
+        $config = [
+            'version' => $this->version,
+            'region' => $region
+        ];
 
         $this->kinesis = $this->aws->createKinesis($config);
     }
