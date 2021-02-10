@@ -216,7 +216,6 @@ class Auth extends \IonAuth\Controllers\Auth {
                     'secret' => $keys->aws_secret
                 ]);
 
-                $this->ec2->client();
                 $result = $this->ec2->DescribeRegions();
 
                 $regions = [];
