@@ -63,7 +63,7 @@
                     <h3 class="StepTitle">Step 1</h3>
                     <div class="form-group">
                         <label class="control-label" for="region">Region</label>
-                        <select name="region" id="region" class="form-control" required>
+                        <select name="region" id="region" class="form-control form-select2" required data-placeholder="Select a Region">
                             <option></option>
                             <?php foreach ($regions as $key => $value): ?>
                                 <option value="<?php echo $key ?>"><?php echo $value ?></option>

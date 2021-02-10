@@ -15,6 +15,20 @@ var Eventstreams = function() {
                 ajax: {
                     url: $btn.attr('href')
                 },
+                onShown: function(form) {
+                    $('#sink_type', form).on('change', function() {
+                        console.log($(this).val());
+                        if($(this).val() == 'kinesis') {
+                            $('.sink-type .kinesis').show();
+                            $('.sink-type .webhook').hide();
+                        } else {
+                            $('.sink-type .kinesis').hide();
+                            $('.sink-type .webhook').show();
+                        }
+                    });
+
+                    $('.form-select2', form).select2();
+                },
                 // width: '960',
                 others: { backdrop: 'static', keyboard: false }
             })
@@ -30,7 +44,7 @@ var Eventstreams = function() {
             App.dt.extend();
             App.dt.init({
                 id: 'sink-table',
-                autoUpdate: 60000,
+                // autoUpdate: 60000,
                 settings: {
                     processing: true,
                     serverSide: true,

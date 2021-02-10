@@ -88,10 +88,7 @@ var Kinesis = function() {
             $('.sw-btn-prev', form).addClass('hidden');
 
             // init elements
-            $('#region', form).select2({
-                placeholder: 'Select a Region',
-                allowClear: true
-            });
+            $('.form-select2', form).select2();
         }
 
         var animateBar = function(step) {

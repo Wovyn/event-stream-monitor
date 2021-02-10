@@ -4,22 +4,14 @@ namespace App\Controllers;
 class Eventstreams extends BaseController
 {
 
-    protected $authKeysModel, $eventstreamSinksModel, $iam;
+    protected $authKeysModel, $eventstreamSinksModel, $kinesisDataStreamsModel;
 
     public function __construct() {
         parent::__construct();
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->eventstreamSinksModel = new \App\Models\EventstreamSinksModel();
-
-        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
-
-        if($keys) {
-            $this->iam = new \App\Libraries\Iam([
-                'access' => $keys->aws_access,
-                'secret' => $keys->aws_secret
-            ]);
-        }
+        $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
     }
 
     public function index() {
@@ -68,17 +60,8 @@ class Eventstreams extends BaseController
     }
 
     public function add() {
-        return view('eventstreams/add_modal');
+        $data['kinesisDataStreams'] = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
+        return view('eventstreams/add_modal', $data);
     }
-
-    // public function listRoles() {
-    //     $this->iam->client();
-    //     echo '<pre>' , var_dump($this->iam->ListRoles()) , '</pre>';
-    // }
-
-    // public function getUser() {
-    //     $this->iam->client();
-    //     echo '<pre>' , var_dump($this->iam->GetUser()) , '</pre>';
-    // }
 
 }
