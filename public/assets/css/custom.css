@@ -67,5 +67,5 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 
 /* theme fix */
 textarea.form-control { padding: 5px 4px; }
-
+textarea.no-resize { resize: none; }
 .text-bold { font-weight: 700!important; }
