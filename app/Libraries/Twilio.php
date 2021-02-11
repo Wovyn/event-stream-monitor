@@ -27,7 +27,41 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getDetails();
 
-            log_message('debug', 'CreateStream: ' . $e->getDetails());
+            log_message('debug', 'CreateStream: ' . json_encode($e->getDetails()));
+        }
+
+        return $result;
+    }
+
+    public function SinkTest($sid) {
+        $result['error'] = false;
+        try {
+            $result['SinkTest'] = $this->client->events->v1
+                ->sinks($sid)
+                ->sinkTest
+                ->create();
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getDetails();
+
+            log_message('debug', 'SinkTest: ' . json_encode($e->getDetails()));
+        }
+
+        return $result;
+    }
+
+    public function SinkValid($sid, $testID) {
+        $result['error'] = false;
+        try {
+            $result['SinkValid'] = $this->client->events->v1
+                ->sinks($sid)
+                ->sinkValidate
+                ->create($testID);
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e;
+
+            log_message('debug', 'SinkValid: ' . json_encode($e->getDetails()));
         }
 
         return $result;
@@ -43,7 +77,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getDetails();
 
-            log_message('debug', 'DeleteSink: ' . $e->getDetails());
+            log_message('debug', 'DeleteSink: ' . json_encode($e->getDetails()));
         }
 
         return $result;

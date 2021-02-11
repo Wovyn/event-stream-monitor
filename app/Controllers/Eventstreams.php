@@ -122,6 +122,16 @@ class Eventstreams extends BaseController
         return view('eventstreams/add_modal', $data);
     }
 
+    public function SinkTest($sid) {
+        $result = $this->twilio->SinkTest($sid);
+        echo '<pre>' , var_dump($result['SinkTest']->result) , '</pre>';
+    }
+
+    public function SinkValid($sid, $testID) {
+        $result = $this->twilio->SinkValid($sid, $testID);
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
     public function delete($id) {
         // hook DeleteSink API
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
