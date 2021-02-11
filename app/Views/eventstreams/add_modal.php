@@ -33,7 +33,7 @@
     <div class="webhook" style="display: none;">
         <div class="form-group">
             <label class="control-label" for="destination_url">Destination URL</label>
-            <input type="text" class="form-control" id="destination_url" name="destination_url" placeholder="Destination URL" data-rule-nospace required>
+            <input type="text" class="form-control" id="destination_url" name="destination_url" placeholder="Destination URL" required>
         </div>
         <div class="form-group">
             <label class="control-label" for="method">Method</label>

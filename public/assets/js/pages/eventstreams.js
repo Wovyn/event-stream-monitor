@@ -77,6 +77,43 @@ var Eventstreams = function() {
         });
     }
 
+    var handleDeleteSink = function() {
+        console.log('init handleDeleteSink');
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this);
+
+            Swal.fire({
+                icon: 'warning',
+                text: 'Are you sure you want to delete this Sink Instance?',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch($btn.attr('href')).
+                        then(response => {
+                            return response.json();
+                        });
+                }
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        icon: result.value.error !== true ? 'success' : 'error',
+                        text: result.value.message
+                    });
+
+                    if(!result.value.error) {
+                        $dtTables['sink-table'].ajax.reload();
+                    } else {
+                        console.log(result.value);
+                    }
+                }
+            });
+        });
+    }
+
     return {
         init: function() {
             console.log('Eventstreams.init');
@@ -144,6 +181,7 @@ var Eventstreams = function() {
 
             App.validationSetDefault();
             handleAddSink();
+            handleDeleteSink();
         }
     }
 }();

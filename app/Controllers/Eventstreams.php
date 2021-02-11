@@ -85,14 +85,19 @@ class Eventstreams extends BaseController
                     break;
 
                 case 'webhook':
-                    # code...
+                    $sink_config = [
+                        'destination' => $_POST['destination_url'],
+                        'method' => $_POST['method'],
+                        'batch_events' => $_POST['batch_events']
+                    ];
+
                     break;
             }
 
             $result['CreateSink'] = $this->twilio->CreateSink([
                 'description' => $data['description'],
-                'config' => $sink_config,
-                'sink_type' => $data['sink_type']
+                'sink_type' => $data['sink_type'],
+                'config' => $sink_config
             ]);
 
             if(!$result['CreateSink']['error']) {
@@ -117,10 +122,21 @@ class Eventstreams extends BaseController
         return view('eventstreams/add_modal', $data);
     }
 
-    // public function test() {
-    //     $result = $this->twilio->DeleteSink('DG103b2dde221fdbb06e42e88df782bd8b');
+    public function delete($id) {
+        // hook DeleteSink API
+        $sink = $this->eventstreamSinksModel->where('id', $id)->first();
 
-    //     echo '<pre>' , var_dump($result) , '</pre>';
-    // }
+        $result['DeleteSink'] = $result = $this->twilio->DeleteSink($sink->sid);
+
+        if(!$result['DeleteSink']['error']) {
+            $result['delete'] = $this->eventstreamSinksModel->where('id', $id)->delete();
+        }
+
+        return $this->response->setJSON(json_encode([
+            'error' => $result['DeleteSink']['error'],
+            'message' => ($result['DeleteSink']['error'] ? $result['DeleteSink']['message'] : 'Successfully deleted Sink Instance!'),
+            'result' => $result
+        ]));
+    }
 
 }

@@ -4,6 +4,7 @@ namespace App\Libraries;
 require_once APPPATH . '../vendor/autoload.php';
 
 use Twilio\Rest\Client;
+use Twilio\Exceptions\RestException;
 
 class Twilio {
 
@@ -22,11 +23,11 @@ class Twilio {
                     $args['config'],
                     $args['sink_type']
                 );
-        } catch (Exception $e) {
+        } catch (RestException $e) {
             $result['error'] = true;
-            $result['message'] = $e->message();
+            $result['message'] = $e->getDetails();
 
-            log_message('debug', 'CreateStream: ' . $e->getMessage());
+            log_message('debug', 'CreateStream: ' . $e->getDetails());
         }
 
         return $result;
@@ -38,11 +39,11 @@ class Twilio {
             $result['DeletedSink'] = $this->client->events->v1
                 ->sinks($sid)
                 ->delete();
-        } catch (Exception $e) {
+        } catch (RestException $e) {
             $result['error'] = true;
-            $result['message'] = $e->message();
+            $result['message'] = $e->getDetails();
 
-            log_message('debug', 'DeleteSink: ' . $e->getMessage());
+            log_message('debug', 'DeleteSink: ' . $e->getDetails());
         }
 
         return $result;
