@@ -145,11 +145,6 @@
                                                 </label>
                                                 <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" required value="<?php echo isset($auth_keys->aws_secret) ? $auth_keys->aws_secret : '' ?>">
                                             </div>
-                                        </fieldset>
-                                        <br>
-                                        <fieldset>
-                                            <legend>Others</legend>
-
                                             <div class="form-group">
                                                 <label class="control-label">
                                                     Event Stream Role ARN

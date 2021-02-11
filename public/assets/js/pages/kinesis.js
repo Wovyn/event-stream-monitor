@@ -35,7 +35,6 @@ var Kinesis = function() {
                                                 });
 
                                                 if(!response.error) {
-                                                    document.body.style.cursor = 'default';
                                                     appModal.modal('hide');
                                                     $dtTables['kinesis-table'].ajax.reload();
                                                 } else {

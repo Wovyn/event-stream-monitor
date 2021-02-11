@@ -4,7 +4,7 @@ namespace App\Controllers;
 class Eventstreams extends BaseController
 {
 
-    protected $authKeysModel, $eventstreamSinksModel, $kinesisDataStreamsModel;
+    protected $authKeysModel, $eventstreamSinksModel, $kinesisDataStreamsModel, $twilio, $keys;
 
     public function __construct() {
         parent::__construct();
@@ -12,6 +12,12 @@ class Eventstreams extends BaseController
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->eventstreamSinksModel = new \App\Models\EventstreamSinksModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
+
+        $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+        $this->twilio = new \App\Libraries\Twilio(
+            $this->keys->twilio_sid,
+            $this->keys->twilio_secret
+        );
     }
 
     public function index() {
@@ -60,15 +66,61 @@ class Eventstreams extends BaseController
     }
 
     public function add() {
-        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+        if($_POST) {
+            $data = [
+                'user_id' => $this->data['user']->id,
+                'description' => $_POST['description'],
+                'sink_type' => $_POST['sink_type']
+            ];
+
+            switch ($data['sink_type']) {
+                case 'kinesis':
+                    $stream = $this->kinesisDataStreamsModel->where('id', $_POST['kinesis_data_stream'])->first();
+                    $sink_config = [
+                        'arn' => "arn:aws:kinesis:{$stream->region}:{$this->keys->aws_account}:stream/{$stream->name}",
+                        'role_arn' => $this->keys->event_stream_role_arn,
+                        'external_id' => $this->keys->external_id
+                    ];
+
+                    break;
+
+                case 'webhook':
+                    # code...
+                    break;
+            }
+
+            $result['CreateSink'] = $this->twilio->CreateSink([
+                'description' => $data['description'],
+                'config' => $sink_config,
+                'sink_type' => $data['sink_type']
+            ]);
+
+            if(!$result['CreateSink']['error']) {
+                $data['sid'] = $result['CreateSink']['CreatedSink']->sid;
+                $data['status'] = $result['CreateSink']['CreatedSink']->status;
+
+                $result['save'] = $this->eventstreamSinksModel->save($data);
+            }
+
+            return $this->response->setJSON(json_encode([
+                'error' => $result['CreateSink']['error'],
+                'message' => ($result['CreateSink']['error'] ? $result['CreateSink']['message'] : 'Successfully created Sink Instance!'),
+                'result' => $result
+            ]));
+        }
 
         $data['kinesis'] = [
-            'event_stream_role_arn' => $keys->event_stream_role_arn,
-            'external_id' => $keys->external_id
+            'event_stream_role_arn' => $this->keys->event_stream_role_arn,
+            'external_id' => $this->keys->external_id
         ];
-
         $data['kinesisDataStreams'] = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
         return view('eventstreams/add_modal', $data);
     }
+
+    // public function test() {
+    //     $result = $this->twilio->DeleteSink('DG103b2dde221fdbb06e42e88df782bd8b');
+
+    //     echo '<pre>' , var_dump($result) , '</pre>';
+    // }
 
 }
