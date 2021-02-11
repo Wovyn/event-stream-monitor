@@ -60,6 +60,13 @@ class Eventstreams extends BaseController
     }
 
     public function add() {
+        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+
+        $data['kinesis'] = [
+            'event_stream_role_arn' => $keys->event_stream_role_arn,
+            'external_id' => $keys->external_id
+        ];
+
         $data['kinesisDataStreams'] = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
         return view('eventstreams/add_modal', $data);
     }

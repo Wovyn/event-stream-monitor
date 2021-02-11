@@ -21,6 +21,14 @@
                 <?php endforeach; ?>
             </select>
         </div>
+        <div class="form-group">
+            <label class="control-label" for="role_arn">Role ARN</label>
+            <input type="text" class="form-control" id="role_arn" value="<?php echo $kinesis['event_stream_role_arn'] ?>" readonly>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="external_id">External ID</label>
+            <input type="text" class="form-control" id="external_id" value="<?php echo $kinesis['external_id'] ?>" readonly>
+        </div>
     </div>
     <div class="webhook" style="display: none;">
         <div class="form-group">

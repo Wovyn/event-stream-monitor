@@ -69,3 +69,6 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 textarea.form-control { padding: 5px 4px; }
 textarea.no-resize { resize: none; }
 .text-bold { font-weight: 700!important; }
+
+.form-group.has-error .select2-container--default .select2-selection--single { border-color: #a94442; }
+.form-group.has-success .select2-container--default .select2-selection--single { border-color: #3c763d; }

@@ -88,7 +88,12 @@ var Kinesis = function() {
             $('.sw-btn-prev', form).addClass('hidden');
 
             // init elements
-            $('.form-select2', form).select2();
+            $('.form-select2', form).select2()
+                .on('select2:select', function (e) {
+                    if($(this).val()) {
+                        $(this).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
+                    }
+                });;
         }
 
         var animateBar = function(step) {

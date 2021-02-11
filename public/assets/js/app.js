@@ -289,6 +289,8 @@ var App = function () {
                     error.insertAfter($(element).closest('.form-group').children('div').children().last());
                 } else if (element.attr("name") == "dd" || element.attr("name") == "mm" || element.attr("name") == "yyyy") {
                     error.insertAfter($(element).closest('.form-group').children('div'));
+                } else if (element.hasClass('form-select2')) {
+                    error.insertAfter($(element).next());
                 } else {
                     error.insertAfter(element);
                     // for other inputs, just perform default behavior

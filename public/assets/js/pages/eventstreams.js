@@ -27,9 +27,15 @@ var Eventstreams = function() {
                         }
                     });
 
-                    $('.form-select2', form).select2();
+                    $('.form-select2', form).select2()
+                        .on('select2:select', function (e) {
+                            if($(this).val()) {
+                                $(this).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
+                            }
+                        });
                 },
                 // width: '960',
+                validate: true,
                 others: { backdrop: 'static', keyboard: false }
             })
         });
