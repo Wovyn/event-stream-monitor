@@ -68,6 +68,62 @@ class Kinesis extends Aws {
         return $result;
     }
 
+    public function PutRecord($args) {
+        $result['error'] = false;
+        try {
+            $result['putRecord'] = $this->kinesis->putRecord($args);
+        } catch (AwsException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'PutRecord: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    public function GetRecords($args) {
+        $result['error'] = false;
+        try {
+            $result['getRecords'] = $this->kinesis->getRecords($args);
+        } catch (AwsException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'GetRecords: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    public function ListShards($args) {
+        $result['error'] = false;
+        try {
+            $result['listShards'] = $this->kinesis->listShards($args);
+        } catch (AwsException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'ListShards: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    public function GetShardIterator($args) {
+        $result['error'] = false;
+        try {
+            $result['getShardIterator'] = $this->kinesis->getShardIterator($args);
+        } catch (AwsException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'GetShardIterator: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
 }
 
 ?>

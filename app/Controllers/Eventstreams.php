@@ -122,6 +122,56 @@ class Eventstreams extends BaseController
         return view('eventstreams/add_modal', $data);
     }
 
+    public function PutRecord($streamID) {
+        $stream = $this->kinesisDataStreamsModel->where('id', $streamID)->first();
+
+        $kinesis = new \App\Libraries\Kinesis([
+            'access' => $this->keys->aws_access,
+            'secret' => $this->keys->aws_secret
+        ]);
+
+        $result = $kinesis->PutRecord([
+            'StreamName' => $stream->name,
+            'PartitionKey' => 'TestRecord1',
+            'Data' => 'testputrecord'
+        ]);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
+    public function GetShardIterator() {
+        // shardId-000000000000
+        // 49615405225609431198180231502971734251844934958424522754
+    }
+
+    public function GetRecords($streamID) {
+        $stream = $this->kinesisDataStreamsModel->where('id', $streamID)->first();
+
+        $kinesis = new \App\Libraries\Kinesis([
+            'access' => $this->keys->aws_access,
+            'secret' => $this->keys->aws_secret
+        ]);
+
+        // $result['ListShards'] = $kinesis->ListShards([
+        //     'StreamName' => $stream->name
+        // ]);
+        // shardId-000000000000
+
+        $result['GetShardIterator'] = $kinesis->GetShardIterator([
+            'ShardId' => 'shardId-000000000000',
+            'ShardIteratorType' => 'AT_TIMESTAMP', // REQUIRED
+            'Timestamp' => '2021-02-11T07:33:50+00:00',
+            'StreamName' => $stream->name // REQUIRED
+
+        ]);
+
+        $result['GetRecords'] = $kinesis->GetRecords([
+            'ShardIterator' => $result['GetShardIterator']['getShardIterator']['ShardIterator']
+        ]);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
     public function SinkTest($sid) {
         $result = $this->twilio->SinkTest($sid);
         echo '<pre>' , var_dump($result['SinkTest']->result) , '</pre>';
