@@ -77,6 +77,27 @@ var Eventstreams = function() {
         });
     }
 
+    var handleSync = function() {
+        // EventStream.init('stream', {
+        //     url: '/eventstreams/sync',
+        //     events: [
+        //         {
+        //             type: 'message',
+        //             listener: function(data) {
+        //                 console.log(data);
+        //             }
+        //         }
+        //     ],
+        //     timeout: 60000
+        // });
+
+        setInterval(function() {
+            $.get('/eventstreams/sync', function() {
+                $dtTables['sink-table'].ajax.reload();
+            });
+        }, 60000)
+    }
+
     var handleDeleteSink = function() {
         console.log('init handleDeleteSink');
         $(document).on('click', '.delete-btn', function(e) {
@@ -175,6 +196,9 @@ var Eventstreams = function() {
                     fnCreatedRow: function (nRow, aData, iDataIndex) {
                         console.log('fnCreatedRow');
                         $('.tip', nRow).tooltip();
+                    },
+                    fnInitComplete: function(settings, json) {
+                        handleSync();
                     }
                 }
             });

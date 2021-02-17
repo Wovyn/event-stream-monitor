@@ -83,6 +83,22 @@ class Twilio {
         return $result;
     }
 
+    public function FetchSink($sid) {
+        $result['error'] = false;
+        try {
+            $result['Sink'] = $this->client->events->v1
+                ->sinks($sid)
+                ->fetch();
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getDetails();
+
+            log_message('debug', 'FetchSink: ' . json_encode($e->getDetails()));
+        }
+
+        return $result;
+    }
+
 }
 
 ?>

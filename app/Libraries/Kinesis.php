@@ -124,6 +124,31 @@ class Kinesis extends Aws {
         return $result;
     }
 
+    public function GetAllRecords($streamName) {
+        $result['GetAllRecords'] = [];
+
+        $result['ListShards'] = $this->ListShards([
+            'StreamName' => $streamName
+        ]);
+
+        foreach ($result['ListShards']['listShards']['Shards'] as $shard) {
+            $result['GetShardIterator'] = $this->GetShardIterator([
+                'ShardId' => $shard['ShardId'],
+                'ShardIteratorType' => 'TRIM_HORIZON', // REQUIRED
+                'StreamName' => $streamName // REQUIRED
+            ]);
+
+            $result['GetRecords'] = $this->GetRecords([
+                'ShardIterator' => $result['GetShardIterator']['getShardIterator']['ShardIterator']
+            ]);
+
+            foreach ($result['GetRecords']['getRecords']['Records'] as $record) {
+                $result['GetAllRecords'][] = $record;
+            }
+        }
+
+        return $result['GetAllRecords'];
+    }
 }
 
 ?>

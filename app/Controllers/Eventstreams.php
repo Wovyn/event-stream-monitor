@@ -4,7 +4,7 @@ namespace App\Controllers;
 class Eventstreams extends BaseController
 {
 
-    protected $authKeysModel, $eventstreamSinksModel, $kinesisDataStreamsModel, $twilio, $keys;
+    protected $authKeysModel, $eventstreamSinksModel, $kinesisDataStreamsModel, $twilio, $kinesis, $keys;
 
     public function __construct() {
         parent::__construct();
@@ -14,10 +14,17 @@ class Eventstreams extends BaseController
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
-        $this->twilio = new \App\Libraries\Twilio(
-            $this->keys->twilio_sid,
-            $this->keys->twilio_secret
-        );
+        if($this->keys) {
+            $this->twilio = new \App\Libraries\Twilio(
+                $this->keys->twilio_sid,
+                $this->keys->twilio_secret
+            );
+
+            $this->kinesis = new \App\Libraries\Kinesis([
+                'access' => $this->keys->aws_access,
+                'secret' => $this->keys->aws_secret
+            ]);
+        }
     }
 
     public function index() {
@@ -38,6 +45,7 @@ class Eventstreams extends BaseController
             '/bower_components/datatables/media/js/dataTables.bootstrap.js',
             '/bower_components/jquery-validation/dist/jquery.validate.min.js',
             '/bower_components/jQuery-Smart-Wizard/js/jquery.smartWizard.js',
+            '/assets/js/eventstream.js',
             '/assets/js/pages/eventstreams.js'
         );
 
@@ -104,6 +112,8 @@ class Eventstreams extends BaseController
                 $data['sid'] = $result['CreateSink']['CreatedSink']->sid;
                 $data['status'] = $result['CreateSink']['CreatedSink']->status;
 
+                $result['SinkTest'] = $this->twilio->SinkTest($data['sid']);
+
                 $result['save'] = $this->eventstreamSinksModel->save($data);
             }
 
@@ -120,6 +130,44 @@ class Eventstreams extends BaseController
         ];
         $data['kinesisDataStreams'] = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
         return view('eventstreams/add_modal', $data);
+    }
+
+    public function sync() {
+        $es = new \App\Libraries\EventStream();
+
+        $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
+        foreach ($sinks as $sink) {
+            if($sink->status != 'active') {
+                $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+
+                $this->eventstreamSinksModel
+                    ->where('sid', $sink->sid)
+                    ->update(null, [
+                        'status' => $result['FetchSink']['Sink']->status
+                    ]);
+
+                $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
+                $streamName = $arn[1];
+
+                $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
+                foreach ($result['GetAllRecords'] as $record) {
+                    $recordData = json_decode($record['Data'], true);
+
+                    if(!is_null($recordData)) {
+                        if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
+                            $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
+                        }
+                    }
+                }
+
+                $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+                $this->eventstreamSinksModel
+                    ->where('sid', $sink->sid)
+                    ->update(null, [
+                        'status' => $result['FetchSink']['Sink']->status
+                    ]);
+            }
+        }
     }
 
     public function PutRecord($streamID) {
@@ -139,11 +187,6 @@ class Eventstreams extends BaseController
         echo '<pre>' , var_dump($result) , '</pre>';
     }
 
-    public function GetShardIterator() {
-        // shardId-000000000000
-        // 49615405225609431198180231502971734251844934958424522754
-    }
-
     public function GetRecords($streamID) {
         $stream = $this->kinesisDataStreamsModel->where('id', $streamID)->first();
 
@@ -157,10 +200,12 @@ class Eventstreams extends BaseController
         // ]);
         // shardId-000000000000
 
+        // 49615582009147204759665469022264186369072759274666459138
+
         $result['GetShardIterator'] = $kinesis->GetShardIterator([
             'ShardId' => 'shardId-000000000000',
-            'ShardIteratorType' => 'AT_TIMESTAMP', // REQUIRED
-            'Timestamp' => '2021-02-11T07:33:50+00:00',
+            'ShardIteratorType' => 'TRIM_HORIZON', // REQUIRED
+            // 'StartingSequenceNumber' => '49615582009147204759665469022264186369072759274666459138',
             'StreamName' => $stream->name // REQUIRED
 
         ]);
@@ -174,7 +219,7 @@ class Eventstreams extends BaseController
 
     public function SinkTest($sid) {
         $result = $this->twilio->SinkTest($sid);
-        echo '<pre>' , var_dump($result['SinkTest']->result) , '</pre>';
+        echo '<pre>' , var_dump($result['SinkTest']) , '</pre>';
     }
 
     public function SinkValid($sid, $testID) {
