@@ -168,6 +168,14 @@ class Eventstreams extends BaseController
             }
 
         }
+
+        // $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
+
+        // $es = new \App\Libraries\EventStream();
+        // $es->event([
+        //     'data' => json_encode($sinks)
+        // ]);
+        // return $this->response->setJSON(json_encode($sinks));
     }
 
     public function delete($id) {

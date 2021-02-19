@@ -88,7 +88,7 @@ var Eventstreams = function() {
         //             }
         //         }
         //     ],
-        //     timeout: 60000
+        //     // timeout: 60000
         // });
 
         setInterval(function() {
