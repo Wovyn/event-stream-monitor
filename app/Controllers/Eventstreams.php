@@ -112,8 +112,6 @@ class Eventstreams extends BaseController
                 $data['sid'] = $result['CreateSink']['CreatedSink']->sid;
                 $data['status'] = $result['CreateSink']['CreatedSink']->status;
 
-                $result['SinkTest'] = $this->twilio->SinkTest($data['sid']);
-
                 $result['save'] = $this->eventstreamSinksModel->save($data);
             }
 
@@ -133,33 +131,34 @@ class Eventstreams extends BaseController
     }
 
     public function sync() {
-        $es = new \App\Libraries\EventStream();
-
         $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
         foreach ($sinks as $sink) {
-            if($sink->status != 'active') {
-                $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+            switch ($sink->status) {
+                case 'initialized':
+                    $result['SinkTest'] = $this->twilio->SinkTest($sink->sid);
 
-                $this->eventstreamSinksModel
-                    ->where('sid', $sink->sid)
-                    ->update(null, [
-                        'status' => $result['FetchSink']['Sink']->status
-                    ]);
+                    break;
 
-                $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
-                $streamName = $arn[1];
+                case 'validating':
+                    $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+                    $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
+                    $streamName = $arn[1];
 
-                $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
-                foreach ($result['GetAllRecords'] as $record) {
-                    $recordData = json_decode($record['Data'], true);
+                    $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
+                    foreach ($result['GetAllRecords'] as $record) {
+                        $recordData = json_decode($record['Data'], true);
 
-                    if(!is_null($recordData)) {
-                        if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
-                            $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
+                        if(!is_null($recordData)) {
+                            if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
+                                $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
+                            }
                         }
                     }
-                }
 
+                    break;
+            }
+
+            if($sink->status != 'active') {
                 $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
                 $this->eventstreamSinksModel
                     ->where('sid', $sink->sid)
@@ -167,64 +166,8 @@ class Eventstreams extends BaseController
                         'status' => $result['FetchSink']['Sink']->status
                     ]);
             }
+
         }
-    }
-
-    public function PutRecord($streamID) {
-        $stream = $this->kinesisDataStreamsModel->where('id', $streamID)->first();
-
-        $kinesis = new \App\Libraries\Kinesis([
-            'access' => $this->keys->aws_access,
-            'secret' => $this->keys->aws_secret
-        ]);
-
-        $result = $kinesis->PutRecord([
-            'StreamName' => $stream->name,
-            'PartitionKey' => 'TestRecord1',
-            'Data' => 'testputrecord'
-        ]);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
-    public function GetRecords($streamID) {
-        $stream = $this->kinesisDataStreamsModel->where('id', $streamID)->first();
-
-        $kinesis = new \App\Libraries\Kinesis([
-            'access' => $this->keys->aws_access,
-            'secret' => $this->keys->aws_secret
-        ]);
-
-        // $result['ListShards'] = $kinesis->ListShards([
-        //     'StreamName' => $stream->name
-        // ]);
-        // shardId-000000000000
-
-        // 49615582009147204759665469022264186369072759274666459138
-
-        $result['GetShardIterator'] = $kinesis->GetShardIterator([
-            'ShardId' => 'shardId-000000000000',
-            'ShardIteratorType' => 'TRIM_HORIZON', // REQUIRED
-            // 'StartingSequenceNumber' => '49615582009147204759665469022264186369072759274666459138',
-            'StreamName' => $stream->name // REQUIRED
-
-        ]);
-
-        $result['GetRecords'] = $kinesis->GetRecords([
-            'ShardIterator' => $result['GetShardIterator']['getShardIterator']['ShardIterator']
-        ]);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
-    public function SinkTest($sid) {
-        $result = $this->twilio->SinkTest($sid);
-        echo '<pre>' , var_dump($result['SinkTest']) , '</pre>';
-    }
-
-    public function SinkValid($sid, $testID) {
-        $result = $this->twilio->SinkValid($sid, $testID);
-        echo '<pre>' , var_dump($result) , '</pre>';
     }
 
     public function delete($id) {

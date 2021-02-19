@@ -163,6 +163,37 @@ var Eventstreams = function() {
                     ],
                     columnDefs: [
                         {
+                            targets: 1,
+                            render: function(data, type, full, meta) {
+                                let labelClass;
+
+                                // initialized (blue), validating (yellow), active (green) or failed (red)}
+                                switch (data) {
+                                    case 'initialized':
+                                        labelClass = 'label-info';
+
+                                        break;
+
+                                    case 'validating':
+                                        labelClass = 'label-warning';
+
+                                        break;
+
+                                    case 'active':
+                                        labelClass = 'label-success';
+
+                                        break;
+
+                                    case 'failed':
+                                        labelClass = 'label-danger';
+
+                                        break;
+                                }
+
+                                return '<span class="label ' + labelClass + '">' + data + '</span>';
+                            }
+                        },
+                        {
                             targets:[4,5],
                             render: function(data, type, full, meta) {
                                 let utcTime = moment.tz(data, 'UTC'),
