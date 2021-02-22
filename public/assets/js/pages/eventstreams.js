@@ -17,7 +17,7 @@ var Eventstreams = function() {
                 },
                 onShown: function(form) {
                     $('#sink_type', form).on('change', function() {
-                        console.log($(this).val());
+                        // console.log($(this).val());
                         if($(this).val() == 'kinesis') {
                             $('.sink-type .kinesis').show();
                             $('.sink-type .webhook').hide();
@@ -78,24 +78,36 @@ var Eventstreams = function() {
     }
 
     var handleSync = function() {
-        // EventStream.init('stream', {
-        //     url: '/eventstreams/sync',
-        //     events: [
-        //         {
-        //             type: 'message',
-        //             listener: function(data) {
-        //                 console.log(data);
-        //             }
-        //         }
-        //     ],
-        //     // timeout: 60000
-        // });
+        EventStream.init('stream', {
+            url: '/eventstreams/sync',
+            events: [
+                {
+                    type: 'message',
+                    listener: function(data) {
+                        let newData = JSON.parse(data);
 
-        setInterval(function() {
-            $.get('/eventstreams/sync', function() {
-                $dtTables['sink-table'].ajax.reload();
-            });
-        }, 60000)
+                        console.log(newData);
+
+                        _.forEach(newData, function(rowData) {
+                            let row = $('tr#' + rowData.id),
+                                status = $dtTables['sink-table'].cell($('td:eq(1)', row)).data();
+
+                            if(status != rowData.status) {
+                                // trigger table reload
+                                $dtTables['sink-table'].ajax.reload();
+                            }
+                        });
+                    }
+                }
+            ],
+            // timeout: 60000
+        });
+
+        // setInterval(function() {
+        //     $.get('/eventstreams/sync', function() {
+        //         $dtTables['sink-table'].ajax.reload();
+        //     });
+        // }, 60000)
     }
 
     var handleDeleteSink = function() {
@@ -225,7 +237,10 @@ var Eventstreams = function() {
                         }
                     ],
                     fnCreatedRow: function (nRow, aData, iDataIndex) {
-                        console.log('fnCreatedRow');
+                        // add id to row
+                        $(nRow).attr('id', aData.id);
+
+                        // init tooltips in row
                         $('.tip', nRow).tooltip();
                     },
                     fnInitComplete: function(settings, json) {
