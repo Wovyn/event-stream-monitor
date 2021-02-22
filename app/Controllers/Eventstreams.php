@@ -130,6 +130,23 @@ class Eventstreams extends BaseController
         return view('eventstreams/add_modal', $data);
     }
 
+    public function delete($id) {
+        // hook DeleteSink API
+        $sink = $this->eventstreamSinksModel->where('id', $id)->first();
+
+        $result['DeleteSink'] = $result = $this->twilio->DeleteSink($sink->sid);
+
+        if(!$result['DeleteSink']['error']) {
+            $result['delete'] = $this->eventstreamSinksModel->where('id', $id)->delete();
+        }
+
+        return $this->response->setJSON(json_encode([
+            'error' => $result['DeleteSink']['error'],
+            'message' => ($result['DeleteSink']['error'] ? $result['DeleteSink']['message'] : 'Successfully deleted Sink Instance!'),
+            'result' => $result
+        ]));
+    }
+
     public function sync() {
         $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
         foreach ($sinks as $sink) {
@@ -174,25 +191,14 @@ class Eventstreams extends BaseController
         $es->event([
             'data' => json_encode($sinks)
         ]);
-
-        // return $this->response->setJSON(json_encode($sinks));
     }
 
-    public function delete($id) {
-        // hook DeleteSink API
+    public function subscriptions($id) {
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
 
-        $result['DeleteSink'] = $result = $this->twilio->DeleteSink($sink->sid);
+        $result['FetchSinkSubscriptions'] = $this->twilio->FetchSinkSubscriptions($sink->sid);
 
-        if(!$result['DeleteSink']['error']) {
-            $result['delete'] = $this->eventstreamSinksModel->where('id', $id)->delete();
-        }
-
-        return $this->response->setJSON(json_encode([
-            'error' => $result['DeleteSink']['error'],
-            'message' => ($result['DeleteSink']['error'] ? $result['DeleteSink']['message'] : 'Successfully deleted Sink Instance!'),
-            'result' => $result
-        ]));
+        echo '<pre>' , var_dump($result) , '</pre>';
     }
 
 }

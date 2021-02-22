@@ -25,9 +25,9 @@ class Twilio {
                 );
         } catch (RestException $e) {
             $result['error'] = true;
-            $result['message'] = $e->getDetails();
+            $result['message'] = $e->getMessage();
 
-            log_message('debug', 'CreateStream: ' . json_encode($e->getDetails()));
+            log_message('debug', 'CreateStream: ' . json_encode($e->getMessage()));
         }
 
         return $result;
@@ -42,9 +42,9 @@ class Twilio {
                 ->create();
         } catch (RestException $e) {
             $result['error'] = true;
-            $result['message'] = $e->getDetails();
+            $result['message'] = $e->getMessage();
 
-            log_message('debug', 'SinkTest: ' . json_encode($e->getDetails()));
+            log_message('debug', 'SinkTest: ' . json_encode($e->getMessage()));
         }
 
         return $result;
@@ -61,7 +61,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e;
 
-            log_message('debug', 'SinkValid: ' . json_encode($e->getDetails()));
+            log_message('debug', 'SinkValid: ' . json_encode($e->getMessage()));
         }
 
         return $result;
@@ -75,9 +75,9 @@ class Twilio {
                 ->delete();
         } catch (RestException $e) {
             $result['error'] = true;
-            $result['message'] = $e->getDetails();
+            $result['message'] = $e->getMessage();
 
-            log_message('debug', 'DeleteSink: ' . json_encode($e->getDetails()));
+            log_message('debug', 'DeleteSink: ' . json_encode($e->getMessage()));
         }
 
         return $result;
@@ -91,9 +91,25 @@ class Twilio {
                 ->fetch();
         } catch (RestException $e) {
             $result['error'] = true;
-            $result['message'] = $e->getDetails();
+            $result['message'] = $e->getMessage();
 
-            log_message('debug', 'FetchSink: ' . json_encode($e->getDetails()));
+            log_message('debug', 'FetchSink: ' . json_encode($e->getMessage()));
+        }
+
+        return $result;
+    }
+
+    public function FetchSinkSubscriptions($sid) {
+        $result['error'] = false;
+        try {
+            $result['SinkSubscriptions'] = $this->client->events->v1
+                ->subscriptions($sid)
+                ->fetch();
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getMessage();
+
+            log_message('debug', 'FetchSinkSubscriptions: ' . json_encode($e->getMessage()));
         }
 
         return $result;
