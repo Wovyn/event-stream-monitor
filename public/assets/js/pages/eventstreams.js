@@ -86,7 +86,7 @@ var Eventstreams = function() {
                     listener: function(data) {
                         let newData = JSON.parse(data);
 
-                        console.log(newData);
+                        // console.log(newData);
 
                         _.forEach(newData, function(rowData) {
                             let row = $('tr#' + rowData.id),

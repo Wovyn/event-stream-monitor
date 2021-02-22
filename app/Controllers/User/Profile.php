@@ -69,8 +69,22 @@ class Profile extends \App\Controllers\BaseController
                 'aws_access' => $this->request->getPost('aws_access'),
                 'aws_secret' => $this->request->getPost('aws_secret'),
                 'event_stream_role_arn' => $this->request->getPost('event_stream_role_arn'),
-                'external_id' => $this->request->getPost('external_id')
+                'external_id' => $this->request->getPost('external_id'),
+                'aws_account' => null
             ];
+
+            // validate aws keys and get
+            $sts = new \App\Libraries\Sts([
+                'access' => $data['aws_access'],
+                'secret' => $data['aws_secret']
+            ]);
+
+            $identity = $sts->GetCallerIdentity();
+            if(!$identity['error']) {
+                $data['aws_account'] = $identity['getCallerIdentity']['Account'];
+            }
+
+            // echo '<pre>' , var_dump($data) , '</pre>';
 
             if($this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
                 // update
@@ -120,4 +134,5 @@ class Profile extends \App\Controllers\BaseController
 
         return json_encode($result);
     }
+
 }
