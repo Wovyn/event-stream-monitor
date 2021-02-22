@@ -194,11 +194,11 @@ class Eventstreams extends BaseController
     }
 
     public function subscriptions($id) {
-        $sink = $this->eventstreamSinksModel->where('id', $id)->first();
+        // $sink = $this->eventstreamSinksModel->where('id', $id)->first();
 
-        $result['FetchSinkSubscriptions'] = $this->twilio->FetchSinkSubscriptions($sink->sid);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
+        $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
+        $data['eventTypes'] = $result['ReadEventTypes']['EventTypes'];
+        return view('eventstreams/subscription_modal', $data);
     }
 
 }

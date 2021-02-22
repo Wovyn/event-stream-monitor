@@ -115,6 +115,38 @@ class Twilio {
         return $result;
     }
 
+    public function ReadSubscriptions() {
+        $result['error'] = false;
+        try {
+            $result['Subscriptions'] = $this->client->events->v1
+                ->subscriptions
+                ->read([], 20);
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getMessage();
+
+            log_message('debug', 'ReadSubscriptions: ' . json_encode($e->getMessage()));
+        }
+
+        return $result;
+    }
+
+    public function ReadEventTypes() {
+        $result['error'] = false;
+        try {
+            $result['EventTypes'] = $this->client->events->v1
+                ->eventTypes
+                ->read();
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getMessage();
+
+            log_message('debug', 'ReadEventTypes: ' . json_encode($e->getMessage()));
+        }
+
+        return $result;
+    }
+
 }
 
 ?>

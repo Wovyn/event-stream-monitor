@@ -72,3 +72,5 @@ textarea.no-resize { resize: none; }
 
 .form-group.has-error .select2-container--default .select2-selection--single { border-color: #a94442; }
 .form-group.has-success .select2-container--default .select2-selection--single { border-color: #3c763d; }
+
+input[type=checkbox], input[type=radio] { margin-top: 2px; }

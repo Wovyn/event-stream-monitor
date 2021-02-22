@@ -8,9 +8,8 @@ var Eventstreams = function() {
                 return false;
             }
 
-            let $btn = $(this);
-
-            let appModal = App.modal({
+            let $btn = $(this),
+                appModal = App.modal({
                 title: 'Create Sink Instance',
                 ajax: {
                     url: $btn.attr('href')
@@ -74,6 +73,21 @@ var Eventstreams = function() {
                 validate: true,
                 others: { backdrop: 'static', keyboard: false }
             })
+        });
+    }
+
+    var handleSubscriptionSink = function() {
+        console.log('init handleSubscriptionSink');
+        $(document).on('click', '.subscriptions-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this),
+                appModal = App.modal({
+                    title: 'Sink Subscriptions',
+                    ajax: {
+                        url: $btn.attr('href')
+                    }
+                });
         });
     }
 
@@ -229,6 +243,7 @@ var Eventstreams = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
+                                        '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn"><i class="fa fa-sliders"></i></a>' +
                                         '<a href="/eventstreams/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 
@@ -251,6 +266,7 @@ var Eventstreams = function() {
 
             App.validationSetDefault();
             handleAddSink();
+            handleSubscriptionSink();
             handleDeleteSink();
         }
     }
