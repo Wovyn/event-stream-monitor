@@ -170,7 +170,7 @@ var Eventstreams = function() {
             App.dt.extend();
             App.dt.init({
                 id: 'sink-table',
-                // autoUpdate: 60000,
+                autoUpdate: 60000,
                 settings: {
                     processing: true,
                     serverSide: true,

@@ -201,4 +201,15 @@ class Eventstreams extends BaseController
         return view('eventstreams/subscription_modal', $data);
     }
 
+    public function test() {
+        $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
+        $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes']);
+
+        echo '<pre>' , var_dump($result['JSTreeFormat']) , '</pre>';
+
+        // foreach($result['JSTreeFormat'] as $eventType) {
+        //     echo '<pre>' , var_dump($eventType) , '</pre><br><br>';
+        // }
+    }
+
 }

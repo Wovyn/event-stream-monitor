@@ -147,6 +147,34 @@ class Twilio {
         return $result;
     }
 
+    public function JSTreeFormat($eventTypes) {
+        $jstree = [];
+        $parents = [];
+
+        foreach ($eventTypes as $eventType) {
+            // check if schemaId parent is already created
+            if(!in_array($eventType->schemaId, $parents)) {
+                // add schemaId to parents
+                array_push($parents, $eventType->schemaId);
+                // add parent node
+                array_push($jstree, [
+                    'id' => $eventType->schemaId,
+                    'parent' => '#',
+                    'text' => $eventType->schemaId
+                ]);
+            }
+
+            // add child node
+            array_push($jstree, [
+                'id' => $eventType->type,
+                'parent' => $eventType->schemaId,
+                'text' => $eventType->description
+            ]);
+        }
+
+        return $jstree;
+    }
+
 }
 
 ?>
