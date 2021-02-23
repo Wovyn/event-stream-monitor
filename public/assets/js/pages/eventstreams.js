@@ -84,8 +84,18 @@ var Eventstreams = function() {
             let $btn = $(this),
                 appModal = App.modal({
                     title: 'Sink Subscriptions',
-                    ajax: {
-                        url: $btn.attr('href')
+                    body: '<div id="jstree"></div>',
+                    onShow: function(form) {
+                        $('#jstree', form).jstree({
+                            core: {
+                                data: {
+                                    url: $btn.attr('href'),
+                                    data: function(node) {
+                                        console.log(node);
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
         });

@@ -34,7 +34,8 @@ class Eventstreams extends BaseController
         array_push($this->data['css'],
             '/bower_components/select2/dist/css/select2.min.css',
             '/bower_components/datatables/media/css/dataTables.bootstrap.min.css',
-            '/bower_components/jQuery-Smart-Wizard/css/smart_wizard.css'
+            '/bower_components/jQuery-Smart-Wizard/css/smart_wizard.css',
+            '/bower_components/jstree/themes/default/style.min.css'
         );
 
         array_push($this->data['scripts'],
@@ -45,6 +46,7 @@ class Eventstreams extends BaseController
             '/bower_components/datatables/media/js/dataTables.bootstrap.js',
             '/bower_components/jquery-validation/dist/jquery.validate.min.js',
             '/bower_components/jQuery-Smart-Wizard/js/jquery.smartWizard.js',
+            '/bower_components/jstree/jstree.min.js',
             '/assets/js/eventstream.js',
             '/assets/js/pages/eventstreams.js'
         );
@@ -197,8 +199,9 @@ class Eventstreams extends BaseController
         // $sink = $this->eventstreamSinksModel->where('id', $id)->first();
 
         $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
-        $data['eventTypes'] = $result['ReadEventTypes']['EventTypes'];
-        return view('eventstreams/subscription_modal', $data);
+        $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes']);
+
+        return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
 
     public function test() {
