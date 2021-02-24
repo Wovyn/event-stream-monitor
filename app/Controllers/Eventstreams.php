@@ -35,7 +35,7 @@ class Eventstreams extends BaseController
             '/bower_components/select2/dist/css/select2.min.css',
             '/bower_components/datatables/media/css/dataTables.bootstrap.min.css',
             '/bower_components/jQuery-Smart-Wizard/css/smart_wizard.css',
-            '/bower_components/jstree/themes/default/style.min.css'
+            '/bower_components/jstree/themes/default/style.css'
         );
 
         array_push($this->data['scripts'],

@@ -89,12 +89,21 @@ var Eventstreams = function() {
                         $('#jstree', form).jstree({
                             core: {
                                 data: {
-                                    url: $btn.attr('href'),
-                                    data: function(node) {
-                                        console.log(node);
-                                    }
-                                }
-                            }
+                                    url: $btn.attr('href')
+                                },
+                                multiple: true
+                            },
+                            checkbox: {
+                                keep_selected_style: false
+                            },
+                            search: {
+                                show_only_matches: true
+                            },
+                            types: {
+                                default: { icon: 'fa fa-hashtag' },
+                                parent: { icon: 'fa fa-folder' },
+                            },
+                            plugins: ['checkbox', 'types', 'wholerow']
                         });
                     }
                 });

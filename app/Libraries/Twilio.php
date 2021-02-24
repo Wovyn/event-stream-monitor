@@ -160,7 +160,8 @@ class Twilio {
                 array_push($jstree, [
                     'id' => $eventType->schemaId,
                     'parent' => '#',
-                    'text' => $eventType->schemaId
+                    'text' => $eventType->schemaId,
+                    'type' => 'parent'
                 ]);
             }
 
