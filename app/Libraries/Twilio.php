@@ -14,6 +14,7 @@ class Twilio {
         $this->client = new Client($sid, $token);
     }
 
+    // start Sink API
     public function CreateSink($args) {
         $result['error'] = false;
         try {
@@ -98,7 +99,9 @@ class Twilio {
 
         return $result;
     }
+    // End Sink API
 
+    // Start Subscription API
     public function FetchSinkSubscriptions($sid) {
         $result['error'] = false;
         try {
@@ -131,6 +134,33 @@ class Twilio {
         return $result;
     }
 
+    public function CreateSubscription($args) {
+        $result['error'] = false;
+        try {
+            $result['Subscription'] = $this->client->events->v1
+                ->subscriptions
+                ->create(
+                    $args['description'], // description
+                    $args['sid'], // sinkSid
+                    $args['types'] // types
+                );
+                // types format
+                // [
+                //     [ "type-id" => "com.twilio.messaging.message.delivered" ],
+                //     [ "type-id" => "com.twilio.messaging.message.sent" ]
+                // ]
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getMessage();
+
+            log_message('debug', 'CreateSubscription: ' . json_encode($e->getMessage()));
+        }
+
+        return $result;
+    }
+    // End Subscription API
+
+    // Start EventTypes API
     public function ReadEventTypes() {
         $result['error'] = false;
         try {
@@ -146,7 +176,9 @@ class Twilio {
 
         return $result;
     }
+    // End EventTypes API
 
+    // Start Custom
     public function JSTreeFormat($eventTypes) {
         $jstree = [];
         $parents = [];
@@ -178,6 +210,7 @@ class Twilio {
             'jstree' => $jstree
         ];
     }
+    // End Custom
 
 }
 

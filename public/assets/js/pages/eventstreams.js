@@ -112,13 +112,18 @@ var Eventstreams = function() {
                         confirm: {
                             text: 'Update Subscription',
                             onClick: function(form) {
-                                // let selected = _.filter($tree.jstree('get_selected'), data.parents);
+                                let selected = $tree.jstree('get_selected');
+                                _.pullAll(selected, data.parents);
 
-                                console.log($tree.jstree('get_selected'));
-
-                                console.log(data.parents);
-
-                                console.log(_.difference($tree.jstree('get_selected'), data.parents));
+                                $.ajax({
+                                    url: $btn.attr('href'),
+                                    method: 'POST',
+                                    data: { subscriptions: selected },
+                                    dataType: 'json',
+                                    success: function(response) {
+                                        console.log(response);
+                                    }
+                                });
 
                                 return false;
                             }
