@@ -173,7 +173,10 @@ class Twilio {
             ]);
         }
 
-        return $jstree;
+        return [
+            'parents' => $parents,
+            'jstree' => $jstree
+        ];
     }
 
 }

@@ -65,6 +65,13 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 /* select2 */
 .select2-container { z-index: 9999; }
 
+/* jstree */
+.jstree .jstree-container-ul > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before,
+.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before,
+.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before,
+.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before
+{ content: "\f07c"; }
+
 /* theme fix */
 textarea.form-control { padding: 5px 4px; }
 textarea.no-resize { resize: none; }

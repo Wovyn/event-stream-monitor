@@ -81,16 +81,18 @@ var Eventstreams = function() {
         $(document).on('click', '.subscriptions-btn', function(e) {
             e.preventDefault();
 
-            let $btn = $(this),
+            let $btn = $(this), $tree, appModal;
+
+            $.get($btn.attr('href'), function(data) {
                 appModal = App.modal({
                     title: 'Sink Subscriptions',
                     body: '<div id="jstree"></div>',
                     onShow: function(form) {
-                        $('#jstree', form).jstree({
+                        let $subscriptions = $('#subscriptions', form);
+
+                        $tree = $('#jstree', form).jstree({
                             core: {
-                                data: {
-                                    url: $btn.attr('href')
-                                },
+                                data: data.jstree,
                                 multiple: true
                             },
                             checkbox: {
@@ -105,8 +107,25 @@ var Eventstreams = function() {
                             },
                             plugins: ['checkbox', 'types', 'wholerow']
                         });
+                    },
+                    btn: {
+                        confirm: {
+                            text: 'Update Subscription',
+                            onClick: function(form) {
+                                // let selected = _.filter($tree.jstree('get_selected'), data.parents);
+
+                                console.log($tree.jstree('get_selected'));
+
+                                console.log(data.parents);
+
+                                console.log(_.difference($tree.jstree('get_selected'), data.parents));
+
+                                return false;
+                            }
+                        }
                     }
                 });
+            });
         });
     }
 
