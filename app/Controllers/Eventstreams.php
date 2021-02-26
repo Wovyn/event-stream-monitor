@@ -200,32 +200,26 @@ class Eventstreams extends BaseController
         if($_POST) {
             $types = [];
             foreach ($_POST['subscriptions'] as $subscription) {
-                $types[] = ['type-id' => $subscription];
+                $types[] = ['typeId' => $subscription];
             }
-            // $this->twilio->CreateSubscription([
-            //     'description' => '',
-            //     'sid' => $sink->sid,
-            //     'types' =>
-            // ]);
 
-            return $this->response->setJSON(json_encode($types));
+            $result['CreateSubscription'] = $this->twilio->CreateSubscription([
+                'description' => 'Subscriptions for Sink ID: ' . $sink->id,
+                'sid' => $sink->sid,
+                'types' => $types
+            ]);
+
+            return $this->response->setJSON(json_encode([
+                'error' => $result['CreateSubscription']['error'],
+                'message' => ($result['CreateSubscription']['error'] ? $result['CreateSubscription']['message'] : 'Successfully updated Sink Event Subscriptions!'),
+                'result' => $result
+            ]));
         }
 
         $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
         $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes']);
 
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
-    }
-
-    public function test() {
-        $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
-        $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes']);
-
-        echo '<pre>' , var_dump($result['JSTreeFormat']) , '</pre>';
-
-        // foreach($result['JSTreeFormat'] as $eventType) {
-        //     echo '<pre>' , var_dump($eventType) , '</pre><br><br>';
-        // }
     }
 
 }

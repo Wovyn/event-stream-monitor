@@ -115,13 +115,29 @@ var Eventstreams = function() {
                                 let selected = $tree.jstree('get_selected');
                                 _.pullAll(selected, data.parents);
 
-                                $.ajax({
-                                    url: $btn.attr('href'),
-                                    method: 'POST',
-                                    data: { subscriptions: selected },
-                                    dataType: 'json',
-                                    success: function(response) {
-                                        console.log(response);
+                                Swal.fire({
+                                    title: 'Updating Sink Event Subscription',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        $.ajax({
+                                            url: $btn.attr('href'),
+                                            method: 'POST',
+                                            data: { subscriptions: selected },
+                                            dataType: 'json',
+                                            success: function(response) {
+                                                Swal.fire({
+                                                    icon: response.error !== true ? 'success' : 'error',
+                                                    text: response.message
+                                                });
+
+                                                if(!response.error) {
+                                                    appModal.modal('hide');
+                                                } else {
+                                                    console.log(response);
+                                                }
+                                            }
+                                        });
                                     }
                                 });
 
