@@ -196,9 +196,19 @@ class Eventstreams extends BaseController
     }
 
     public function subscriptions($id) {
-        // $sink = $this->eventstreamSinksModel->where('id', $id)->first();
+        $sink = $this->eventstreamSinksModel->where('id', $id)->first();
         if($_POST) {
-            return $this->response->setJSON(json_encode($_POST));
+            $types = [];
+            foreach ($_POST['subscriptions'] as $subscription) {
+                $types[] = ['type-id' => $subscription];
+            }
+            // $this->twilio->CreateSubscription([
+            //     'description' => '',
+            //     'sid' => $sink->sid,
+            //     'types' =>
+            // ]);
+
+            return $this->response->setJSON(json_encode($types));
         }
 
         $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();

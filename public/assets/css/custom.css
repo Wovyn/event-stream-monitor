@@ -66,11 +66,19 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 .select2-container { z-index: 9999; }
 
 /* jstree */
-.jstree .jstree-container-ul > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before,
-.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before,
-.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before,
-.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .fa-folder:before
-{ content: "\f07c"; }
+.jstree .jstree-container-ul > .jstree-node.jstree-open > .jstree-anchor .clip-folder:before,
+.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .clip-folder:before,
+.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .clip-folder:before,
+.jstree .jstree-container-ul > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node > .jstree-children > .jstree-node.jstree-open > .jstree-anchor .clip-folder:before
+{ content: "\e040"; }
+
+.jstree-default .jstree-disabled { color: #000; }
+.jstree-default .jstree-disabled .jstree-checkbox { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.jstree-default .jstree-checkbox { background: transparent; font-family: clip-font; speak: none; font-style: normal; font-weight: 400; font-variant: normal; text-transform: none; line-height: 1; -webkit-font-smoothing: antialiased; }
+.jstree-default .jstree-checkbox:before { content: "\e0fe"; }
+.jstree-default .jstree-checkbox.jstree-undetermined:before { content: "\e100"; }
+.jstree-default .jstree-clicked .jstree-checkbox:before { content: "\e0fd"; }
 
 /* theme fix */
 textarea.form-control { padding: 5px 4px; }

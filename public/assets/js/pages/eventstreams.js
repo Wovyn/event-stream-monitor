@@ -103,7 +103,7 @@ var Eventstreams = function() {
                             },
                             types: {
                                 default: { icon: 'fa fa-hashtag' },
-                                parent: { icon: 'fa fa-folder' },
+                                parent: { icon: 'clip-folder' },
                             },
                             plugins: ['checkbox', 'types', 'wholerow']
                         });
