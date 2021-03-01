@@ -158,6 +158,22 @@ class Twilio {
 
         return $result;
     }
+
+    public function DeleteSubscription($subscription_sid) {
+        $result['error'] = false;
+        try {
+            $result['DeletedSubscription'] = $this->client->events->v1
+                ->subscriptions($subscription_sid)
+                ->delete();
+        } catch (RestException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getMessage();
+
+            log_message('debug', 'DeleteSubscription: ' . json_encode($e->getMessage()));
+        }
+
+        return $result;
+    }
     // End Subscription API
 
     // Start EventTypes API

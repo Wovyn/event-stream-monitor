@@ -209,6 +209,9 @@ class Eventstreams extends BaseController
                 'types' => $types
             ]);
 
+            // TODO: insert subscription data to DB
+            // echo '<pre>' , var_dump($result['CreateSubscription']) , '</pre>';
+
             return $this->response->setJSON(json_encode([
                 'error' => $result['CreateSubscription']['error'],
                 'message' => ($result['CreateSubscription']['error'] ? $result['CreateSubscription']['message'] : 'Successfully updated Sink Event Subscriptions!'),
@@ -222,4 +225,18 @@ class Eventstreams extends BaseController
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
 
+    public function ReadSubscriptions() {
+        $result = $this->twilio->ReadSubscriptions();
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
+    public function FetchSinkSubscriptions($subscription_sid) {
+        $result = $this->twilio->FetchSinkSubscriptions($subscription_sid);
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
+    public function DeleteSubscription($subscription_sid) {
+        $result = $this->twilio->DeleteSubscription($subscription_sid);
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
 }
