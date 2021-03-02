@@ -47,7 +47,8 @@ class Filters extends BaseConfig
 			'before' => [
 				'dashboard', 'dashboard/*',
 				'kinesis', 'kinesis/*',
-				'user', 'user/*'
+				'user', 'user/*',
+				'eventstreams', 'eventstreams/*'
 			]
 		]
 	];
