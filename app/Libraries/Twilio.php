@@ -195,7 +195,7 @@ class Twilio {
     // End EventTypes API
 
     // Start Custom
-    public function JSTreeFormat($eventTypes) {
+    public function JSTreeFormat($eventTypes, $subscriptions = []) {
         $jstree = [];
         $parents = [];
 
@@ -217,7 +217,10 @@ class Twilio {
             array_push($jstree, [
                 'id' => $eventType->type,
                 'parent' => $eventType->schemaId,
-                'text' => $eventType->description
+                'text' => $eventType->description,
+                'state' => [
+                    'selected' => (in_array($eventType->type, $subscriptions) ? true : false)
+                ]
             ]);
         }
 

@@ -204,6 +204,7 @@ class Eventstreams extends BaseController
 
     public function subscriptions($id) {
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
+
         if($_POST) {
             $types = [];
             foreach ($_POST['subscriptions'] as $subscription) {
@@ -216,8 +217,7 @@ class Eventstreams extends BaseController
                 'types' => $types
             ]);
 
-            // TODO: insert subscription data to DB
-            // echo '<pre>' , var_dump($result['CreateSubscription']->sid) , '</pre>';
+            // save sink id, created subscription sid and event types subscribed
             $result['save'] = $this->sinkSubscriptionsModel->save([
                 'sink_id' => $sink->id,
                 'subscription_sid' => $result['CreateSubscription']['Subscription']->sid,
@@ -231,8 +231,10 @@ class Eventstreams extends BaseController
             ]));
         }
 
+        $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
+        $subscriptions = $sink_subscription ? json_decode($sink_subscription->subscriptions) : [];
         $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
-        $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes']);
+        $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes'], $subscriptions);
 
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
