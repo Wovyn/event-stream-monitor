@@ -4,7 +4,13 @@ namespace App\Controllers;
 class Eventstreams extends BaseController
 {
 
-    protected $authKeysModel, $eventstreamSinksModel, $kinesisDataStreamsModel, $twilio, $kinesis, $keys;
+    protected $authKeysModel,
+        $eventstreamSinksModel,
+        $kinesisDataStreamsModel,
+        $sinkSubscriptionsModel,
+        $twilio,
+        $kinesis,
+        $keys;
 
     public function __construct() {
         parent::__construct();
@@ -12,6 +18,7 @@ class Eventstreams extends BaseController
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->eventstreamSinksModel = new \App\Models\EventstreamSinksModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
+        $this->sinkSubscriptionsModel = new \App\Models\SinkSubscriptionsModel();
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
@@ -210,7 +217,12 @@ class Eventstreams extends BaseController
             ]);
 
             // TODO: insert subscription data to DB
-            // echo '<pre>' , var_dump($result['CreateSubscription']) , '</pre>';
+            // echo '<pre>' , var_dump($result['CreateSubscription']->sid) , '</pre>';
+            $result['save'] = $this->sinkSubscriptionsModel->save([
+                'sink_id' => $sink->id,
+                'subscription_sid' => $result['CreateSubscription']['Subscription']->sid,
+                'subscriptions' => json_encode($_POST['subscriptions'])
+            ]);
 
             return $this->response->setJSON(json_encode([
                 'error' => $result['CreateSubscription']['error'],
