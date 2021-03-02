@@ -204,39 +204,74 @@ class Eventstreams extends BaseController
 
     public function subscriptions($id) {
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
-
-        if($_POST) {
-            $types = [];
-            foreach ($_POST['subscriptions'] as $subscription) {
-                $types[] = ['typeId' => $subscription];
-            }
-
-            $result['CreateSubscription'] = $this->twilio->CreateSubscription([
-                'description' => 'Subscriptions for Sink ID: ' . $sink->id,
-                'sid' => $sink->sid,
-                'types' => $types
-            ]);
-
-            // save sink id, created subscription sid and event types subscribed
-            $result['save'] = $this->sinkSubscriptionsModel->save([
-                'sink_id' => $sink->id,
-                'subscription_sid' => $result['CreateSubscription']['Subscription']->sid,
-                'subscriptions' => json_encode($_POST['subscriptions'])
-            ]);
-
-            return $this->response->setJSON(json_encode([
-                'error' => $result['CreateSubscription']['error'],
-                'message' => ($result['CreateSubscription']['error'] ? $result['CreateSubscription']['message'] : 'Successfully updated Sink Event Subscriptions!'),
-                'result' => $result
-            ]));
-        }
-
         $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
         $subscriptions = $sink_subscription ? json_decode($sink_subscription->subscriptions) : [];
+        $create = true;
+
+        if($_POST) {
+            // check if subscription exists
+            if($sink_subscription) {
+                // check if subscriptions has been update with new event types
+                if(count(array_diff($_POST['subscriptions'], $subscriptions))) {
+                    // delete current subscription
+                    $this->twilio->DeleteSubscription($sink_subscription->subscription_sid);
+                } else {
+                    $create = false;
+                }
+            }
+
+            if($create) {
+                // create subscription
+                $types = [];
+                foreach ($_POST['subscriptions'] as $subscription) {
+                    $types[] = ['typeId' => $subscription];
+                }
+
+                $result['CreateSubscription'] = $this->twilio->CreateSubscription([
+                    'description' => 'Subscriptions for Sink ID: ' . $sink->id,
+                    'sid' => $sink->sid,
+                    'types' => $types
+                ]);
+
+                if($sink_subscription) {
+                    // update current sink_subscription
+                    $result['update'] = $this->sinkSubscriptionsModel
+                        ->update($sink_subscription->id, [
+                            'subscription_sid' => $result['CreateSubscription']['Subscription']->sid,
+                            'subscriptions' => json_encode($_POST['subscriptions'])
+                        ]);
+                } else {
+                    // create new sink_subscription
+                    // save sink id, created subscription sid and event types subscribed
+                    $result['save'] = $this->sinkSubscriptionsModel->save([
+                        'sink_id' => $sink->id,
+                        'subscription_sid' => $result['CreateSubscription']['Subscription']->sid,
+                        'subscriptions' => json_encode($_POST['subscriptions'])
+                    ]);
+                }
+
+                return $this->response->setJSON(json_encode([
+                    'error' => $result['CreateSubscription']['error'],
+                    'message' => ($result['CreateSubscription']['error'] ? $result['CreateSubscription']['message'] : 'Successfully updated Sink Event Subscriptions!'),
+                    'result' => $result
+                ]));
+            } else {
+                return $this->response->setJSON(json_encode([
+                    'error' => false,
+                    'message' => false
+                ]));
+            }
+        }
+
         $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
         $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes'], $subscriptions);
 
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
+    }
+
+    public function GetSinkSubscription($id) {
+        $result = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
+        echo '<pre>' , var_dump($result) , '</pre>';
     }
 
     public function ReadSubscriptions() {

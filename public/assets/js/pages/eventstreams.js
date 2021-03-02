@@ -126,10 +126,14 @@ var Eventstreams = function() {
                                             data: { subscriptions: selected },
                                             dataType: 'json',
                                             success: function(response) {
-                                                Swal.fire({
-                                                    icon: response.error !== true ? 'success' : 'error',
-                                                    text: response.message
-                                                });
+                                                if(response.message !== false) {
+                                                    Swal.fire({
+                                                        icon: response.error !== true ? 'success' : 'error',
+                                                        text: response.message
+                                                    });
+                                                } else {
+                                                    Swal.close();
+                                                }
 
                                                 if(!response.error) {
                                                     appModal.modal('hide');
