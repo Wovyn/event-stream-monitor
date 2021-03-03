@@ -208,48 +208,19 @@ class Eventstreams extends BaseController
         ]);
     }
 
-    public function syncTest() {
+    public function test() {
         $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
         foreach ($sinks as $sink) {
             echo 'sink: ' . $sink->id . '<br>';
-            switch ($sink->status) {
-                case 'initialized':
-                    $result['SinkTest'] = $this->twilio->SinkTest($sink->sid);
 
-                    break;
+            $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+            $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
+            $streamName = $arn[1];
 
-                case 'validating':
-                    $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-                    $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
-                    $streamName = $arn[1];
+            $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
 
-                    $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
-
-                    echo 'Records from ' . $streamName . ' <br>';
-                    echo '<pre>' , var_dump($result['GetAllRecords']) , '</pre>';
-
-                    // foreach ($result['GetAllRecords'] as $record) {
-                    //     $recordData = json_decode($record['Data'], true);
-
-                    //     if(!is_null($recordData)) {
-                    //         if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
-                    //             $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
-                    //         }
-                    //     }
-                    // }
-
-                    break;
-            }
-
-            if($sink->status != 'active') {
-                $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-                $this->eventstreamSinksModel
-                    ->where('sid', $sink->sid)
-                    ->update(null, [
-                        'status' => $result['FetchSink']['Sink']->status
-                    ]);
-            }
-
+            echo 'Records from ' . $streamName . ' <br>';
+            echo '<pre>' , var_dump($result['GetAllRecords']) , '</pre>';
         }
     }
 
@@ -268,7 +239,8 @@ class Eventstreams extends BaseController
             // check if subscription exists
             if($sink_subscription) {
                 // check if subscriptions has been update with new event types
-                if(count(array_diff($_POST['subscriptions'], $subscriptions))) {
+                $diff_count = count(array_diff($_POST['subscriptions'], $subscriptions)) + count(array_diff($subscriptions, $_POST['subscriptions']));
+                if($diff_count) {
                     // delete current subscription
                     $this->twilio->DeleteSubscription($sink_subscription->subscription_sid);
                 } else {
