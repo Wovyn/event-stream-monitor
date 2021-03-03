@@ -140,13 +140,19 @@ class Eventstreams extends BaseController
     }
 
     public function delete($id) {
+        // check if sink has subscription
+        $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
+        if($sink_subscription) {
+            $result['DeleteSubscription'] = $this->twilio->DeleteSubscription($sink_subscription->subscription_sid);
+            $result['SubscriptionDelete'] = $this->sinkSubscriptionsModel->where('sink_id', $id)->delete();
+        }
+
         // hook DeleteSink API
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
-
         $result['DeleteSink'] = $result = $this->twilio->DeleteSink($sink->sid);
 
         if(!$result['DeleteSink']['error']) {
-            $result['delete'] = $this->eventstreamSinksModel->where('id', $id)->delete();
+            $result['SinkDelete'] = $this->eventstreamSinksModel->where('id', $id)->delete();
         }
 
         return $this->response->setJSON(json_encode([
@@ -200,6 +206,56 @@ class Eventstreams extends BaseController
         $es->event([
             'data' => json_encode($sinks)
         ]);
+    }
+
+    public function syncTest() {
+        $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
+        foreach ($sinks as $sink) {
+            echo 'sink: ' . $sink->id . '<br>';
+            switch ($sink->status) {
+                case 'initialized':
+                    $result['SinkTest'] = $this->twilio->SinkTest($sink->sid);
+
+                    break;
+
+                case 'validating':
+                    $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+                    $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
+                    $streamName = $arn[1];
+
+                    $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
+
+                    echo 'Records from ' . $streamName . ' <br>';
+                    echo '<pre>' , var_dump($result['GetAllRecords']) , '</pre>';
+
+                    // foreach ($result['GetAllRecords'] as $record) {
+                    //     $recordData = json_decode($record['Data'], true);
+
+                    //     if(!is_null($recordData)) {
+                    //         if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
+                    //             $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
+                    //         }
+                    //     }
+                    // }
+
+                    break;
+            }
+
+            if($sink->status != 'active') {
+                $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+                $this->eventstreamSinksModel
+                    ->where('sid', $sink->sid)
+                    ->update(null, [
+                        'status' => $result['FetchSink']['Sink']->status
+                    ]);
+            }
+
+        }
+    }
+
+    public function SinkTest($sid) {
+        $result = $this->twilio->SinkTest($sid);
+        echo '<pre>' , var_dump($result) , '</pre>';
     }
 
     public function subscriptions($id) {
@@ -269,23 +325,23 @@ class Eventstreams extends BaseController
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
 
-    public function GetSinkSubscription($id) {
-        $result = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
+    // public function GetSinkSubscription($id) {
+    //     $result = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
+    //     echo '<pre>' , var_dump($result) , '</pre>';
+    // }
 
-    public function ReadSubscriptions() {
-        $result = $this->twilio->ReadSubscriptions();
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
+    // public function ReadSubscriptions() {
+    //     $result = $this->twilio->ReadSubscriptions();
+    //     echo '<pre>' , var_dump($result) , '</pre>';
+    // }
 
-    public function FetchSinkSubscriptions($subscription_sid) {
-        $result = $this->twilio->FetchSinkSubscriptions($subscription_sid);
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
+    // public function FetchSinkSubscriptions($subscription_sid) {
+    //     $result = $this->twilio->FetchSinkSubscriptions($subscription_sid);
+    //     echo '<pre>' , var_dump($result) , '</pre>';
+    // }
 
-    public function DeleteSubscription($subscription_sid) {
-        $result = $this->twilio->DeleteSubscription($subscription_sid);
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
+    // public function DeleteSubscription($subscription_sid) {
+    //     $result = $this->twilio->DeleteSubscription($subscription_sid);
+    //     echo '<pre>' , var_dump($result) , '</pre>';
+    // }
 }
