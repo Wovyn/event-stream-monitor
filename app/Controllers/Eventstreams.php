@@ -105,7 +105,7 @@ class Eventstreams extends BaseController
                     $sink_config = [
                         'destination' => $_POST['destination_url'],
                         'method' => $_POST['method'],
-                        'batch_events' => $_POST['batch_events']
+                        'batch_events' => (bool) $_POST['batch_events']
                     ];
 
                     break;
@@ -208,27 +208,6 @@ class Eventstreams extends BaseController
         ]);
     }
 
-    public function test() {
-        $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
-        foreach ($sinks as $sink) {
-            echo 'sink: ' . $sink->id . '<br>';
-
-            $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-            $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
-            $streamName = $arn[1];
-
-            $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
-
-            echo 'Records from ' . $streamName . ' <br>';
-            echo '<pre>' , var_dump($result['GetAllRecords']) , '</pre>';
-        }
-    }
-
-    public function SinkTest($sid) {
-        $result = $this->twilio->SinkTest($sid);
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
     public function subscriptions($id) {
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
         $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
@@ -297,23 +276,27 @@ class Eventstreams extends BaseController
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
 
-    // public function GetSinkSubscription($id) {
-    //     $result = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
-    //     echo '<pre>' , var_dump($result) , '</pre>';
-    // }
+    public function test() {
+        // {
+        //     "description": "<Customers chosen sink name>",
+        //     "sink_type":"webhook",
+        //     "sink_configuration": {
+        //         "destination": "http://example.org/webhook",
+        //         "method": "<POST|GET>",
+        //         "batch_events": <true|false>
+        //      }
+        // }
 
-    // public function ReadSubscriptions() {
-    //     $result = $this->twilio->ReadSubscriptions();
-    //     echo '<pre>' , var_dump($result) , '</pre>';
-    // }
+        $result = $this->twilio->DeleteSink([
+            'description' => 'sample webhook',
+            'sink_type' => 'webhook',
+            'config' => [
+                'destination' => 'http://example.org/webhook',
+                'method' => 'POST',
+                'batch_events' => false
+            ]
+        ]);
 
-    // public function FetchSinkSubscriptions($subscription_sid) {
-    //     $result = $this->twilio->FetchSinkSubscriptions($subscription_sid);
-    //     echo '<pre>' , var_dump($result) , '</pre>';
-    // }
-
-    // public function DeleteSubscription($subscription_sid) {
-    //     $result = $this->twilio->DeleteSubscription($subscription_sid);
-    //     echo '<pre>' , var_dump($result) , '</pre>';
-    // }
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
 }
