@@ -2,7 +2,7 @@
 
 use CodeIgniter\Database\Migration;
 
-class AlterAuthKeysTable extends Migration
+class AlterAuthKeysTable02 extends Migration
 {
     public function up()
     {

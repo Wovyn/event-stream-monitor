@@ -2,7 +2,7 @@
 
 use CodeIgniter\Database\Migration;
 
-class AlterKinesisTable extends Migration
+class AlterKinesisTable01 extends Migration
 {
 	public function up()
 	{
