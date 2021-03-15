@@ -33,9 +33,6 @@ class Auth extends \IonAuth\Controllers\Auth {
             if ($this->ionAuth->login($this->request->getVar('identity'), $this->request->getVar('password'), $remember))
             {
                 //if the login is successful
-                // set Aws Regions
-                $this->setAwsRegions();
-
                 //redirect them back to the home page
                 $this->session->setFlashdata('message', $this->ionAuth->messages());
                 return redirect()->to('/dashboard');
@@ -199,41 +196,41 @@ class Auth extends \IonAuth\Controllers\Auth {
         }
     }
 
-    private function setAwsRegions() {
-        $authKeysModel = new \App\Models\AuthKeysModel();
-        if(!$authKeysModel->where('user_id', $this->ionAuth->user()->row()->id)->countAllResults()) {
-            return;
-        }
+    // private function setAwsRegions() {
+    //     $authKeysModel = new \App\Models\AuthKeysModel();
+    //     if(!$authKeysModel->where('user_id', $this->ionAuth->user()->row()->id)->countAllResults()) {
+    //         return;
+    //     }
 
-        if(!$this->session->has('regions')) {
-            $aws = new \Config\Aws();
-            $authKeysModel = new \App\Models\AuthKeysModel();
-            $keys = $authKeysModel->where('user_id', $this->ionAuth->user()->row()->id)->first();
+    //     if(!$this->session->has('regions')) {
+    //         $aws = new \Config\Aws();
+    //         $authKeysModel = new \App\Models\AuthKeysModel();
+    //         $keys = $authKeysModel->where('user_id', $this->ionAuth->user()->row()->id)->first();
 
-            if($keys) {
-                $this->ec2 = new \App\Libraries\Ec2([
-                    'access' => $keys->aws_access,
-                    'secret' => $keys->aws_secret
-                ]);
+    //         if($keys) {
+    //             $this->ec2 = new \App\Libraries\Ec2([
+    //                 'access' => $keys->aws_access,
+    //                 'secret' => $keys->aws_secret
+    //             ]);
 
-                $result = $this->ec2->DescribeRegions();
+    //             $result = $this->ec2->DescribeRegions();
 
-                $regions = [];
-                if(!$result['error']) {
-                    foreach ($result['describeRegions']['Regions'] as $region) {
-                        $regions[$region['RegionName']] = $aws->regions[$region['RegionName']];
-                    }
+    //             $regions = [];
+    //             if(!$result['error']) {
+    //                 foreach ($result['describeRegions']['Regions'] as $region) {
+    //                     $regions[$region['RegionName']] = $aws->regions[$region['RegionName']];
+    //                 }
 
-                }
-            } else {
-                // set to default
-                $regions = $aws->regions;
-            }
+    //             }
+    //         } else {
+    //             // set to default
+    //             $regions = $aws->regions;
+    //         }
 
-            asort($regions, SORT_STRING);
-            $this->session->set('regions', $regions);
-        }
-    }
+    //         asort($regions, SORT_STRING);
+    //         $this->session->set('regions', $regions);
+    //     }
+    // }
 
     // public function getSession() {
     //     $session = $this->session->get();

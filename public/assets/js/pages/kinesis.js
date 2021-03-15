@@ -257,7 +257,7 @@ var Kinesis = function() {
                         type: 'post'
                     },
                     columns: [
-                        { name: 'region', data: 'region' },
+                        { name: 'region', data: 'region_name' },
                         { name: 'name', data: 'name' },
                         { name: 'shards', data: 'shards' },
                         { name: 'created_at', data: 'created_at' },
@@ -268,7 +268,7 @@ var Kinesis = function() {
                         {
                             targets: 0,
                             render: function(data, type, full, meta) {
-                                return full.region_name + ' | ' + data;
+                                return '<span data-html="true" title="' + full.region + '" class="tip">' + data + '</span>';
                             }
                         },
                         {

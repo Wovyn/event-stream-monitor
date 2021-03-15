@@ -3,7 +3,7 @@ namespace App\Controllers;
 
 class Kinesis extends BaseController
 {
-    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $kinesis, $regions;
+    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $kinesis, $awsconfig;
 
     public function __construct() {
         parent::__construct();
@@ -20,7 +20,7 @@ class Kinesis extends BaseController
             ]);
         }
 
-        $this->regions = $this->session->get('regions');
+        $this->awsconfig = new \Config\Aws();
     }
 
     public function index()
@@ -60,7 +60,7 @@ class Kinesis extends BaseController
             ->findAll($limit, $offset);
 
         foreach ($rows as $row) {
-            $row->region_name = $this->regions[$row->region];
+            $row->region_name = $this->awsconfig->regions[$row->region];
         }
 
         $total = $this->kinesisDataStreamsModel->countAll();
@@ -100,8 +100,38 @@ class Kinesis extends BaseController
             ]));
         }
 
-        $data['regions'] = $this->regions;
+        $data['regions'] = $this->GetAwsRegions();
         return view('kinesis/wizard_modal', $data);
+    }
+
+    private function GetAwsRegions() {
+        if(!$this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
+            return;
+        }
+
+        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+
+        if($keys) {
+            $this->ec2 = new \App\Libraries\Ec2([
+                'access' => $keys->aws_access,
+                'secret' => $keys->aws_secret
+            ]);
+
+            $result = $this->ec2->DescribeRegions();
+
+            $regions = [];
+            if(!$result['error']) {
+                foreach ($result['describeRegions']['Regions'] as $region) {
+                    $regions[$region['RegionName']] = $this->awsconfig->regions[$region['RegionName']];
+                }
+
+            }
+        } else {
+            // set to default
+            $regions = $this->awsconfig->regions;
+        }
+
+        return $regions; // asort($regions, SORT_STRING);
     }
 
     public function delete($id) {
