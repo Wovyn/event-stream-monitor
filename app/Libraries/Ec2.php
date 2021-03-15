@@ -1,7 +1,7 @@
 <?php
 namespace App\Libraries;
 
-use \Aws\Ec2\Exception;
+use \Aws\Ec2\Exception\Ec2Exception;
 
 class Ec2 extends Aws {
 
@@ -27,10 +27,6 @@ class Ec2 extends Aws {
     }
 
     public function DescribeRegions($args = []) {
-        if(is_null($this->ec2)) {
-            $this->client();
-        }
-
         $result['error'] = false;
         try {
             $result['describeRegions'] = $this->ec2->describeRegions($args);

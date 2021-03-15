@@ -3,7 +3,12 @@ namespace App\Controllers;
 
 class Kinesis extends BaseController
 {
-    protected $authKeysModel, $kinesisDataStreamsModel, $ionAuth, $kinesis, $awsconfig;
+    protected $authKeysModel,
+        $kinesisDataStreamsModel,
+        $ionAuth,
+        $kinesis,
+        $awsconfig,
+        $keys;
 
     public function __construct() {
         parent::__construct();
@@ -11,12 +16,16 @@ class Kinesis extends BaseController
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
 
-        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+        $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
+        if($this->keys) {
+            $this->twilio = new \App\Libraries\Twilio(
+                $this->keys->twilio_sid,
+                $this->keys->twilio_secret
+            );
 
-        if($keys) {
             $this->kinesis = new \App\Libraries\Kinesis([
-                'access' => $keys->aws_access,
-                'secret' => $keys->aws_secret
+                'access' => $this->keys->aws_access,
+                'secret' => $this->keys->aws_secret
             ]);
         }
 
@@ -104,34 +113,28 @@ class Kinesis extends BaseController
         return view('kinesis/wizard_modal', $data);
     }
 
-    private function GetAwsRegions() {
-        if(!$this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
-            return;
-        }
-
-        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
-
-        if($keys) {
-            $this->ec2 = new \App\Libraries\Ec2([
-                'access' => $keys->aws_access,
-                'secret' => $keys->aws_secret
+    public function GetAwsRegions() {
+        if($this->keys) {
+            $ec2 = new \App\Libraries\Ec2([
+                'access' => $this->keys->aws_access,
+                'secret' => $this->keys->aws_secret
             ]);
 
-            $result = $this->ec2->DescribeRegions();
+            $result = $ec2->DescribeRegions();
 
             $regions = [];
             if(!$result['error']) {
                 foreach ($result['describeRegions']['Regions'] as $region) {
                     $regions[$region['RegionName']] = $this->awsconfig->regions[$region['RegionName']];
                 }
-
             }
         } else {
             // set to default
             $regions = $this->awsconfig->regions;
         }
 
-        return $regions; // asort($regions, SORT_STRING);
+        asort($regions, SORT_STRING);
+        return $regions;
     }
 
     public function delete($id) {
