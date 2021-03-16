@@ -30,7 +30,7 @@ class Ec2 extends Aws {
         $result['error'] = false;
         try {
             $result['describeRegions'] = $this->ec2->describeRegions($args);
-        } catch (AwsException $e) {
+        } catch (Ec2Exception $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 

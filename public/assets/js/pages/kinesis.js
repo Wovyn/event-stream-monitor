@@ -90,9 +90,15 @@ var Kinesis = function() {
             $('.form-select2', form).select2()
                 .on('select2:select', function (e) {
                     if($(this).val()) {
-                        $(this).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
+                        $(this)
+                            .closest('.form-group')
+                                .removeClass('has-error')
+                                .addClass('has-success')
+                            .find('.symbol')
+                                .removeClass('required')
+                                .addClass('ok');
                     }
-                });;
+                });
         }
 
         var animateBar = function(step) {
@@ -134,6 +140,17 @@ var Kinesis = function() {
         return {
             init: function(form) {
                 initWizard(form);
+
+                $('#shards', form).on('change', function() {
+                    let shards = $(this).val(),
+                        writeMiB = shards * 1,
+                        writeData = shards * 1000,
+                        readMiB = shards * 2;
+
+                    $('.write-calculated-mib', form).html(writeMiB);
+                    $('.write-calculated-data', form).html(writeData);
+                    $('.read-calculated-mib', form).html(readMiB);
+                });
             }
         };
     }();
@@ -157,17 +174,6 @@ var Kinesis = function() {
                     console.log('initialize wizard');
 
                     FormWizard.init(form);
-
-                    $('#shards', form).on('change', function() {
-                        let shards = $(this).val(),
-                            writeMiB = shards * 1,
-                            writeData = shards * 1000,
-                            readMiB = shards * 2;
-
-                        $('.write-calculated-mib', form).html(writeMiB);
-                        $('.write-calculated-data', form).html(writeData);
-                        $('.read-calculated-mib', form).html(readMiB);
-                    })
                 },
                 width: '960',
                 footer: false,

@@ -30,7 +30,7 @@ class Kinesis extends Aws {
         $result['error'] = false;
         try {
             $result['createStream'] = $this->kinesis->createStream($args);
-        } catch (AwsException $e) {
+        } catch (KinesisException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
@@ -44,7 +44,7 @@ class Kinesis extends Aws {
         $result['error'] = false;
         try {
             $result['deleteStream'] = $this->kinesis->deleteStream($args);
-        } catch (AwsException $e) {
+        } catch (KinesisException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
@@ -58,7 +58,7 @@ class Kinesis extends Aws {
         $result['error'] = false;
         try {
             $result['describeStreamSummary'] = $this->kinesis->describeStreamSummary($args);
-        } catch (AwsException $e) {
+        } catch (KinesisException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
@@ -72,7 +72,7 @@ class Kinesis extends Aws {
         $result['error'] = false;
         try {
             $result['putRecord'] = $this->kinesis->putRecord($args);
-        } catch (AwsException $e) {
+        } catch (KinesisException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
@@ -86,7 +86,7 @@ class Kinesis extends Aws {
         $result['error'] = false;
         try {
             $result['getRecords'] = $this->kinesis->getRecords($args);
-        } catch (AwsException $e) {
+        } catch (KinesisException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
@@ -100,7 +100,7 @@ class Kinesis extends Aws {
         $result['error'] = false;
         try {
             $result['listShards'] = $this->kinesis->listShards($args);
-        } catch (AwsException $e) {
+        } catch (KinesisException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
@@ -114,7 +114,7 @@ class Kinesis extends Aws {
         $result['error'] = false;
         try {
             $result['getShardIterator'] = $this->kinesis->getShardIterator($args);
-        } catch (AwsException $e) {
+        } catch (KinesisException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 

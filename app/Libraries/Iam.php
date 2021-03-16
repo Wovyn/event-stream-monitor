@@ -30,7 +30,7 @@ class Iam extends Aws {
         $result['error'] = false;
         try {
             $result['listRoles'] = $this->iam->listRoles();
-        } catch (AwsException $e) {
+        } catch (IamException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
@@ -44,7 +44,7 @@ class Iam extends Aws {
         $result['error'] = false;
         try {
             $result['getUser'] = $this->iam->getUser();
-        } catch (AwsException $e) {
+        } catch (IamException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 

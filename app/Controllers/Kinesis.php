@@ -113,7 +113,8 @@ class Kinesis extends BaseController
         return view('kinesis/wizard_modal', $data);
     }
 
-    public function GetAwsRegions() {
+    private function GetAwsRegions() {
+        $regions = [];
         if($this->keys) {
             $ec2 = new \App\Libraries\Ec2([
                 'access' => $this->keys->aws_access,
@@ -122,13 +123,14 @@ class Kinesis extends BaseController
 
             $result = $ec2->DescribeRegions();
 
-            $regions = [];
             if(!$result['error']) {
                 foreach ($result['describeRegions']['Regions'] as $region) {
                     $regions[$region['RegionName']] = $this->awsconfig->regions[$region['RegionName']];
                 }
             }
-        } else {
+        }
+
+        if(empty($regions)) {
             // set to default
             $regions = $this->awsconfig->regions;
         }
@@ -169,4 +171,5 @@ class Kinesis extends BaseController
         $data['stream'] = $result['describeStreamSummary']['StreamDescriptionSummary'];
         return view('kinesis/view_modal', $data);
     }
+
 }

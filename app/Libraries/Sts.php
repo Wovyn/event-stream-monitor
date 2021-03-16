@@ -30,7 +30,7 @@ class Sts extends Aws {
         $result['error'] = false;
         try {
             $result['getCallerIdentity'] = $this->sts->getCallerIdentity();
-        } catch (AwsException $e) {
+        } catch (StsException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 

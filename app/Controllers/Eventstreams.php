@@ -275,28 +275,4 @@ class Eventstreams extends BaseController
 
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
-
-    public function test() {
-        // {
-        //     "description": "<Customers chosen sink name>",
-        //     "sink_type":"webhook",
-        //     "sink_configuration": {
-        //         "destination": "http://example.org/webhook",
-        //         "method": "<POST|GET>",
-        //         "batch_events": <true|false>
-        //      }
-        // }
-
-        $result = $this->twilio->DeleteSink([
-            'description' => 'sample webhook',
-            'sink_type' => 'webhook',
-            'config' => [
-                'destination' => 'http://example.org/webhook',
-                'method' => 'POST',
-                'batch_events' => false
-            ]
-        ]);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
 }
