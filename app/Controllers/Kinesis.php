@@ -109,7 +109,7 @@ class Kinesis extends BaseController
             ]));
         }
 
-        $data['regions'] = $this->GetAwsRegions();
+        $data['regions'] = GetAwsRegions($this->keys);
         return view('kinesis/wizard_modal', $data);
     }
 
