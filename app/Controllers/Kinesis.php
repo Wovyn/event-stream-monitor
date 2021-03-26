@@ -4,8 +4,10 @@ namespace App\Controllers;
 class Kinesis extends BaseController
 {
     protected $authKeysModel,
+        $eventstreamSinksModel,
         $kinesisDataStreamsModel,
         $ionAuth,
+        $twilio,
         $kinesis,
         $awsconfig,
         $keys;
@@ -14,6 +16,7 @@ class Kinesis extends BaseController
         parent::__construct();
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
+        $this->eventstreamSinksModel = new \App\Models\EventstreamSinksModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
@@ -140,9 +143,34 @@ class Kinesis extends BaseController
     }
 
     public function delete($id) {
-        // hook aws deleteStream API
+        // check if stream is being used on any twilio sink
+        $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
+        $activeStreams = [];
+        foreach ($sinks as $sink) {
+            // skip webhooks
+            if($sink->sink_type != 'kinesis') {
+                continue;
+            }
+
+            // fetch sinkconfiguration and get the kinesis data stream name
+            $fetchSink = $this->twilio->FetchSink($sink->sid);
+            $arn = explode('stream/', $fetchSink['Sink']->sinkConfiguration['arn']);
+            $streamName = $arn[1];
+            $activeStreams[] = $streamName;
+        }
+
+        // get stream
         $stream = $this->kinesisDataStreamsModel->where('id', $id)->first();
 
+        // check if stream is still being used by a sink instance
+        if(in_array($stream->name, $activeStreams)) {
+            return $this->response->setJSON(json_encode([
+                'error' => true,
+                'message' => 'Kinesis Data Stream is still being used by a Sink Instance'
+            ]));
+        }
+
+        // hook aws deleteStream API
         $this->kinesis->setRegion($stream->region);
         $result['DeleteStream'] = $this->kinesis->DeleteStream([
             'EnforceConsumerDeletion' => true,

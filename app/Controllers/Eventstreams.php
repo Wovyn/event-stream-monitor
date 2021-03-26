@@ -3,7 +3,6 @@ namespace App\Controllers;
 
 class Eventstreams extends BaseController
 {
-
     protected $authKeysModel,
         $eventstreamSinksModel,
         $kinesisDataStreamsModel,
@@ -288,7 +287,7 @@ class Eventstreams extends BaseController
             'StreamName' => $streamName
         ]);
 
-        echo '<pre>' , var_dump($result['listShards']) , '</pre>';
+        echo '<pre>' , var_dump($result['listShards']['Shards']) , '</pre>';
     }
 
     // manual test and validation for webhook sinks
