@@ -275,4 +275,32 @@ class Eventstreams extends BaseController
 
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
+
+    // manual test for sink validation
+    public function GetAllRecords($streamName) {
+        $result = $this->kinesis->GetAllRecords($streamName);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
+    public function ListShards($streamName) {
+        $result = $this->kinesis->ListShards([
+            'StreamName' => $streamName
+        ]);
+
+        echo '<pre>' , var_dump($result['listShards']) , '</pre>';
+    }
+
+    // manual test and validation for webhook sinks
+    public function SinkTest($sid) {
+        $result = $this->twilio->SinkTest($sid);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
+    public function SinkValid($sid, $test_id) {
+        $result = $this->twilio->SinkValid($sid, $test_id);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
 }

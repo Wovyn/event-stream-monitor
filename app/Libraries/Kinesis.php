@@ -125,11 +125,14 @@ class Kinesis extends Aws {
     }
 
     public function GetAllRecords($streamName) {
-        $result['GetAllRecords'] = [];
+        log_message('debug', 'GetAllRecords for ' . $streamName);
 
+        $result['GetAllRecords'] = [];
         $result['ListShards'] = $this->ListShards([
             'StreamName' => $streamName
         ]);
+
+        log_message('debug', 'ListShards: ' . json_encode($result['ListShards']['listShards']['Shards']));
 
         foreach ($result['ListShards']['listShards']['Shards'] as $shard) {
             $result['GetShardIterator'] = $this->GetShardIterator([
