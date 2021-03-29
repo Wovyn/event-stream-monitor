@@ -73,13 +73,18 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/user/profile">
-                                    <i class="clip-user-2"></i> &nbsp;My Profile
+                                    <i class="clip-user-2"></i> My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/phpliteadmin" target="_blank">
+                                    <i class="clip-database"></i> PHPLiteAdmin
                                 </a>
                             </li>
                             <li class="divider"></li>
                             <li>
                                 <a href="/auth/logout">
-                                    <i class="clip-exit"></i> &nbsp;Log Out
+                                    <i class="clip-exit"></i> Log Out
                                 </a>
                             </li>
                         </ul>
