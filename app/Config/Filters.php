@@ -48,7 +48,9 @@ class Filters extends BaseConfig
 				'dashboard', 'dashboard/*',
 				'kinesis', 'kinesis/*',
 				'user', 'user/*',
-				'eventstreams', 'eventstreams/*'
+				'eventstreams', 'eventstreams/*',
+				'elasticsearch', 'elasticsearch/*',
+				'firehose', 'firehose/*'
 			]
 		]
 	];
