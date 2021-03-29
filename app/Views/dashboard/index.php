@@ -14,7 +14,7 @@
                         </a>
                     </li>
                     <li class="active">
-                        Dashboard
+                        <?php echo $meta['header']; ?>
                     </li>
                     <li class="search-box">
                         <form class="sidebar-search">

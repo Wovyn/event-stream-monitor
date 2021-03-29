@@ -12,7 +12,7 @@
                         <a href="/">Home</a>
                     </li>
                     <li class="active">
-                        Kinesis
+                        <?php echo $meta['header']; ?>
                     </li>
                     <li class="search-box">
                         <form class="sidebar-search">

@@ -9,7 +9,9 @@
                 <ol class="breadcrumb">
                     <li>
                         <i class="clip-home-3"></i>
-                        <a href="/">Home</a>
+                        <a href="#">
+                            Home
+                        </a>
                     </li>
                     <li class="active">
                         <?php echo $meta['header']; ?>
@@ -26,10 +28,6 @@
                     </li>
                 </ol>
                 <div class="page-header">
-                    <div class="toolbar">
-                        <a class="btn btn-primary add-sink-btn" href="/eventstreams/add">Create Sink Instance</a>
-                    </div>
-
                     <?php echo view('includes/page_header') ?>
                 </div>
                 <!-- end: PAGE TITLE & BREADCRUMB -->
@@ -39,26 +37,7 @@
         <!-- start: PAGE CONTENT -->
         <div class="row">
             <div class="col-md-12">
-                <!-- start: DYNAMIC TABLE PANEL -->
-                <table class="dt-table table table-striped table-bordered table-hover table-full-width" id="sink-table">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Sink Type</th>
-                            <th>SID</th>
-                            <th>Created</th>
-                            <th>Last Updated</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="dataTables_empty" colspan="7">Loading data from database.</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- end: DYNAMIC TABLE PANEL -->
+
             </div>
         </div>
         <!-- end: PAGE CONTENT-->

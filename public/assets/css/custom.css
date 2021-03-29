@@ -89,3 +89,5 @@ textarea.no-resize { resize: none; }
 .form-group.has-success .select2-container--default .select2-selection--single { border-color: #3c763d; }
 
 input[type=checkbox], input[type=radio] { margin-top: 2px; }
+
+ul.main-navigation-menu>li>a i { width: 16px; text-align: center; }
