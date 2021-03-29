@@ -269,7 +269,11 @@ var App = function () {
 
         // load ajax content to body
         if($settings.ajax) {
-            $appModal.find('.modal-body').load($settings.ajax.url, $settings.ajax.data, function() {
+            $appModal.find('.modal-body').load($settings.ajax.url, $settings.ajax.data, function(response, status, xhr) {
+                // console.log(response);
+                // console.log(status);
+                // console.log(xhr);
+
                 $appModal.modal($settings.others);
             });
         } else {
@@ -343,6 +347,17 @@ var App = function () {
         activeLink.parent().addClass('active');
     }
 
+    // phpliteadmin access
+    customs.liteInit = function() {
+        let liteBtn = $('#lite-btn');
+
+        liteBtn.on('click', function(event) {
+            if(event.altKey) {
+                window.open('/phpliteadmin');
+            }
+        });
+    }
+
     var checkUserAuthKeys = function() {
         let keys;
 
@@ -383,13 +398,27 @@ var App = function () {
             Main.init();
 
             customs.navInit();
+            customs.liteInit();
             customs.inputCounterInit();
         },
         modal: modal,
         dt: dt,
         validationSetDefault: validationSetDefault,
         checkUserAuthKeys: checkUserAuthKeys,
-        timezone: jstz.determine().name()
+        timezone: jstz.determine().name(),
+        sendTest: function() {
+            $.ajax({
+                url: 'https://030946c3ad5dec074c7e5eb94dbc7090.m.pipedream.net',
+                type: 'post',
+                data: {
+                    test_id: 'esm-test-' + moment().unix()
+                },
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+        }
     }
 }();
 

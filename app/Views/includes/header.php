@@ -65,7 +65,7 @@
                 <ul class="nav navbar-right">
                     <!-- start: USER DROPDOWN -->
                     <li class="dropdown current-user">
-                        <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+                        <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#" id="lite-btn">
                             <img src="/assets/images/twilio-logo-30x30.png" class="circle-img" alt="<?php echo $user->first_name . ' ' . $user->last_name ?>" width="30" height="30">
                             <span class="username"><?php echo $user->first_name . ' ' . $user->last_name ?></span>
                             <i class="clip-chevron-down"></i>
@@ -74,11 +74,6 @@
                             <li>
                                 <a href="/user/profile">
                                     <i class="clip-user-2"></i> My Profile
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/phpliteadmin" target="_blank">
-                                    <i class="clip-database"></i> PHPLiteAdmin
                                 </a>
                             </li>
                             <li class="divider"></li>
