@@ -172,9 +172,11 @@ class Eventstreams extends BaseController
 
                 case 'validating':
                     $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-                    $arn = explode('stream/', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
-                    $streamName = $arn[1];
+                    $arn = explode(':', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
+                    $region = $arn[3];
+                    $streamName = str_replace('stream/', '', $arn[5]);
 
+                    $this->kinesis->setRegion($region);
                     $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
                     foreach ($result['GetAllRecords'] as $record) {
                         $recordData = json_decode($record['Data'], true);
@@ -276,19 +278,31 @@ class Eventstreams extends BaseController
     }
 
     // manual test for sink validation
-    public function GetAllRecords($streamName) {
-        $result = $this->kinesis->GetAllRecords($streamName);
+    // public function GetAllRecords($streamName) {
+    //     $this->kinesis->setRegion('us-east-1');
+    //     $result = $this->kinesis->GetAllRecords($streamName);
 
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
+    //     echo '<pre>' , var_dump($result) , '</pre>';
+    // }
 
-    public function ListShards($streamName) {
-        $result = $this->kinesis->ListShards([
-            'StreamName' => $streamName
-        ]);
+    // public function ListShards($streamName) {
+    //     $this->kinesis->setRegion('us-east-1');
+    //     $result = $this->kinesis->ListShards([
+    //         'StreamName' => $streamName
+    //     ]);
 
-        echo '<pre>' , var_dump($result['listShards']['Shards']) , '</pre>';
-    }
+    //     echo '<pre>' , var_dump($result) , '</pre>';
+    // }
+
+    // public function FetchSink($sid) {
+    //     $result = $this->twilio->FetchSink($sid);
+    //     $arn = explode(':', $result['Sink']->sinkConfiguration['arn']);
+
+    //     $region = $arn[3];
+    //     $streamName = str_replace('stream/', '', $arn[5]);
+
+    //     echo $region . ' - ' . $streamName;
+    // }
 
     // manual test and validation for webhook sinks
     public function SinkTest($sid) {
