@@ -81,6 +81,15 @@ var Eventstreams = function() {
         $(document).on('click', '.subscriptions-btn', function(e) {
             e.preventDefault();
 
+            // loading phase start
+            Swal.fire({
+                title: 'Loading Sink Subscriptions!',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             let $btn = $(this), $tree, appModal;
 
             $.get($btn.attr('href'), function(data) {
@@ -107,6 +116,9 @@ var Eventstreams = function() {
                             },
                             plugins: ['checkbox', 'types', 'wholerow']
                         });
+
+                        // loading phase end
+                        Swal.close();
                     },
                     btn: {
                         confirm: {
@@ -306,7 +318,7 @@ var Eventstreams = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn"><i class="fa fa-sliders"></i></a>' +
+                                        '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn ' + (full.status != 'active' ? 'disabled' : '') + '"><i class="fa fa-sliders"></i></a>' +
                                         '<a href="/eventstreams/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 
