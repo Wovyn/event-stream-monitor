@@ -40,6 +40,34 @@ class Elasticsearch extends Aws {
         return $result;
     }
 
+    public function DeleteElasticsearchDomain($args = []) {
+        $result['error'] = false;
+        try {
+            $result['response'] = $this->elasticsearch->deleteElasticsearchDomain($args);
+        } catch (ElasticsearchServiceException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'DeleteElasticsearchDomain: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    public function DescribeElasticsearchDomain($args = []) {
+        $result['error'] = false;
+        try {
+            $result['response'] = $this->elasticsearch->describeElasticsearchDomain($args);
+        } catch (ElasticsearchServiceException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'DescribeElasticsearchDomain: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
     public function version() {
         return $this->version;
     }

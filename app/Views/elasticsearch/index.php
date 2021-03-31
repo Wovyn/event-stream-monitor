@@ -28,6 +28,10 @@
                     </li>
                 </ol>
                 <div class="page-header">
+                    <div class="toolbar">
+                        <a class="btn btn-primary add-btn" href="/elasticsearch/add">Create Elasticsearch Domain</a>
+                    </div>
+
                     <?php echo view('includes/page_header') ?>
                 </div>
                 <!-- end: PAGE TITLE & BREADCRUMB -->
@@ -37,7 +41,24 @@
         <!-- start: PAGE CONTENT -->
         <div class="row">
             <div class="col-md-12">
-
+                <!-- start: DYNAMIC TABLE PANEL -->
+                <table class="dt-table table table-striped table-bordered table-hover table-full-width" id="elasticsearch-table">
+                    <thead>
+                        <tr>
+                            <th>Region</th>
+                            <th>DomainName</th>
+                            <th>Created</th>
+                            <th>Last Updated</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="dataTables_empty" colspan="6">Loading data from database.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- end: DYNAMIC TABLE PANEL -->
             </div>
         </div>
         <!-- end: PAGE CONTENT-->
