@@ -37,7 +37,7 @@ class Kinesis extends BaseController
 
     public function index()
     {
-        $this->data['meta']['header'] = 'AWS Kinesis';
+        $this->data['meta']['header'] = 'Kinesis Data Sinks';
         $this->data['meta']['subheader'] = 'data streams';
 
         array_push($this->data['css'],

@@ -40,7 +40,7 @@
                 <div class="core-box">
                     <div class="heading">
                         <i class="clip-barcode circle-icon circle-bricky"></i>
-                        <h2>Manage Event Streams</h2>
+                        <h2>Manage Event Stream Sinks</h2>
                     </div>
                     <div class="content">
                         This is where you can create a Sink Instance, validate the Sink Instance, and also create, update, and delete subscriptions.
@@ -54,7 +54,7 @@
                 <div class="core-box">
                     <div class="heading">
                         <i class="clip-windy circle-icon circle-teal"></i>
-                        <h2>Manage Kinesis Data Streams</h2>
+                        <h2>Manage Kinesis Data Sinks</h2>
                     </div>
                     <div class="content">
                         This is where you can create, update, and delete AWS Kinesis Data Streams.  These are currently the primary Event Stream Sink types.

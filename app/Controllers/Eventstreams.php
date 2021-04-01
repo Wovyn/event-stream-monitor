@@ -34,8 +34,8 @@ class Eventstreams extends BaseController
     }
 
     public function index() {
-        $this->data['meta']['header'] = 'Event Streams';
-        $this->data['meta']['subheader'] = 'connecting streams';
+        $this->data['meta']['header'] = 'Event Stream Sinks';
+        $this->data['meta']['subheader'] = 'receiving and subscribing';
 
         array_push($this->data['css'],
             '/bower_components/select2/dist/css/select2.min.css',

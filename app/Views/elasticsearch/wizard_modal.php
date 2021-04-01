@@ -8,7 +8,7 @@
                 <span class="stepDesc">
                     Step 1
                     <br />
-                    <small>Step 1 description</small>
+                    <small>Select Region</small>
                 </span>
             </a>
        </li>
@@ -20,7 +20,7 @@
                 <span class="stepDesc">
                     Step 2
                     <br />
-                    <small>Step 2 description</small>
+                    <small>Name and Describe</small>
                 </span>
             </a>
        </li>
@@ -32,7 +32,7 @@
                 <span class="stepDesc">
                     Step 3
                     <br />
-                    <small>Step 3 description</small>
+                    <small>Define Throughput</small>
                 </span>
             </a>
        </li>
@@ -44,7 +44,7 @@
                 <span class="stepDesc">
                     Step 4
                     <br />
-                    <small>Step 4 description</small>
+                    <small>Review</small>
                 </span>
             </a>
        </li>

@@ -116,14 +116,14 @@
                     <li>
                         <a href="/eventstreams">
                             <i class="clip-stats"></i>
-                            <span class="title"> Event Streams </span>
+                            <span class="title"> Event Stream Sinks </span>
                             <span class="selected"></span>
                         </a>
                     </li>
                     <li>
                         <a href="/kinesis">
                             <i class="clip-data"></i>
-                            <span class="title"> AWS Kinesis </span>
+                            <span class="title"> Kinesis Data Streams </span>
                             <span class="selected"></span>
                         </a>
                     </li>

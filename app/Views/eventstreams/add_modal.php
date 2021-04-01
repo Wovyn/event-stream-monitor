@@ -5,7 +5,7 @@
 <div class="form-group">
     <label class="control-label" for="sink_type">Sink Type</label>
     <select name="sink_type" id="sink_type" class="form-control">
-        <option value="kinesis">AWS Kinesis</option>
+        <option value="kinesis">AWS Kinesis Data Sink</option>
         <option value="webhook">Webhook</option>
     </select>
 </div>
