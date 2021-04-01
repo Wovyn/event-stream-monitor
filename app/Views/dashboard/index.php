@@ -71,7 +71,7 @@
                         <h2>Manage Consumers</h2>
                     </div>
                     <div class="content">
-                        This is where you will be able to create, update, and delete AWS Kinesis consumers.  This will start with ElasticSearch instances.
+                        This is where you will be able to create, update, and delete AWS Kinesis consumers.  This will start with Elasticsearch instances.
                     </div>
                     <a class="view-more" href="#">
                         View More <i class="clip-arrow-right-2"></i>
