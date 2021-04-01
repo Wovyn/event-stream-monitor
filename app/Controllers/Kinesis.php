@@ -37,8 +37,8 @@ class Kinesis extends BaseController
 
     public function index()
     {
-        $this->data['meta']['header'] = 'Kinesis Data Sinks';
-        $this->data['meta']['subheader'] = 'data streams';
+        $this->data['meta']['header'] = 'Kinesis Data Streams';
+        $this->data['meta']['subheader'] = 'create and manage';
 
         array_push($this->data['css'],
             '/bower_components/select2/dist/css/select2.min.css',

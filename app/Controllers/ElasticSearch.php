@@ -23,8 +23,8 @@ class ElasticSearch extends BaseController
     }
 
     public function index() {
-        $this->data['meta']['header'] = 'ElasticSearch';
-        $this->data['meta']['subheader'] = 'setup your searches!';
+        $this->data['meta']['header'] = 'AWS Elasticsearch';
+        $this->data['meta']['subheader'] = 'create and manage';
 
         array_push($this->data['css'],
             '/bower_components/select2/dist/css/select2.min.css',

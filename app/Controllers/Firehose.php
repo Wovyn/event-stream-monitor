@@ -10,8 +10,8 @@ class Firehose extends BaseController
     }
 
     public function index() {
-        $this->data['meta']['header'] = 'Firehose';
-        $this->data['meta']['subheader'] = 'hose down your searches!';
+        $this->data['meta']['header'] = 'Kinesis Data Firehose';
+        $this->data['meta']['subheader'] = 'connect your data streams';
 
         array_push($this->data['css'],
 

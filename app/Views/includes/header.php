@@ -130,14 +130,14 @@
                     <li>
                         <a href="/elasticsearch">
                             <i class="clip-search"></i>
-                            <span class="title"> ElasticSearch </span>
+                            <span class="title"> AWS Elasticsearch </span>
                             <span class="selected"></span>
                         </a>
                     </li>
                     <li>
                         <a href="/firehose">
                             <i class="fa fa-fire"></i>
-                            <span class="title"> Firehose </span>
+                            <span class="title"> Kinesis Data Firehose </span>
                             <span class="selected"></span>
                         </a>
                     </li>
