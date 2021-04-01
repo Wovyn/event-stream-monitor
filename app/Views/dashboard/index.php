@@ -45,7 +45,7 @@
                     <div class="content">
                         This is where you can create a Sink Instance, validate the Sink Instance, and also create, update, and delete subscriptions.
                     </div>
-                    <a class="view-more" href="#">
+                    <a class="view-more" href="/eventstreams">
                         View More <i class="clip-arrow-right-2"></i>
                     </a>
                 </div>
@@ -59,7 +59,7 @@
                     <div class="content">
                         This is where you can create, update, and delete AWS Kinesis Data Streams.  These are currently the primary Event Stream Sink types.
                     </div>
-                    <a class="view-more" href="#">
+                    <a class="view-more" href="/kinesis">
                         View More <i class="clip-arrow-right-2"></i>
                     </a>
                 </div>
