@@ -141,7 +141,7 @@ var Kinesis = function() {
             init: function(form) {
                 initWizard(form);
 
-                $('#shards', form).on('change', function() {
+                $('#shards', form).on('change keyup', function() {
                     let shards = $(this).val(),
                         writeMiB = shards * 1,
                         writeData = shards * 1000,

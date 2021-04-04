@@ -60,6 +60,7 @@
                 <!-- end: DYNAMIC TABLE PANEL -->
             </div>
         </div>
+        <!-- end: PAGE CONTENT -->
     </div>
 </div>
 

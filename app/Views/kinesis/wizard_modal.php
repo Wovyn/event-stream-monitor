@@ -96,7 +96,7 @@
                     <h3 class="StepTitle">Step 3</h3>
                     <div class="form-group">
                         <label class="control-label" for="shards">Number of open shards</label>
-                        <input type="number" class="form-control" id="shards" name="shards" placeholder="Number of open shards" value="1" min="1" max="500">
+                        <input type="number" class="form-control" id="shards" name="shards" placeholder="Number of open shards" value="1" min="1" max="500" required>
                         <span class="help-block">Minimum: 1, Maximum: 500, Account limit: 500.</span>
                     </div>
                     <div class="form-group">
