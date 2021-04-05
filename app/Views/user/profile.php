@@ -126,7 +126,10 @@
                                                 <label class="control-label">
                                                     Secret
                                                 </label>
-                                                <input type="text" placeholder="Secret" class="form-control" id="twilio_secret" name="twilio_secret" required value="<?php echo isset($auth_keys->twilio_secret) ? $auth_keys->twilio_secret : '' ?>">
+                                                <div class="input-group input-append input-hidden-container input-hidden">
+                                                    <input type="text" placeholder="Secret" class="form-control" id="twilio_secret" name="twilio_secret" required value="<?php echo isset($auth_keys->twilio_secret) ? $auth_keys->twilio_secret : '' ?>">
+                                                    <span class="input-group-addon add-on toggle"><i class="clip-eye"></i></span>
+                                                </div>
                                             </div>
                                         </fieldset>
                                         <br>
@@ -143,7 +146,10 @@
                                                 <label class="control-label">
                                                     Secret Key
                                                 </label>
-                                                <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" required value="<?php echo isset($auth_keys->aws_secret) ? $auth_keys->aws_secret : '' ?>">
+                                                <div class="input-group input-append input-hidden-container input-hidden">
+                                                    <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" required value="<?php echo isset($auth_keys->aws_secret) ? $auth_keys->aws_secret : '' ?>">
+                                                    <span class="input-group-addon add-on toggle"><i class="clip-eye"></i></span>
+                                                </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">
@@ -155,7 +161,10 @@
                                                 <label class="control-label">
                                                     External ID
                                                 </label>
-                                                <input type="text" placeholder="External ID" class="form-control" id="external_id" name="external_id" required value="<?php echo isset($auth_keys->external_id) ? $auth_keys->external_id : '' ?>">
+                                                <div class="input-group input-append input-hidden-container input-hidden">
+                                                    <input type="text" placeholder="External ID" class="form-control" id="external_id" name="external_id" required value="<?php echo isset($auth_keys->external_id) ? $auth_keys->external_id : '' ?>">
+                                                    <span class="input-group-addon add-on toggle"><i class="clip-eye"></i></span>
+                                                </div>
                                             </div>
                                         </fieldset>
 

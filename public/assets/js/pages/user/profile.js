@@ -35,6 +35,10 @@ var Profile = function() {
     var handleUpdateKeysForm = function() {
         let $form = $('#update-keys-form');
 
+        $('#twilio_secret').inputHidden();
+        $('#aws_secret').inputHidden();
+        $('#external_id').inputHidden();
+
         $form.validate({
             submitHandler: function (form) {
                 $.ajax({

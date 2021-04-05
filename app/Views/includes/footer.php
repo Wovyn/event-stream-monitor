@@ -38,14 +38,13 @@
     <script type="text/javascript" src="/bower_components/jstz/jstz.min.js"></script>
     <script type="text/javascript" src="/assets/js/min/main.min.js"></script>
     <script type="text/javascript" src="/assets/js/lodash.min.js"></script>
+    <script type="text/javascript" src="/assets/js/app.js"></script>
 
     <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
     <?php foreach($scripts as $path): ?>
          <script type="text/javascript" src="<?php echo $path; ?>"></script>
     <?php endforeach; ?>
     <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-
-    <script type="text/javascript" src="/assets/js/app.js"></script>
     <!-- end: MAIN JAVASCRIPTS -->
 </body>
 

@@ -295,6 +295,8 @@ var App = function () {
                     error.insertAfter($(element).closest('.form-group').children('div'));
                 } else if (element.hasClass('form-select2')) {
                     error.insertAfter($(element).next());
+                } else if (element.parent().hasClass('input-group')) {
+                    error.insertAfter($(element).parent());
                 } else {
                     error.insertAfter(element);
                     // for other inputs, just perform default behavior
@@ -338,6 +340,24 @@ var App = function () {
 
                 count = $settings.max - $settings.input.val().length;
                 $settings.counter.html(count);
+            });
+        }
+    }
+
+    customs.inputHiddenInit = function() {
+        $.fn.inputHidden = function ($settings = {}) {
+            $settings.input = $(this);
+
+            // $settings.input.wrap('<div class="input-group input-append input-hidden-container input-hidden"></div>');
+            // $settings.input.parent().append('<span id="toggle" class="input-group-addon add-on"><i class="clip-eye"></i></span>');
+
+            $settings.toggle = $settings.input.next();
+            $settings.toggle.on('click', function() {
+                if($settings.input.parent().hasClass('input-hidden')) {
+                    $settings.input.parent().removeClass('input-hidden');
+                } else {
+                    $settings.input.parent().addClass('input-hidden');
+                }
             });
         }
     }
@@ -400,6 +420,7 @@ var App = function () {
             customs.navInit();
             customs.liteInit();
             customs.inputCounterInit();
+            customs.inputHiddenInit();
         },
         modal: modal,
         dt: dt,
