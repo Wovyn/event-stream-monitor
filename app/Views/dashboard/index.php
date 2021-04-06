@@ -100,6 +100,7 @@
                     </div>
                     <div class="panel-body">
                         <!-- d3-hierarchy -->
+                        <div id="d3-hierarchy"></div>
                     </div>
                 </div>
             </div>

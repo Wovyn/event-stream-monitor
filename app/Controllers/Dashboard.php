@@ -19,6 +19,7 @@ class Dashboard extends BaseController
             '/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
             '/bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
             '/bower_components/fullcalendar/dist/fullcalendar.min.js',
+            '/bower_components/d3/d3.js',
             '/assets/js/pages/dashboard.js'
         );
 
