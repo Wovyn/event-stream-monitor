@@ -3,8 +3,6 @@ var Dashboard = function() {
     return {
         init: function() {
             console.log('Dashboard.init');
-
-            Index.init();
             App.checkUserAuthKeys();
         }
     }
