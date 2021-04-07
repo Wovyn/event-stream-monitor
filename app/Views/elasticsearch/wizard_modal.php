@@ -63,7 +63,7 @@
                     <h3 class="StepTitle">Step 1</h3>
                     <div class="form-group">
                         <label class="control-label" for="region">Region</label>
-                        <select name="region" id="region" class="form-control form-select2" required data-placeholder="Select a Region">
+                        <select name="region" id="region" class="form-control form-select2" required data-placeholder="Select a Region" style="width: 100%">
                             <option></option>
                             <?php foreach ($regions as $key => $value): ?>
                                 <option value="<?php echo $key ?>"><?php echo $value ?></option>
@@ -76,9 +76,10 @@
 
        <div id="step-2" class="tab-pane" role="tabpanel">
             <div class="row">
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12">
                     <h3 class="StepTitle">Step 2</h3>
-
+                </div>
+                <div class="col-md-6">
                     <fieldset>
                         <legend>Configure Domain</legend>
                         <div class="form-group">
@@ -108,12 +109,31 @@
                             </div>
                         </div>
                     </fieldset>
-
+                </div>
+                <div class="col-md-6">
                     <fieldset>
                         <legend>Data nodes</legend>
                         <div class="form-group">
+                            <label class="control-label" for="availability_zones">Availability Zones</label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" value="2" name="availability_zones" checked="checked" />
+                                    2-AZ
+                                    <p class="help-block">Suitable for production workloads.</p>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" value="1" name="availability_zones" />
+                                    1-AZ
+                                    <p class="help-block">Suitable for non-critical workloads.</p>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label" for="instance_type">Instance type</label>
-                            <select name="instance_type" id="instance_type">
+                            <select name="instance_type" id="instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
+                                <option></option>
                                 <optgroup label="C4 (Compute optimized)">
                                     <option value="c4.large.elasticsearch">c4.large.elasticsearch</option>
                                     <option value="c4.xlarge.elasticsearch">c4.xlarge.elasticsearch</option>
@@ -192,6 +212,11 @@
                                     <option value=""></option>
                                 </optgroup>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="number_of_nodes">Number of nodes</label>
+                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="2" required>
+                            <p class="help-block">For two Availability Zones, you must choose instances in multiples of two.</p>
                         </div>
                     </fieldset>
                 </div>
