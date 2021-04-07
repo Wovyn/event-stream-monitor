@@ -20,7 +20,7 @@
                 <span class="stepDesc">
                     Step 2
                     <br />
-                    <small>Name and Describe</small>
+                    <small>Configure domain</small>
                 </span>
             </a>
         </li>
@@ -32,7 +32,7 @@
                 <span class="stepDesc">
                     Step 3
                     <br />
-                    <small>Define Throughput</small>
+                    <small>Data Nodes</small>
                 </span>
             </a>
         </li>
@@ -43,6 +43,18 @@
                 </div>
                 <span class="stepDesc">
                     Step 4
+                    <br />
+                    <small>Configure access and security</small>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-5">
+                <div class="stepNumber">
+                    5
+                </div>
+                <span class="stepDesc">
+                    Step 5
                     <br />
                     <small>Review</small>
                 </span>
@@ -76,10 +88,8 @@
 
        <div id="step-2" class="tab-pane" role="tabpanel">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6 col-md-offset-3">
                     <h3 class="StepTitle">Step 2</h3>
-                </div>
-                <div class="col-md-6">
                     <fieldset>
                         <legend>Configure Domain</legend>
                         <div class="form-group">
@@ -110,6 +120,14 @@
                         </div>
                     </fieldset>
                 </div>
+            </div>
+       </div>
+
+       <div id="step-3" class="tab-pane" role="tabpanel">
+           <div class="row">
+                <div class="col-md-12">
+                    <h3 class="StepTitle">Step 3</h3>
+                </div>
                 <div class="col-md-6">
                     <fieldset>
                         <legend>Data nodes</legend>
@@ -118,15 +136,13 @@
                             <div class="radio">
                                 <label>
                                     <input type="radio" value="2" name="availability_zones" checked="checked" />
-                                    2-AZ
-                                    <p class="help-block">Suitable for production workloads.</p>
+                                    2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
                                     <input type="radio" value="1" name="availability_zones" />
-                                    1-AZ
-                                    <p class="help-block">Suitable for non-critical workloads.</p>
+                                    1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
                         </div>
@@ -219,15 +235,29 @@
                             <p class="help-block">For two Availability Zones, you must choose instances in multiples of two.</p>
                         </div>
                     </fieldset>
-                </div>
-            </div>
-       </div>
-
-       <div id="step-3" class="tab-pane" role="tabpanel">
-           <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <h3 class="StepTitle">Step 3</h3>
-
+                    <fieldset>
+                        <legend>Data nodes storage</legend>
+                        <!--
+                        <div class="form-group">
+                            <label class="control-label">Data node storage type</label>
+                            <p class="form-control-static">EBS</p>
+                        </div>
+                        -->
+                        <div class="form-group">
+                            <label class="control-label" for="ebs_volume_type">EBS Volume type</label>
+                            <select name="ebs_volume_type" id="ebs_volume_type" class="form-control form-select2" required data-placeholder="Select an EBS volume type" style="width: 100%">
+                                <option></option>
+                                <option value="gp2" selected="selected">General Purpose (SSD)</option>
+                                <option value="io1">Provisioned IOPS (SSD)</option>
+                                <option value="standard">Magnetic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="ebs_storage_size_per_node">EBS storage size per node</label>
+                            <input type="number" class="form-control" id="ebs_storage_size_per_node" name="ebs_storage_size_per_node" placeholder="EBS storage size per node" value="10" required>
+                            <p class="help-block">Total cluster size will be {ebs_storage_size_per_node*2} GiB (EBS volume size x Instance count).</p>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
        </div>
@@ -236,6 +266,15 @@
            <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <h3 class="StepTitle">Step 4</h3>
+
+                </div>
+            </div>
+       </div>
+
+       <div id="step-5" class="tab-pane" role="tabpanel">
+           <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3 class="StepTitle">Step 5</h3>
 
                 </div>
             </div>
