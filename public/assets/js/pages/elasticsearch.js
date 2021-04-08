@@ -1,6 +1,6 @@
 var Elasticsearch = function() {
-    var appModal;
-    var FormWizard = function() {
+    var appModal,
+        FormWizard = function() {
         let wizard, wizardForm;
 
         var initWizard = function(form) {
@@ -55,9 +55,9 @@ var Elasticsearch = function() {
             // on leaveSte
             wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
                 // validate current step
-                if(!form.valid()) {
-                    return false;
-                }
+                // if(!form.valid()) {
+                //     return false;
+                // }
 
                 // set prev button hidden on first step
                 if(nextStepIndex == 0) {
@@ -99,6 +99,8 @@ var Elasticsearch = function() {
                                 .addClass('ok');
                     }
                 });
+
+            // App.customs.activeToggle();
         }
 
         var animateBar = function(step) {
@@ -141,16 +143,16 @@ var Elasticsearch = function() {
             init: function(form) {
                 initWizard(form);
 
-                $('#shards', form).on('change', function() {
-                    let shards = $(this).val(),
-                        writeMiB = shards * 1,
-                        writeData = shards * 1000,
-                        readMiB = shards * 2;
+                // $('#shards', form).on('change', function() {
+                //     let shards = $(this).val(),
+                //         writeMiB = shards * 1,
+                //         writeData = shards * 1000,
+                //         readMiB = shards * 2;
 
-                    $('.write-calculated-mib', form).html(writeMiB);
-                    $('.write-calculated-data', form).html(writeData);
-                    $('.read-calculated-mib', form).html(readMiB);
-                });
+                //     $('.write-calculated-mib', form).html(writeMiB);
+                //     $('.write-calculated-data', form).html(writeData);
+                //     $('.read-calculated-mib', form).html(readMiB);
+                // });
             }
         };
     }();
@@ -175,7 +177,7 @@ var Elasticsearch = function() {
 
                     FormWizard.init(form);
                 },
-                width: '960',
+                width: '1060',
                 footer: false,
                 others: { backdrop: 'static', keyboard: false }
             });

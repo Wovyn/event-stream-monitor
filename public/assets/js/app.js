@@ -378,6 +378,18 @@ var App = function () {
         });
     }
 
+    customs.activeToggle = function() {
+        let $body = $('body');
+
+        $body.on('click', '.active-toggle', function() {
+            let $btn = $(this);
+
+            console.log($btn.prop('checked'));
+            console.log($btn.data('at-checked'));
+            console.log($btn.data('at-elements'));
+        });
+    }
+
     var checkUserAuthKeys = function() {
         let keys;
 
@@ -439,7 +451,8 @@ var App = function () {
                     console.log(response);
                 }
             });
-        }
+        },
+        customs: customs
     }
 }();
 

@@ -365,10 +365,11 @@
                         <legend>UltraWarm data nodes</legend>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="ultrawarm_data_node" checked="checked" />
+                                <input type="checkbox" value="enable" name="ultrawarm_data_node" checked="checked" class="active-toggle" data-at-checked="enabled" data-at-elements="['#ultrawarm_instance_type', '#number_of_warm_data_nodes']" />
                                 Enable UltraWarm data nodes
                             </label>
-                            <div class="form-group">
+                        </div>
+                        <div class="form-group">
                             <label class="control-label" for="ultrawarm_instance_type">Instance type</label>
                             <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%">
                                 <option></option>
@@ -381,7 +382,6 @@
                             <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" required>
                             <p class="help-block">UltraWarm requires a minimum of two warm nodes.</p>
                         </div>
-                        </div>
                     </fieldset>
                 </div>
             </div>
@@ -391,7 +391,19 @@
            <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <h3 class="StepTitle">Step 4</h3>
-
+                    <fieldset>
+                        <legend>Network configuration</legend>
+                        <div class="form-group">
+                            <label class="radio">
+                                <input type="radio" value="vpc" name="network_configuration" />
+                                VPC access
+                            </label>
+                            <label class="radio">
+                                <input type="radio" value="public" name="network_configuration" checked="checked" />
+                                Public access
+                            </label>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
        </div>
