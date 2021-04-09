@@ -390,20 +390,52 @@ var App = function () {
         });
     }
 
-    var checkUserAuthKeys = function() {
-        let keys;
-
-        if(_.isNull(window.localStorage.getItem('HasAuthKeys'))) {
-            console.log('checkUserAuthKeys');
+    var checkUserAwsKeys = function() {
+        if(_.isNull(window.localStorage.getItem('HasAwsKeys'))) {
+            console.log('checkUserAwsKeys');
             $.ajax({
                 type: 'get',
                 url: '/user/profile/auth_keys',
                 dataType: 'json',
                 success: function(response) {
-                    if(!response.keys) {
+                    if(_.isEmpty(response.keys.aws_access) || _.isEmpty(response.keys.aws_secret)) {
                         Swal.fire({
-                            text: response.message,
+                            text: 'To use any AWS related services, you must configure your AWS API Keys and parameters in your profile.',
                             icon: 'warning',
+                            showCloseButton: true,
+                            confirmButtonText: 'Configure',
+                            showCancelButton: true,
+                            cancelButtonText: 'Close'
+                        }).then((result) => {
+                            if(result.isConfirmed) {
+                                window.location = '/user/profile';
+                            }
+                        });
+                    } else {
+                        window.localStorage.setItem('HasAwsKeys', true);
+                    }
+                }
+            });
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    var checkUserTwilioKeys = function() {
+        if(_.isNull(window.localStorage.getItem('HasTwilioKeys'))) {
+            console.log('checkUserTwilioKeys');
+            $.ajax({
+                type: 'get',
+                url: '/user/profile/auth_keys',
+                dataType: 'json',
+                success: function(response) {
+                    if(_.isEmpty(response.keys.twilio_sid) || _.isEmpty(response.keys.twilio_secret)) {
+                        Swal.fire({
+                            text: 'Before using the portal, you must enter your Twilio API Keys.',
+                            icon: 'warning',
+                            confirmButtonText: 'Configure',
                             showCloseButton: true
                         }).then((result) => {
                             if(result.isConfirmed) {
@@ -411,7 +443,7 @@ var App = function () {
                             }
                         });
                     } else {
-                        window.localStorage.setItem('HasAuthKeys', true);
+                        window.localStorage.setItem('HasTwilioKeys', true);
                     }
                 }
             });
@@ -437,7 +469,8 @@ var App = function () {
         modal: modal,
         dt: dt,
         validationSetDefault: validationSetDefault,
-        checkUserAuthKeys: checkUserAuthKeys,
+        checkUserTwilioKeys: checkUserTwilioKeys,
+        checkUserAwsKeys: checkUserAwsKeys,
         timezone: jstz.determine().name(),
         sendTest: function() {
             $.ajax({

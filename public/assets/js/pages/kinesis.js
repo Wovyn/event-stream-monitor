@@ -159,7 +159,7 @@ var Kinesis = function() {
         $('.add-stream-btn').on('click', function(e) {
             e.preventDefault();
 
-            if(!App.checkUserAuthKeys()) {
+            if(!App.checkUserAwsKeys()) {
                 return false;
             }
 
@@ -249,7 +249,7 @@ var Kinesis = function() {
         init: function() {
             console.log('Kinesis.init');
 
-            App.checkUserAuthKeys();
+            App.checkUserAwsKeys();
 
             App.dt.extend();
             App.dt.init({

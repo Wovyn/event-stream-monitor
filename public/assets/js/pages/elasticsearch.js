@@ -161,7 +161,7 @@ var Elasticsearch = function() {
         $('.add-btn').on('click', function(e) {
             e.preventDefault();
 
-            if(!App.checkUserAuthKeys()) {
+            if(!App.checkUserAwsKeys()) {
                 return false;
             }
 
@@ -188,7 +188,7 @@ var Elasticsearch = function() {
         init: function() {
             console.log('Elasticsearch.init');
 
-            App.checkUserAuthKeys();
+            App.checkUserAwsKeys();
 
             // App.dt.extend();
             // App.dt.init({

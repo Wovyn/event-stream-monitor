@@ -70,7 +70,7 @@ var Dashboard = function() {
     return {
         init: function() {
             console.log('Dashboard.init');
-            App.checkUserAuthKeys();
+            App.checkUserTwilioKeys();
 
             hierarchy.chart({
                 container: $('#d3-hierarchy'),
@@ -80,7 +80,7 @@ var Dashboard = function() {
                         { name: 'analytics' },
                         { name: 'animate' },
                         { name: 'data' },
-                        { name: 'display' },
+                        { name: 'display' }
                     ]
                 }
             });

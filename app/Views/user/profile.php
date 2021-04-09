@@ -160,14 +160,14 @@
                                                 <label class="control-label">
                                                     Access Key
                                                 </label>
-                                                <input type="text" placeholder="Access Key" class="form-control" id="aws_access" name="aws_access" required value="<?php echo isset($auth_keys->aws_access) ? $auth_keys->aws_access : '' ?>">
+                                                <input type="text" placeholder="Access Key" class="form-control" id="aws_access" name="aws_access" value="<?php echo isset($auth_keys->aws_access) ? $auth_keys->aws_access : '' ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">
                                                     Secret Key
                                                 </label>
                                                 <div class="input-group input-append input-hidden-container input-hidden">
-                                                    <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" required value="<?php echo isset($auth_keys->aws_secret) ? $auth_keys->aws_secret : '' ?>">
+                                                    <input type="text" placeholder="Secret Key" class="form-control" id="aws_secret" name="aws_secret" value="<?php echo isset($auth_keys->aws_secret) ? $auth_keys->aws_secret : '' ?>">
                                                     <span class="input-group-addon add-on toggle"><i class="clip-eye"></i></span>
                                                 </div>
                                             </div>
@@ -175,14 +175,14 @@
                                                 <label class="control-label">
                                                     Event Stream Role ARN
                                                 </label>
-                                                <input type="text" placeholder="Event Stream Role ARN" class="form-control" id="event_stream_role_arn" name="event_stream_role_arn" required value="<?php echo isset($auth_keys->event_stream_role_arn) ? $auth_keys->event_stream_role_arn : '' ?>">
+                                                <input type="text" placeholder="Event Stream Role ARN" class="form-control" id="event_stream_role_arn" name="event_stream_role_arn" value="<?php echo isset($auth_keys->event_stream_role_arn) ? $auth_keys->event_stream_role_arn : '' ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">
                                                     External ID
                                                 </label>
                                                 <div class="input-group input-append input-hidden-container input-hidden">
-                                                    <input type="text" placeholder="External ID" class="form-control" id="external_id" name="external_id" required value="<?php echo isset($auth_keys->external_id) ? $auth_keys->external_id : '' ?>">
+                                                    <input type="text" placeholder="External ID" class="form-control" id="external_id" name="external_id" value="<?php echo isset($auth_keys->external_id) ? $auth_keys->external_id : '' ?>">
                                                     <span class="input-group-addon add-on toggle"><i class="clip-eye"></i></span>
                                                 </div>
                                             </div>

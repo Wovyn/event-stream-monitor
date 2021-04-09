@@ -4,7 +4,7 @@ var Eventstreams = function() {
         $('.add-sink-btn').on('click', function(e) {
             e.preventDefault();
 
-            if(!App.checkUserAuthKeys()) {
+            if(!App.checkUserTwilioKeys()) {
                 return false;
             }
 
@@ -240,7 +240,7 @@ var Eventstreams = function() {
         init: function() {
             console.log('Eventstreams.init');
 
-            App.checkUserAuthKeys();
+            App.checkUserTwilioKeys();
 
             App.dt.extend();
             App.dt.init({
