@@ -114,7 +114,17 @@
                                 <div class="col-sm-7 col-md-8">
                                     <form action="/user/profile/update_keys" role="form" id="update-keys-form">
                                         <fieldset>
-                                            <legend>Twilio API Keys</legend>
+                                            <legend>
+                                                Twilio API Keys
+                                                <a class="popovers" href="javascript:;"
+                                                    data-original-title="Twilio API Keys Notes"
+                                                    data-content="Twilio API Keys content <a href='#' target='_blank'>sample link</a>"
+                                                    data-html="true"
+                                                    data-placement="top"
+                                                >
+                                                    <i class="fa fa-question-circle"></i>
+                                                </a>
+                                            </legend>
 
                                             <div class="form-group">
                                                 <label class="control-label">
@@ -134,7 +144,17 @@
                                         </fieldset>
                                         <br>
                                         <fieldset>
-                                            <legend>AWS API Keys</legend>
+                                            <legend>
+                                                AWS API Keys
+                                                <a class="popovers" href="javascript:;"
+                                                    data-original-title="AWS API Keys Notes"
+                                                    data-content="AWS API Keys content <a href='#' target='_blank'>sample link</a>"
+                                                    data-html="true"
+                                                    data-placement="top"
+                                                >
+                                                    <i class="fa fa-question-circle"></i>
+                                                </a>
+                                            </legend>
 
                                             <div class="form-group">
                                                 <label class="control-label">
