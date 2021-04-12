@@ -5,18 +5,16 @@
 <div class="form-group">
     <label class="control-label" for="sink_type">Sink Type</label>
     <select name="sink_type" id="sink_type" class="form-control">
-        <?php if(count($kinesisDataStreams)): ?>
-        <option value="kinesis">AWS Kinesis Data Sink</option>
-        <?php endif; ?>
         <option value="webhook">Webhook</option>
+        <option value="kinesis">AWS Kinesis Data Sink</option>
     </select>
 </div>
 <fieldset class="sink-type">
     <label for="sink_type_configuration">Sink Configuration</label>
-    <div class="kinesis" <?php echo (count($kinesisDataStreams)) ? '' : 'style="display:none"' ?>>
+    <div class="kinesis" style="display:none">
         <div class="form-group">
             <label class="control-label" for="kinesis_data_stream">Kinesis Data Stream</label>
-            <select name="kinesis_data_stream" id="kinesis_data_stream" class="form-control form-select2" required data-placeholder="Select a Kinesis Data Stream">
+            <select name="kinesis_data_stream" id="kinesis_data_stream" class="form-control form-select2" required data-placeholder="Select a Kinesis Data Stream" style="width: 100%">
                 <option></option>
                 <?php foreach ($kinesisDataStreams as $stream): ?>
                     <option value="<?php echo $stream->id ?>"><?php echo $stream->name ?></option>
@@ -32,7 +30,7 @@
             <input type="text" class="form-control" id="external_id" value="<?php echo $kinesis['external_id'] ?>" readonly>
         </div>
     </div>
-    <div class="webhook" <?php echo (count($kinesisDataStreams)) ? 'style="display:none"' : '' ?>>
+    <div class="webhook">
         <div class="form-group">
             <label class="control-label" for="destination_url">Destination URL</label>
             <input type="text" class="form-control" id="destination_url" name="destination_url" placeholder="Destination URL" required>
