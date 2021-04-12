@@ -123,14 +123,20 @@ class Profile extends \App\Controllers\BaseController
 
         // return json_encode($result);
 
+        $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         $result = [
-            'keys' => true
+            'keys' => [
+                'twilio_sid' => $keys->twilio_sid,
+                'twilio_secret' => $keys->twilio_secret,
+                'aws_access' => $keys->aws_access,
+                'aws_secret' => $keys->aws_secret
+            ]
         ];
 
-        if(!$this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
-            $result['keys'] = false;
-            $result['message'] = 'Before using the portal, you must enter your API Keys for Twilio and AWS.';
-        }
+        // if(!$this->authKeysModel->where('user_id', $this->data['user']->id)->countAllResults()) {
+        //     $result['keys'] = false;
+        //     $result['message'] = 'Before using the portal, you must enter your API Keys for Twilio and AWS.';
+        // }
 
         return json_encode($result);
     }
