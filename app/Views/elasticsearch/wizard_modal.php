@@ -215,7 +215,7 @@
                                     <option value="r4.16xlarge.elasticsearch">r4.16xlarge.elasticsearch</option>
                                 </optgroup>
                                 <optgroup label="r5 (Memory optimized)">
-                                    <option value="r5.large.elasticsearch" selected="selected">r5.large.elasticsearch</option>
+                                    <option value="r5.large.elasticsearch" selected="selected">r5.large.elasticsearch (default)</option>
                                     <option value="r5.xlarge.elasticsearch">r5.xlarge.elasticsearch</option>
                                     <option value="r5.2xlarge.elasticsearch">r5.2xlarge.elasticsearch</option>
                                     <option value="r5.4xlarge.elasticsearch">r5.4xlarge.elasticsearch</option>
@@ -266,121 +266,125 @@
                         <legend>Dedicated master nodes</legend>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="dedicated_master_nodes" checked="checked" />
+                                <input type="checkbox" value="enable" name="dedicated_master_nodes" id="dedicated_master_nodes" checked="checked" />
                                 Enable Dedicated master nodes
                             </label>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label" for="dedicated_master_node_instance_type">Instance type</label>
-                            <select name="dedicated_master_node_instance_type" id="dedicated_master_node_instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
-                                <option></option>
-                                <optgroup label="C4 (Compute optimized)">
-                                    <option value="c4.large.elasticsearch">c4.large.elasticsearch</option>
-                                    <option value="c4.xlarge.elasticsearch">c4.xlarge.elasticsearch</option>
-                                    <option value="c4.2xlarge.elasticsearch">c4.2xlarge.elasticsearch</option>
-                                    <option value="c4.4xlarge.elasticsearch">c4.4xlarge.elasticsearch</option>
-                                    <option value="c4.8xlarge.elasticsearch">c4.8xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="C5 (Compute optimized)">
-                                    <option value="c5.large.elasticsearch">c5.large.elasticsearch</option>
-                                    <option value="c5.xlarge.elasticsearch">c5.xlarge.elasticsearch</option>
-                                    <option value="c5.2xlarge.elasticsearch">c5.2xlarge.elasticsearch</option>
-                                    <option value="c5.4xlarge.elasticsearch">c5.4xlarge.elasticsearch</option>
-                                    <option value="c5.9xlarge.elasticsearch">c5.9xlarge.elasticsearch</option>
-                                    <option value="c5.18xlarge.elasticsearch">c5.18xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="i2">
-                                    <option value="i2.xlarge.elasticsearch">i2.xlarge.elasticsearch</option>
-                                    <option value="i2.2xlarge.elasticsearch">i2.2xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="i3 (Storage optimized)">
-                                    <option value="i3.large.elasticsearch">i3.large.elasticsearch</option>
-                                    <option value="i3.xlarge.elasticsearch">i3.xlarge.elasticsearch</option>
-                                    <option value="i3.2xlarge.elasticsearch">i3.2xlarge.elasticsearch</option>
-                                    <option value="i3.4xlarge.elasticsearch">i3.4xlarge.elasticsearch</option>
-                                    <option value="i3.8xlarge.elasticsearch">i3.8xlarge.elasticsearch</option>
-                                    <option value="i3.16xlarge.elasticsearch">i3.16xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="m3">
-                                    <option value="m3.medium.elasticsearch">m3.medium.elasticsearch</option>
-                                    <option value="m3.large.elasticsearch">m3.large.elasticsearch</option>
-                                    <option value="m3.xlarge.elasticsearch">m3.xlarge.elasticsearch</option>
-                                    <option value="m3.2xlarge.elasticsearch">m3.2xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="m4 (General purpose)">
-                                    <option value="m4.large.elasticsearch">m4.large.elasticsearch</option>
-                                    <option value="m4.xlarge.elasticsearch">m4.xlarge.elasticsearch</option>
-                                    <option value="m4.2xlarge.elasticsearch">m4.2xlarge.elasticsearch</option>
-                                    <option value="m4.4xlarge.elasticsearch">m4.4xlarge.elasticsearch</option>
-                                    <option value="m4.10xlarge.elasticsearch">m4.10xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="m5 (General purpose)">
-                                    <option value="m5.large.elasticsearch">m5.large.elasticsearch</option>
-                                    <option value="m5.xlarge.elasticsearch">m5.xlarge.elasticsearch</option>
-                                    <option value="m5.2xlarge.elasticsearch">m5.2xlarge.elasticsearch</option>
-                                    <option value="m5.4xlarge.elasticsearch">m5.4xlarge.elasticsearch</option>
-                                    <option value="m5.12xlarge.elasticsearch">m5.12xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="r3">
-                                    <option value="r3.large.elasticsearch">r3.large.elasticsearch</option>
-                                    <option value="r3.xlarge.elasticsearch">r3.xlarge.elasticsearch</option>
-                                    <option value="r3.2xlarge.elasticsearch">r3.2xlarge.elasticsearch</option>
-                                    <option value="r3.4xlarge.elasticsearch">r3.4xlarge.elasticsearch</option>
-                                    <option value="r3.8xlarge.elasticsearch">r3.8xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="r4 (Memory optimized)">
-                                    <option value="r4.large.elasticsearch">r4.large.elasticsearch</option>
-                                    <option value="r4.xlarge.elasticsearch">r4.xlarge.elasticsearch</option>
-                                    <option value="r4.2xlarge.elasticsearch">r4.2xlarge.elasticsearch</option>
-                                    <option value="r4.4xlarge.elasticsearch">r4.4xlarge.elasticsearch</option>
-                                    <option value="r4.8xlarge.elasticsearch">r4.8xlarge.elasticsearch</option>
-                                    <option value="r4.16xlarge.elasticsearch">r4.16xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="r5 (Memory optimized)">
-                                    <option value="r5.large.elasticsearch" selected="selected">r5.large.elasticsearch</option>
-                                    <option value="r5.xlarge.elasticsearch">r5.xlarge.elasticsearch</option>
-                                    <option value="r5.2xlarge.elasticsearch">r5.2xlarge.elasticsearch</option>
-                                    <option value="r5.4xlarge.elasticsearch">r5.4xlarge.elasticsearch</option>
-                                    <option value="r5.12xlarge.elasticsearch">r5.12xlarge.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="t2">
-                                    <option value="t2.small.elasticsearch">t2.small.elasticsearch</option>
-                                    <option value="t2.medium.elasticsearch">t2.medium.elasticsearch</option>
-                                </optgroup>
-                                <optgroup label="t3 (General purpose)">
-                                    <option value="t3.small.elasticsearch">t3.small.elasticsearch</option>
-                                    <option value="t3.medium.elasticsearch">t3.medium.elasticsearch</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="dedicated_master_node_number_of_nodes">Number of nodes</label>
-                            <select name="dedicated_master_node_number_of_nodes" id="dedicated_master_node_number_of_nodes" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
-                                <option value="3" selected="selected">3 (default)</option>
-                                <option value="5">5</option>
-                            </select>
+                        <div id="dedicated_container">
+                            <div class="form-group">
+                                <label class="control-label" for="dedicated_master_node_instance_type">Instance type</label>
+                                <select name="dedicated_master_node_instance_type" id="dedicated_master_node_instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
+                                    <option></option>
+                                    <optgroup label="C4 (Compute optimized)">
+                                        <option value="c4.large.elasticsearch">c4.large.elasticsearch</option>
+                                        <option value="c4.xlarge.elasticsearch">c4.xlarge.elasticsearch</option>
+                                        <option value="c4.2xlarge.elasticsearch">c4.2xlarge.elasticsearch</option>
+                                        <option value="c4.4xlarge.elasticsearch">c4.4xlarge.elasticsearch</option>
+                                        <option value="c4.8xlarge.elasticsearch">c4.8xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="C5 (Compute optimized)">
+                                        <option value="c5.large.elasticsearch">c5.large.elasticsearch</option>
+                                        <option value="c5.xlarge.elasticsearch">c5.xlarge.elasticsearch</option>
+                                        <option value="c5.2xlarge.elasticsearch">c5.2xlarge.elasticsearch</option>
+                                        <option value="c5.4xlarge.elasticsearch">c5.4xlarge.elasticsearch</option>
+                                        <option value="c5.9xlarge.elasticsearch">c5.9xlarge.elasticsearch</option>
+                                        <option value="c5.18xlarge.elasticsearch">c5.18xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="i2">
+                                        <option value="i2.xlarge.elasticsearch">i2.xlarge.elasticsearch</option>
+                                        <option value="i2.2xlarge.elasticsearch">i2.2xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="i3 (Storage optimized)">
+                                        <option value="i3.large.elasticsearch">i3.large.elasticsearch</option>
+                                        <option value="i3.xlarge.elasticsearch">i3.xlarge.elasticsearch</option>
+                                        <option value="i3.2xlarge.elasticsearch">i3.2xlarge.elasticsearch</option>
+                                        <option value="i3.4xlarge.elasticsearch">i3.4xlarge.elasticsearch</option>
+                                        <option value="i3.8xlarge.elasticsearch">i3.8xlarge.elasticsearch</option>
+                                        <option value="i3.16xlarge.elasticsearch">i3.16xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="m3">
+                                        <option value="m3.medium.elasticsearch">m3.medium.elasticsearch</option>
+                                        <option value="m3.large.elasticsearch">m3.large.elasticsearch</option>
+                                        <option value="m3.xlarge.elasticsearch">m3.xlarge.elasticsearch</option>
+                                        <option value="m3.2xlarge.elasticsearch">m3.2xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="m4 (General purpose)">
+                                        <option value="m4.large.elasticsearch">m4.large.elasticsearch</option>
+                                        <option value="m4.xlarge.elasticsearch">m4.xlarge.elasticsearch</option>
+                                        <option value="m4.2xlarge.elasticsearch">m4.2xlarge.elasticsearch</option>
+                                        <option value="m4.4xlarge.elasticsearch">m4.4xlarge.elasticsearch</option>
+                                        <option value="m4.10xlarge.elasticsearch">m4.10xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="m5 (General purpose)">
+                                        <option value="m5.large.elasticsearch">m5.large.elasticsearch</option>
+                                        <option value="m5.xlarge.elasticsearch">m5.xlarge.elasticsearch</option>
+                                        <option value="m5.2xlarge.elasticsearch">m5.2xlarge.elasticsearch</option>
+                                        <option value="m5.4xlarge.elasticsearch">m5.4xlarge.elasticsearch</option>
+                                        <option value="m5.12xlarge.elasticsearch">m5.12xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="r3">
+                                        <option value="r3.large.elasticsearch">r3.large.elasticsearch</option>
+                                        <option value="r3.xlarge.elasticsearch">r3.xlarge.elasticsearch</option>
+                                        <option value="r3.2xlarge.elasticsearch">r3.2xlarge.elasticsearch</option>
+                                        <option value="r3.4xlarge.elasticsearch">r3.4xlarge.elasticsearch</option>
+                                        <option value="r3.8xlarge.elasticsearch">r3.8xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="r4 (Memory optimized)">
+                                        <option value="r4.large.elasticsearch">r4.large.elasticsearch</option>
+                                        <option value="r4.xlarge.elasticsearch">r4.xlarge.elasticsearch</option>
+                                        <option value="r4.2xlarge.elasticsearch">r4.2xlarge.elasticsearch</option>
+                                        <option value="r4.4xlarge.elasticsearch">r4.4xlarge.elasticsearch</option>
+                                        <option value="r4.8xlarge.elasticsearch">r4.8xlarge.elasticsearch</option>
+                                        <option value="r4.16xlarge.elasticsearch">r4.16xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="r5 (Memory optimized)">
+                                        <option value="r5.large.elasticsearch" selected="selected">r5.large.elasticsearch (default)</option>
+                                        <option value="r5.xlarge.elasticsearch">r5.xlarge.elasticsearch</option>
+                                        <option value="r5.2xlarge.elasticsearch">r5.2xlarge.elasticsearch</option>
+                                        <option value="r5.4xlarge.elasticsearch">r5.4xlarge.elasticsearch</option>
+                                        <option value="r5.12xlarge.elasticsearch">r5.12xlarge.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="t2">
+                                        <option value="t2.small.elasticsearch">t2.small.elasticsearch</option>
+                                        <option value="t2.medium.elasticsearch">t2.medium.elasticsearch</option>
+                                    </optgroup>
+                                    <optgroup label="t3 (General purpose)">
+                                        <option value="t3.small.elasticsearch">t3.small.elasticsearch</option>
+                                        <option value="t3.medium.elasticsearch">t3.medium.elasticsearch</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="dedicated_master_node_number_of_nodes">Number of nodes</label>
+                                <select name="dedicated_master_node_number_of_nodes" id="dedicated_master_node_number_of_nodes" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
+                                    <option value="3" selected="selected">3 (default)</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
                         </div>
                     </fieldset>
                     <fieldset>
                         <legend>UltraWarm data nodes</legend>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="ultrawarm_data_node" checked="checked" class="active-toggle" data-at-checked="enabled" data-at-elements="['#ultrawarm_instance_type', '#number_of_warm_data_nodes']" />
+                                <input type="checkbox" value="enable" name="ultrawarm_data_node" id="ultrawarm_data_node" />
                                 Enable UltraWarm data nodes
                             </label>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label" for="ultrawarm_instance_type">Instance type</label>
-                            <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%">
-                                <option></option>
-                                <option value="ultrawarm1.medium.elasticsearch" selected="selected">ultrawarm1.medium.elasticsearch (default)</option>
-                                <option value="ultrawarm1.large.elasticsearch">ultrawarm1.large.elasticsearch</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="number_of_warm_data_nodes">Number of warm data nodes</label>
-                            <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" required>
-                            <p class="help-block">UltraWarm requires a minimum of two warm nodes.</p>
+                        <div id="ulrawarm_container" style="display: none">
+                            <div class="form-group">
+                                <label class="control-label" for="ultrawarm_instance_type">Instance type</label>
+                                <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%">
+                                    <option></option>
+                                    <option value="ultrawarm1.medium.elasticsearch" selected="selected">ultrawarm1.medium.elasticsearch (default)</option>
+                                    <option value="ultrawarm1.large.elasticsearch">ultrawarm1.large.elasticsearch</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="number_of_warm_data_nodes">Number of warm data nodes</label>
+                                <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" required>
+                                <p class="help-block">UltraWarm requires a minimum of two warm nodes.</p>
+                            </div>
                         </div>
                     </fieldset>
                 </div>
