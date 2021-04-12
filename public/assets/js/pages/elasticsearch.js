@@ -1,10 +1,11 @@
 var Elasticsearch = function() {
     var appModal,
         FormWizard = function() {
-        let wizard, wizardForm;
+        let wizard, wizardForm, lastStep;
 
         var initWizard = function(form) {
             wizard = $('#smartwizard', form);
+            lastStep = $('.nav li', wizard).length - 1;
 
             wizard.smartWizard({
                 selected: 0,
@@ -67,7 +68,7 @@ var Elasticsearch = function() {
                 }
 
                 // show/hide create data stream btn and next button
-                if(nextStepIndex == 3) {
+                if(nextStepIndex == lastStep) {
                     generateSummary(form);
 
                     $('.sw-btn-next', form).addClass('hidden');
