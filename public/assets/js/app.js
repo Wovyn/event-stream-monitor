@@ -378,15 +378,26 @@ var App = function () {
         });
     }
 
-    customs.activeToggle = function() {
-        let $body = $('body');
+    customs.activeToggle = function(options) {
+        let $settings = $.extend(true, {
+            btn: null,
+            elements: null,
+            condition: function(btn) {
+                return btn.is(':checked');
+            }
+        }, options);
 
-        $body.on('click', '.active-toggle', function() {
-            let $btn = $(this);
-
-            console.log($btn.prop('checked'));
-            console.log($btn.data('at-checked'));
-            console.log($btn.data('at-elements'));
+        $settings.btn.on('click', function() {
+            // check condition display if condition is true; hide if false
+            if($settings.condition($(this))) {
+                $.each($settings.elements, function(key, element) {
+                    element.show();
+                });
+            } else {
+                $.each($settings.elements, function(key, element) {
+                    element.hide();
+                });
+            }
         });
     }
 

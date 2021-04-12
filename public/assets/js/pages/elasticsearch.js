@@ -52,7 +52,7 @@ var Elasticsearch = function() {
             // html class fix
             $('.toolbar', wizard).addClass('modal-footer');
 
-            // on leaveSte
+            // on leaveStep
             wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
                 // validate current step
                 // if(!form.valid()) {
@@ -80,6 +80,11 @@ var Elasticsearch = function() {
                 animateBar(nextStepIndex);
             });
 
+            // on showStep
+            wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
+                appModal.modal('layout');
+            });
+
             // initialize animateBar
             animateBar();
 
@@ -100,7 +105,17 @@ var Elasticsearch = function() {
                     }
                 });
 
-            // App.customs.activeToggle();
+            // dedicated master nodes
+            App.customs.activeToggle({
+                btn: $('#dedicated_master_nodes', form),
+                elements: [ $('#dedicated_container', form) ]
+            });
+
+            // ultrawarm data nodes
+            App.customs.activeToggle({
+                btn: $('#ultrawarm_data_node', form),
+                elements: [ $('#ulrawarm_container', form) ]
+            });
         }
 
         var animateBar = function(step) {

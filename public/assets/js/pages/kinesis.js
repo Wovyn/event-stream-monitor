@@ -52,7 +52,7 @@ var Kinesis = function() {
             // html class fix
             $('.toolbar', wizard).addClass('modal-footer');
 
-            // on leaveSte
+            // on leaveStep
             wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
                 // validate current step
                 if(!form.valid()) {
@@ -78,6 +78,11 @@ var Kinesis = function() {
                 }
 
                 animateBar(nextStepIndex);
+            });
+
+            // on showStep
+            wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
+                appModal.modal('layout');
             });
 
             // initialize animateBar
