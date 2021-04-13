@@ -35,12 +35,12 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="tabbable">
-                    <ul class="nav nav-tabs tab-padding tab-space-3 tab-blue" id="myTab4">
-                        <li class="active"><a data-toggle="tab" href="#panel_overview">Overview</a></li>
-                        <li><a data-toggle="tab" href="#panel_edit_account">Edit Account</a></li>
+                    <ul class="nav nav-tabs tab-padding tab-space-3 tab-blue">
+                        <li class="active"><a data-toggle="tab" href="#overview">Overview</a></li>
+                        <li><a data-toggle="tab" href="#edit_account">Edit Account</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div id="panel_overview" class="tab-pane in active">
+                        <div id="overview" class="tab-pane in active">
                             <div class="row">
                                 <div class="col-sm-5 col-md-4">
                                     <div class="user-left">
@@ -81,12 +81,12 @@
                                                 <tr>
                                                     <td>email:</td>
                                                     <td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
-                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                    <td><a href="#edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>phone:</td>
                                                     <td><a href="tel:<?php echo $user->phone ?>"><?php echo $user->phone ?></a></td>
-                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                    <td><a href="#edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -100,12 +100,12 @@
                                                 <tr>
                                                     <td>Company</td>
                                                     <td><?php echo $user->company ?></td>
-                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                    <td><a href="#edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Last Logged In</td>
                                                     <td><?php echo $user->last_login ?></td>
-                                                    <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                                                    <td><a href="#edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="panel_edit_account" class="tab-pane">
+                        <div id="edit_account" class="tab-pane">
                             <form action="/user/profile/update" role="form" id="update-profile-form">
                                 <div class="row">
                                     <div class="col-md-12">

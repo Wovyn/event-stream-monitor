@@ -469,6 +469,41 @@ var App = function () {
         }
     }
 
+    var checkUserDefaults = function() {
+        if(_.isNull(window.localStorage.getItem('HasUpdatedDefaults'))) {
+            console.log('checkUserDefaults');
+            $.ajax({
+                type: 'get',
+                url: '/user/profile/user_defaults',
+                dataType: 'json',
+                success: function(response) {
+                    if(response.email_updated || response.password_updated) {
+                        let message = '';
+
+                        message += (!response.email_updated) ? '<p>Email needs to be updated.</p>' : '';
+                        message += (!response.password_updated) ? '<p>Password needs to be updated.</p>' : '';
+
+                        Swal.fire({
+                            html: message,
+                            icon: 'warning',
+                            showCloseButton: true
+                        }).then((result) => {
+                            if(result.isConfirmed) {
+                                window.location = '/user/profile#edit_account';
+                            }
+                        });
+                    } else {
+                        window.localStorage.setItem('HasUpdatedDefaults', true);
+                    }
+                }
+            });
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     return {
         init: function() {
             console.log('App.init');
@@ -486,6 +521,7 @@ var App = function () {
         validationSetDefault: validationSetDefault,
         checkUserTwilioKeys: checkUserTwilioKeys,
         checkUserAwsKeys: checkUserAwsKeys,
+        checkUserDefaults: checkUserDefaults,
         timezone: jstz.determine().name(),
         sendTest: function() {
             $.ajax({

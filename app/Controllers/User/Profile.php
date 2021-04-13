@@ -141,4 +141,23 @@ class Profile extends \App\Controllers\BaseController
         return json_encode($result);
     }
 
+    public function user_defaults() {
+        $result = [
+            'email_updated' => true,
+            'password_updated' => true
+        ];
+
+        $user = $this->usersModel->where('id', $this->data['user']->id)->first();
+
+        if($user->email == 'admin@admin.com') {
+            $result['email_updated'] = false;
+        }
+
+        if($this->ionAuthModel->verifyPassword('password', $user->password, $user->email)) {
+            $result['password_updated'] = false;
+        }
+
+        return $this->response->setJSON(json_encode($result));
+    }
+
 }

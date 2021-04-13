@@ -71,6 +71,7 @@ var Dashboard = function() {
         init: function() {
             console.log('Dashboard.init');
             App.checkUserTwilioKeys();
+            App.checkUserDefaults();
 
             hierarchy.chart({
                 container: $('#d3-hierarchy'),

@@ -58,11 +58,19 @@ var Profile = function() {
         });
     }
 
+    var checkHashtag = function() {
+        if(!_.isEmpty(window.location.hash)) {
+            $('.nav-tabs a[href="' + window.location.hash + '"]').tab('show');
+        }
+    }
+
     return {
         init: function() {
             console.log('Profile.init');
 
             App.validationSetDefault();
+
+            checkHashtag();
 
             handleUpdateProfileForm();
             handleUpdateKeysForm();
