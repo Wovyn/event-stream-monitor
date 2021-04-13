@@ -94,7 +94,7 @@
                         <legend>Configure Domain</legend>
                         <div class="form-group">
                             <label class="control-label" for="domain_name">Elasticsearch Domain Name</label>
-                            <input type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Elasticsearch Domain Name" data-rule-nospace required>
+                            <input type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Elasticsearch Domain Name" data-rule-domainname required>
                             <p class="help-block">The name must start with a lowercase letter and must be between 3 and 28 characters. Valid characters are a-z (lowercase only), 0-9, and - (hyphen).</p>
                         </div>
                     </fieldset>
@@ -131,19 +131,19 @@
                             <label class="control-label" for="availability_zones">Availability Zones</label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="3" name="availability_zones" checked="checked" />
+                                    <input type="radio" value="3" name="availability_zones" class="availability_zones" checked="checked" />
                                     3-AZ (Recommended for production workloads with higher availability requirements)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="2" name="availability_zones" />
+                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" />
                                     2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="1" name="availability_zones" />
+                                    <input type="radio" value="1" name="availability_zones" class="availability_zones" />
                                     1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
@@ -233,8 +233,8 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="number_of_nodes">Number of nodes</label>
-                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="2" required>
-                            <p class="help-block">For two Availability Zones, you must choose instances in multiples of two.</p>
+                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="3" required>
+                            <p class="help-block">For three Availability Zones, we recommend instances in multiples of three for equal distribution across the Availability Zones.</p>
                         </div>
                     </fieldset>
                     <fieldset>
@@ -393,18 +393,41 @@
 
        <div id="step-4" class="tab-pane" role="tabpanel">
            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12">
                     <h3 class="StepTitle">Step 4</h3>
+                </div>
+                <div class="col-md-6">
                     <fieldset>
                         <legend>Network configuration</legend>
                         <div class="form-group">
+                            <!--
                             <label class="radio">
                                 <input type="radio" value="vpc" name="network_configuration" />
                                 VPC access
                             </label>
+                            -->
                             <label class="radio">
                                 <input type="radio" value="public" name="network_configuration" checked="checked" />
                                 Public access
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Access policy</legend>
+                        <div class="form-group">
+                            <label class="control-label" for="access_policy">JSON defined access policy</label>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Encryption</legend>
+                        <div class="form-group">
+                            <label class="checkbox">
+                                <input type="checkbox" value="true" name="note_to_node_encryption" id="note_to_node_encryption" checked="checked" />
+                                Node-to-node encryption
                             </label>
                         </div>
                     </fieldset>

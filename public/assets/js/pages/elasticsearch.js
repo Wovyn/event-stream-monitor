@@ -14,18 +14,18 @@ var Elasticsearch = function() {
                 autoAdjustHeight: false,
                 toolbarSettings: {
                     toolbarExtraButtons: [
-                        $('<button type="button" class="btn btn-finish btn-success hidden">Create Data Stream</button>')
+                        $('<button type="button" class="btn btn-finish btn-success hidden">Create Elasticsearch</button>')
                             .on('click', function() {
                                 $(this).addClass('disabled');
 
                                 Swal.fire({
-                                    title: 'Creating Data Stream',
+                                    title: 'Creating Elasticsearch',
                                     allowOutsideClick: false,
                                     didOpen: () => {
                                         Swal.showLoading();
 
                                         $.ajax({
-                                            url: '/kinesis/add',
+                                            url: '/elasticsearch/add',
                                             method: 'POST',
                                             data: form.serialize(),
                                             dataType: 'json',
@@ -37,7 +37,7 @@ var Elasticsearch = function() {
 
                                                 if(!response.error) {
                                                     appModal.modal('hide');
-                                                    $dtTables['kinesis-table'].ajax.reload();
+                                                    $dtTables['elasticsearch-table'].ajax.reload();
                                                 } else {
                                                     console.log(response);
                                                 }
@@ -56,9 +56,9 @@ var Elasticsearch = function() {
             // on leaveStep
             wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
                 // validate current step
-                // if(!form.valid()) {
-                //     return false;
-                // }
+                if(!form.valid()) {
+                    return false;
+                }
 
                 // set prev button hidden on first step
                 if(nextStepIndex == 0) {
