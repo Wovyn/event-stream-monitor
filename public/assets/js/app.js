@@ -477,7 +477,7 @@ var App = function () {
                 url: '/user/profile/user_defaults',
                 dataType: 'json',
                 success: function(response) {
-                    if(response.email_updated || response.password_updated) {
+                    if(!response.email_updated || !response.password_updated) {
                         let message = '';
 
                         message += (!response.email_updated) ? '<p>Email needs to be updated.</p>' : '';
