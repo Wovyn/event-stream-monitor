@@ -382,6 +382,21 @@ var App = function () {
         });
     }
 
+    // hiddenNavs
+    customs.hiddenNavs = function() {
+        let main = $('.main-container');
+
+        main.on('click', function(event) {
+            if(event.altKey) {
+                if($('.main-navigation-menu li.secret').is(':visible')) {
+                   $('.main-navigation-menu li.secret').hide();
+                } else {
+                    $('.main-navigation-menu li.secret').show();
+                }
+            }
+        });
+    }
+
     customs.activeToggle = function(options) {
         let $settings = $.extend(true, {
             btn: null,
@@ -513,6 +528,7 @@ var App = function () {
 
             customs.navInit();
             customs.liteInit();
+            customs.hiddenNavs();
             customs.inputCounterInit();
             customs.inputHiddenInit();
         },
@@ -523,19 +539,19 @@ var App = function () {
         checkUserAwsKeys: checkUserAwsKeys,
         checkUserDefaults: checkUserDefaults,
         timezone: jstz.determine().name(),
-        sendTest: function() {
-            $.ajax({
-                url: 'https://030946c3ad5dec074c7e5eb94dbc7090.m.pipedream.net',
-                type: 'post',
-                data: {
-                    test_id: 'esm-test-' + moment().unix()
-                },
-                dataType: 'json',
-                success: function(response) {
-                    console.log(response);
-                }
-            });
-        },
+        // sendTest: function() {
+        //     $.ajax({
+        //         url: 'https://030946c3ad5dec074c7e5eb94dbc7090.m.pipedream.net',
+        //         type: 'post',
+        //         data: {
+        //             test_id: 'esm-test-' + moment().unix()
+        //         },
+        //         dataType: 'json',
+        //         success: function(response) {
+        //             console.log(response);
+        //         }
+        //     });
+        // },
         customs: customs
     }
 }();

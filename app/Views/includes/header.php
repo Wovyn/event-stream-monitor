@@ -127,14 +127,14 @@
                             <span class="selected"></span>
                         </a>
                     </li>
-                    <li>
+                    <li class="secret" style="display: none">
                         <a href="/elasticsearch">
                             <i class="clip-search"></i>
                             <span class="title"> AWS Elasticsearch </span>
                             <span class="selected"></span>
                         </a>
                     </li>
-                    <li>
+                    <li class="secret" style="display: none">
                         <a href="/firehose">
                             <i class="fa fa-fire"></i>
                             <span class="title"> Kinesis Data Firehose </span>
