@@ -126,10 +126,10 @@ class Profile extends \App\Controllers\BaseController
         $keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         $result = [
             'keys' => [
-                'twilio_sid' => $keys->twilio_sid,
-                'twilio_secret' => $keys->twilio_secret,
-                'aws_access' => $keys->aws_access,
-                'aws_secret' => $keys->aws_secret
+                'twilio_sid' => isset($keys->twilio_sid) ? $keys->twilio_sid : null,
+                'twilio_secret' => isset($keys->twilio_secret) ? $keys->twilio_secret : null,
+                'aws_access' => isset($keys->aws_access) ? $keys->aws_access : null,
+                'aws_secret' => isset($keys->aws_secret) ? $keys->aws_secret : null,
             ]
         ];
 

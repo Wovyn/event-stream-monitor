@@ -241,6 +241,7 @@ var Eventstreams = function() {
             console.log('Eventstreams.init');
 
             App.checkUserTwilioKeys();
+            App.checkUserDefaults();
 
             App.dt.extend();
             App.dt.init({
