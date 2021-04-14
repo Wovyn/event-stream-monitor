@@ -68,6 +68,7 @@ class Kinesis extends BaseController
         // $search = $_POST['search']['value'];
 
         $rows = $this->kinesisDataStreamsModel
+            ->where('user_id', $this->data['user']->id)
             ->orderBy($order, $sort)
             ->findAll($limit, $offset);
 

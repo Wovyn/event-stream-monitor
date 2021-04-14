@@ -3,22 +3,25 @@ var Dashboard = function() {
     var hierarchy = {};
 
     hierarchy.chart = function(settings) {
-      const root = hierarchy.tree(settings);
+        const root = hierarchy.tree(settings);
 
-      let width = settings.container.width();
-      let x0 = Infinity;
-      let x1 = -x0;
-      root.each(d => {
-        if (d.x > x1) x1 = d.x;
-        if (d.x < x0) x0 = d.x;
-      });
+        console.log(root);
 
-      const svg = d3.create("svg")
-          .attr("viewBox", [0, 0, width, x1 - x0 + root.dx * 2]);
+        let width = settings.container.width(),
+            x0 = Infinity,
+            x1 = -x0;
+
+        root.each(d => {
+            if (d.x > x1) x1 = d.x;
+            if (d.x < x0) x0 = d.x;
+        });
+
+        const svg = d3.create("svg")
+            .attr("viewBox", [0, 0, width, x1 - x0 + root.dx * 2]);
 
       const g = svg.append("g")
-          .attr("font-family", "sans-serif")
-          .attr("font-size", 10)
+          .attr("font-family", settings.font.family)
+          .attr("font-size", settings.font.size)
           .attr("transform", `translate(${root.dy / 3},${root.dx - x0})`);
 
       const link = g.append("g")
@@ -61,7 +64,9 @@ var Dashboard = function() {
         let width = settings.container.width(),
             root = d3.hierarchy(settings.data);
 
-        root.dx = 10;
+        console.log(root);
+
+        root.dx = settings.font.size * 2;
         root.dy = width / (root.height + 1);
 
         return d3.tree().nodeSize([root.dx, root.dy])(root);
@@ -73,18 +78,37 @@ var Dashboard = function() {
             App.checkUserTwilioKeys();
             App.checkUserDefaults();
 
-            hierarchy.chart({
-                container: $('#d3-hierarchy'),
-                data: {
-                    name: 'flare',
-                    children: [
-                        { name: 'analytics' },
-                        { name: 'animate' },
-                        { name: 'data' },
-                        { name: 'display' }
-                    ]
-                }
+            $.get('/dashboard/chartdata', function(data) {
+                hierarchy.chart({
+                    container: $('#d3-hierarchy'),
+                    font: {
+                        family: 'Open Sans',
+                        size: 12
+                    },
+                    data: {
+                        name: 'Event Streams',
+                        children: data
+                    }
+                });
             });
+
+            // CollapseTree.chart({
+            //     container: $('#d3-hierarchy'),
+            //     points: {
+            //         height: 15,
+            //         depth: 3
+            //     },
+            //     margin: ({top: 10, right: 120, bottom: 10, left: 40}),
+            //     data: {
+            //         name: 'Event Streams',
+            //         children: [
+            //             { name: 'analytics' },
+            //             { name: 'animate' },
+            //             { name: 'data' },
+            //             { name: 'display' }
+            //         ]
+            //     }
+            // });
         }
     }
 }();

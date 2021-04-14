@@ -68,6 +68,7 @@ class Eventstreams extends BaseController
         // $search = $_POST['search']['value'];
 
         $rows = $this->eventstreamSinksModel
+            ->where('user_id', $this->data['user']->id)
             ->orderBy($order, $sort)
             ->findAll($limit, $offset);
 
@@ -211,6 +212,12 @@ class Eventstreams extends BaseController
 
     public function subscriptions($id) {
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
+        // add check if sink is active
+        // $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+        // if($result['FetchSink']['Sink']->status != 'active') {
+
+        // }
+
         $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
         $subscriptions = $sink_subscription ? json_decode($sink_subscription->subscriptions) : [];
         $create = true;
