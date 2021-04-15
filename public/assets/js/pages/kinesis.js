@@ -255,8 +255,7 @@ var Kinesis = function() {
         init: function() {
             console.log('Kinesis.init');
 
-            App.checkUserAwsKeys();
-            App.checkUserDefaults();
+            App.globalPageChecks();
 
             App.dt.extend();
             App.dt.init({

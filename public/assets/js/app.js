@@ -425,6 +425,7 @@ var App = function () {
             console.log('checkUserAwsKeys');
             $.ajax({
                 type: 'get',
+                async: false,
                 url: '/user/profile/auth_keys',
                 dataType: 'json',
                 success: function(response) {
@@ -458,6 +459,7 @@ var App = function () {
             console.log('checkUserTwilioKeys');
             $.ajax({
                 type: 'get',
+                async: false,
                 url: '/user/profile/auth_keys',
                 dataType: 'json',
                 success: function(response) {
@@ -489,6 +491,7 @@ var App = function () {
             console.log('checkUserDefaults');
             $.ajax({
                 type: 'get',
+                async: false,
                 url: '/user/profile/user_defaults',
                 dataType: 'json',
                 success: function(response) {
@@ -519,6 +522,23 @@ var App = function () {
         }
     }
 
+    var globalPageChecks = function() {
+
+        checkUserDefaults();
+
+        if($.inArray(window.location.pathname, ['/dashboard', '/eventstreams']) > -1) {
+            if(!_.isNull(window.localStorage.getItem('HasUpdatedDefaults'))) {
+                checkUserTwilioKeys();
+            }
+        }
+
+        if($.inArray(window.location.pathname, ['/kinesis']) > -1) {
+            if(!_.isNull(window.localStorage.getItem('HasUpdatedDefaults'))) {
+                checkUserAwsKeys();
+            }
+        }
+    }
+
     return {
         init: function() {
             console.log('App.init');
@@ -535,6 +555,7 @@ var App = function () {
         modal: modal,
         dt: dt,
         validationSetDefault: validationSetDefault,
+        globalPageChecks: globalPageChecks,
         checkUserTwilioKeys: checkUserTwilioKeys,
         checkUserAwsKeys: checkUserAwsKeys,
         checkUserDefaults: checkUserDefaults,

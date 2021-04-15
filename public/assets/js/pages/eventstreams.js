@@ -240,8 +240,7 @@ var Eventstreams = function() {
         init: function() {
             console.log('Eventstreams.init');
 
-            App.checkUserTwilioKeys();
-            App.checkUserDefaults();
+            App.globalPageChecks();
 
             App.dt.extend();
             App.dt.init({
