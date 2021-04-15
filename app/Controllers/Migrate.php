@@ -13,7 +13,8 @@ class Migrate extends \CodeIgniter\Controller {
 
     public function index() {
         try {
-          $this->migrate->setNamespace('App')->latest();
+            $this->migrate->setNamespace('App')->latest();
+            echo 'Successfully migrated latest migration from App.';
         } catch (\Exception $e) {
             echo $e;
         }
@@ -21,7 +22,8 @@ class Migrate extends \CodeIgniter\Controller {
 
     public function rollback($batch) {
         try {
-          $this->migrate->setNamespace('App')->regress($batch);
+            $this->migrate->setNamespace('App')->regress($batch);
+            echo 'Successfully rolled back to migration batch: ' . $batch . '.';
         } catch (\Exception $e) {
             echo $e;
         }
@@ -29,9 +31,9 @@ class Migrate extends \CodeIgniter\Controller {
 
     public function IonAuth() {
         try {
-          $this->migrate->setNamespace('IonAuth')->latest();
-          $this->seeder->call('IonAuth\Database\Seeds\IonAuthSeeder');
-
+            $this->migrate->setNamespace('IonAuth')->latest();
+            $this->seeder->call('IonAuth\Database\Seeds\IonAuthSeeder');
+            echo 'Successfully migrated IonAuth migrations.';
         } catch (\Exception $e) {
             echo $e;
         }
