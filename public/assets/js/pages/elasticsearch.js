@@ -204,8 +204,7 @@ var Elasticsearch = function() {
         init: function() {
             console.log('Elasticsearch.init');
 
-            App.checkUserAwsKeys();
-            App.checkUserDefaults();
+            App.globalPageChecks();
 
             // App.dt.extend();
             // App.dt.init({

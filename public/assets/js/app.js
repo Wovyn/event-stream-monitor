@@ -433,7 +433,8 @@ var App = function () {
                         Swal.fire({
                             text: 'To use any AWS related services, you must configure your AWS API Keys and parameters in your profile.',
                             icon: 'warning',
-                            showCloseButton: true,
+                            allowOutsideClick: false,
+                            showCloseButton: false,
                             confirmButtonText: 'Configure',
                             showCancelButton: true,
                             cancelButtonText: 'Close'
@@ -468,7 +469,8 @@ var App = function () {
                             text: 'Before using the portal, you must enter your Twilio API Keys.',
                             icon: 'warning',
                             confirmButtonText: 'Configure',
-                            showCloseButton: true
+                            allowOutsideClick: false,
+                            showCloseButton: false
                         }).then((result) => {
                             if(result.isConfirmed) {
                                 window.location = '/user/profile';
@@ -504,7 +506,8 @@ var App = function () {
                         Swal.fire({
                             html: message,
                             icon: 'warning',
-                            showCloseButton: true
+                            allowOutsideClick: false,
+                            showCloseButton: false
                         }).then((result) => {
                             if(result.isConfirmed) {
                                 window.location = '/user/profile#edit_account';
@@ -526,16 +529,16 @@ var App = function () {
 
         checkUserDefaults();
 
-        if($.inArray(window.location.pathname, ['/dashboard', '/eventstreams']) > -1) {
-            if(!_.isNull(window.localStorage.getItem('HasUpdatedDefaults'))) {
-                checkUserTwilioKeys();
-            }
+        if(_.isNull(window.localStorage.getItem('HasUpdatedDefaults'))) {
+            return false;
         }
 
-        if($.inArray(window.location.pathname, ['/kinesis']) > -1) {
-            if(!_.isNull(window.localStorage.getItem('HasUpdatedDefaults'))) {
-                checkUserAwsKeys();
-            }
+        if($.inArray(window.location.pathname, ['/dashboard', '/eventstreams']) > -1) {
+            checkUserTwilioKeys();
+        }
+
+        if($.inArray(window.location.pathname, ['/kinesis', '/elasticsearch']) > -1) {
+            checkUserAwsKeys();
         }
     }
 
