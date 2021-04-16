@@ -40,7 +40,7 @@
                             <input type="checkbox" class="grey remember" id="remember" name="remember">
                             Keep me signed in
                         </label>
-                        <button type="submit" class="btn btn-bricky pull-right">
+                        <button id="login" type="submit" class="btn btn-bricky pull-right">
                             Login <i class="fa fa-arrow-circle-right"></i>
                         </button>
                     </div>

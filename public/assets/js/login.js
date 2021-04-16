@@ -228,6 +228,9 @@ var Login = function () {
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     };
 
+    var runMigrationCheck = function() {
+
+    };
 
     return {
         //main function to initiate template pages
@@ -238,6 +241,8 @@ var Login = function () {
             runForgotValidator();
             runRegisterValidator();
             runResetPasswordValidator();
+
+            runMigrationCheck();
         }
     };
 }();
