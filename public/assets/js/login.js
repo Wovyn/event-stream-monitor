@@ -229,7 +229,46 @@ var Login = function () {
     };
 
     var runMigrationCheck = function() {
+        let loginBtn = $('#login'),
+            btnContent = loginBtn.html();
 
+        loginBtn.html('<i class="fa fa-spin clip-spinner"></i>');
+        loginBtn.addClass('disabled');
+
+        $.ajax({
+            url: '/migrate/check',
+            method: 'get',
+            dataType: 'json',
+            success: function(response) {
+                if(response.length) {
+                    let summary = '<table class="table">' +
+                        '<thead><tr>' +
+                            '<th>Version</th>' +
+                            '<th>Name</th>' +
+                            '<th>Result</th>' +
+                        '</tr></thead><tbody>';
+
+                    _.forEach(response, function(row, key) {
+                        summary += '<tr>' +
+                                '<td>' + row.version + '</td>' +
+                                '<td>' + row.name + '</td>' +
+                                '<td>' + (row.success ? '<label class="label label-success">success</label>' : '<label class="label label-warning">failed</label>') + '</td>' +
+                            '</tr>';
+                    });
+
+                    summary += '</tbody></table>';
+
+                    App.modal({
+                        title: 'Migration Update Notice',
+                        body: summary,
+                        footer: false
+                    });
+                }
+
+                loginBtn.html(btnContent);
+                loginBtn.removeClass('disabled');
+            }
+        });
     };
 
     return {

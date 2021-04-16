@@ -64,7 +64,7 @@ class Migrate extends \CodeIgniter\Controller {
             }
         }
 
-        echo '<pre>' , var_dump($result) , '</pre>';
+        return $this->response->setJSON(json_encode($result));
     }
 
     public function do_migrate($path, $namespace) {
