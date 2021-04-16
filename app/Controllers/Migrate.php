@@ -52,14 +52,14 @@ class Migrate extends \CodeIgniter\Controller {
                     $result[] = [
                         'version' => $migration->version,
                         'name' => $migration->name,
-                        'success' => $this->do_migrate($migration->path, $migration->namespace)
+                        'result' => $this->do_migrate($migration->path, $migration->namespace),
                     ];
                 }
             } else {
                 $result[] = [
                     'version' => $migration->version,
                     'name' => $migration->name,
-                    'success' => $this->do_migrate($migration->path, $migration->namespace)
+                    'result' => $this->do_migrate($migration->path, $migration->namespace)
                 ];
 
                 if($migration->name == 'install_ion_auth') {
@@ -72,6 +72,15 @@ class Migrate extends \CodeIgniter\Controller {
     }
 
     public function do_migrate($path, $namespace) {
-        return $this->migrate->force($path, $namespace);
+        $result = [];
+
+        try {
+            $result['success'] = $this->migrate->force($path, $namespace);
+        } catch (\Exception $e) {
+            $result['success'] = false;
+            $result['error_message'] = $e->getMessage();
+        }
+
+        return $result;
     }
 }

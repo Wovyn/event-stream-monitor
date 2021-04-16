@@ -246,13 +246,15 @@ var Login = function () {
                             '<th>Version</th>' +
                             '<th>Name</th>' +
                             '<th>Result</th>' +
+                            '<th>Message</th>' +
                         '</tr></thead><tbody>';
 
                     _.forEach(response, function(row, key) {
                         summary += '<tr>' +
                                 '<td>' + row.version + '</td>' +
                                 '<td>' + row.name + '</td>' +
-                                '<td>' + (row.success ? '<label class="label label-success">success</label>' : '<label class="label label-warning">failed</label>') + '</td>' +
+                                '<td>' + (row.result.success ? '<label class="label label-success">success</label>' : '<label class="label label-warning">failed</label>') + '</td>' +
+                                '<td>' + (row.result.success ? '' : row.result.error_message ) + '</td>' +
                             '</tr>';
                     });
 
@@ -261,6 +263,7 @@ var Login = function () {
                     App.modal({
                         title: 'Migration Update Notice',
                         body: summary,
+                        width: 640,
                         footer: false
                     });
                 }
