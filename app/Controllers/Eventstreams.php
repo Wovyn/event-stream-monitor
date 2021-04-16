@@ -279,7 +279,7 @@ class Eventstreams extends BaseController
         }
 
         $result['ReadEventTypes'] = $this->twilio->ReadEventTypes();
-        $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['EventTypes'], $subscriptions);
+        $result['JSTreeFormat'] = $this->twilio->JSTreeFormat($result['ReadEventTypes']['response'], $subscriptions);
 
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }

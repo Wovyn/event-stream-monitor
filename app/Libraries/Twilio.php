@@ -180,9 +180,11 @@ class Twilio {
     public function ReadEventTypes() {
         $result['error'] = false;
         try {
-            $result['EventTypes'] = $this->client->events->v1
+            // log_message('debug', 'running ReadEventTypes');
+            $result['response'] = $this->client->events->v1
                 ->eventTypes
-                ->read();
+                ->read(100); // temporary fix
+            // log_message('debug', 'done ReadEventTypes');
         } catch (RestException $e) {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
