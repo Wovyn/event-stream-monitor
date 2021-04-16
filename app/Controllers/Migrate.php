@@ -61,6 +61,10 @@ class Migrate extends \CodeIgniter\Controller {
                     'name' => $migration->name,
                     'success' => $this->do_migrate($migration->path, $migration->namespace)
                 ];
+
+                if($migration->name == 'install_ion_auth') {
+                    $this->seeder->call('IonAuth\Database\Seeds\IonAuthSeeder');
+                }
             }
         }
 
