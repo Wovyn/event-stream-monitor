@@ -118,7 +118,7 @@
                                                 Twilio API Keys
                                                 <a class="popovers" href="javascript:;"
                                                     data-original-title="Configure Twilio API Keys"
-                                                    data-content="Event Stream Monitor requires Twilio API Keys to call the Twilio Event Stream APIs. You can use the Twilio Console to create a set of revokable API Keys.  In the Twilio Console, create 'Standard' Key Type set of API Keys.  Click here to <a href='https://www.twilio.com/console/project/api-keys' target='_blank'>Create API Keys</a> then you can copy and paste the SID and Secret into the fields below."
+                                                    data-content="Event Stream Monitor requires Twilio API Keys to call the Twilio Event Stream APIs. You can use the Twilio Console to create a set of revokable API Keys.  In the Twilio Console, create a 'Standard' Key Type set of API Keys.  Click here to <a href='https://www.twilio.com/console/project/api-keys' target='_blank'>Create API Keys</a> then you can copy and paste the SID and Secret into the fields below."
                                                     data-html="true"
                                                     data-placement="top"
                                                 >
@@ -147,8 +147,8 @@
                                             <legend>
                                                 AWS API Keys
                                                 <a class="popovers" href="javascript:;"
-                                                    data-original-title="AWS API Keys Notes"
-                                                    data-content="AWS API Keys content <a href='#' target='_blank'>sample link</a>"
+                                                    data-original-title="AWS API Keys and Configuration"
+                                                    data-content="To allow Event Stream Monitor to create and configure AWS resources on your behalf, there are several steps that must be taken to obtain values for the fields below.  Click here to <a href='#' target='_blank'>Read the AWS Configuration Steps</a>"
                                                     data-html="true"
                                                     data-placement="top"
                                                 >
