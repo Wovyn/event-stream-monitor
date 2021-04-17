@@ -148,7 +148,7 @@
                                                 AWS API Keys
                                                 <a class="popovers" href="javascript:;"
                                                     data-original-title="AWS API Keys and Configuration"
-                                                    data-content="To allow Event Stream Monitor to create and configure AWS resources on your behalf, there are several steps that must be taken to obtain values for the fields below.  Click here to <a href='#' target='_blank'>Read the AWS Configuration Steps</a>"
+                                                    data-content="To allow Event Stream Monitor to create and configure AWS resources on your behalf, there are several steps that must be taken to obtain values for the fields below.  Click here to <a href='https://docs.google.com/document/d/1iUATJFnRaQXv7OvvWu5mAvpDDCd6H6EkZOjVNAAK69c/edit?usp=sharing' target='_blank'>Read the AWS Configuration Steps</a>"
                                                     data-html="true"
                                                     data-placement="top"
                                                 >
