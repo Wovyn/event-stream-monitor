@@ -117,8 +117,8 @@
                                             <legend>
                                                 Twilio API Keys
                                                 <a class="popovers" href="javascript:;"
-                                                    data-original-title="Twilio API Keys Notes"
-                                                    data-content="Twilio API Keys content <a href='#' target='_blank'>sample link</a>"
+                                                    data-original-title="Configure Twilio API Keys"
+                                                    data-content="To use Event Stream Monitor you must provide Twilio API Keys which will allow the portal to call the Twilio Event Stream APIs.  The Twilio Console provides the ability to create a set of keys that can be revoked at any time in the future.  Click here to go to the Twilio Console and <a href='https://www.twilio.com/console/project/api-keys' target='_blank'>Create API Keys</a>"
                                                     data-html="true"
                                                     data-placement="top"
                                                 >
