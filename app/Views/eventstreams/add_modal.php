@@ -10,7 +10,7 @@
     </select>
 </div>
 <fieldset class="sink-type">
-    <label for="sink_type_configuration">Sink Configuration</label>
+    <h4><label for="sink_type_configuration">Sink Configuration</label></h4>
     <div class="kinesis" style="display:none">
         <div class="form-group">
             <label class="control-label" for="kinesis_data_stream">Kinesis Data Stream</label>
