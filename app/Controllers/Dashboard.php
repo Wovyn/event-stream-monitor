@@ -42,9 +42,12 @@ class Dashboard extends BaseController {
 
         foreach ($sinks as $sink) {
             $subscription = $this->sinkSubscriptionsModel->where('sink_id', $sink->id)->first();
+            
             $children = [];
-            foreach (json_decode($subscription->subscriptions) as $subs) {
-                $children[] = [ 'name' => str_replace(['com.twilio.'], '', $subs) ];
+            if($subscription) {
+                foreach (json_decode($subscription->subscriptions) as $subs) {
+                    $children[] = [ 'name' => str_replace(['com.twilio.'], '', $subs) ];
+                }
             }
 
             $result[] = [
