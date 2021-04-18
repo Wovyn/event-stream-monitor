@@ -98,3 +98,5 @@ input[type=checkbox], input[type=radio] { margin-top: 2px; }
 ul.main-navigation-menu>li>a i { width: 16px; text-align: center; }
 
 .checkbox, .radio { padding-left: 20px; }
+
+.text-wrap { overflow-wrap: break-word; }

@@ -295,14 +295,29 @@ var Eventstreams = function() {
                             }
                         },
                         {
+                            targets: 2,
+                            render: function(data, type, full, meta) {
+
+                                let config = $.parseJSON(full.config),
+                                    tooltip =
+                                    '<div class=\'text-left text-wrap\'>' +
+                                        '<b>Destination:</b> ' + config.sink_configuration.destination + '<br>' +
+                                        '<b>Batch Events:</b> ' + ( config.sink_configuration.batch_events ? 'true' : 'false' ) + '<br>' +
+                                        '<b>Method:</b> ' + config.sink_configuration.method + '<br>' +
+                                    '</div>';
+
+                                return '<span class="label label-' + (data.sink_type == 'webhook' ? 'info' : 'warning') + ' tip" data-html="true" title="' + tooltip + '"> ' + data + '</span>'
+                            }
+                        },
+                        {
                             targets:[4,5],
                             render: function(data, type, full, meta) {
                                 let utcTime = moment.tz(data, 'UTC'),
                                     localTime = moment.tz(data, 'UTC').tz(App.timezone),
                                     tooltip =
                                         '<div class=\'text-left\'>' +
-                                            '<b>UTC:</b> ' + utcTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
-                                            '<b>Local:</b> ' + localTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
+                                            '<b>UTC:</b> ' + utcTime.format("MMM DD, YYYY h:mm:ss a") + '<br>' +
+                                            '<b>Local:</b> ' + localTime.format("MMM DD, YYYY h:mm:ss a") + '<br>' +
                                         '</div>';
 
                                 if(data) {
@@ -318,8 +333,8 @@ var Eventstreams = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn ' + (full.status != 'active' ? 'disabled' : '') + '"><i class="fa fa-sliders"></i></a>' +
-                                        '<a href="/eventstreams/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
+                                        '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn ' + (full.status != 'active' ? 'disabled' : '') + ' tip" title="Edit Subscriptions"><i class="fa fa-sliders"></i></a>' +
+                                        '<a href="/eventstreams/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 
                                 return options;
