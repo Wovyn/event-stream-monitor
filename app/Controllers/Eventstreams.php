@@ -87,7 +87,8 @@ class Eventstreams extends BaseController
             $data = [
                 'user_id' => $this->data['user']->id,
                 'description' => $_POST['description'],
-                'sink_type' => $_POST['sink_type']
+                'sink_type' => $_POST['sink_type'],
+                'config' => null
             ];
 
             switch ($data['sink_type']) {
@@ -99,6 +100,11 @@ class Eventstreams extends BaseController
                         'external_id' => $this->keys->external_id
                     ];
 
+                    $data['config'] = json_encode([
+                        'sink_configuration' => $sink_config,
+                        'extra' => null
+                    ]);
+
                     break;
 
                 case 'webhook':
@@ -107,6 +113,13 @@ class Eventstreams extends BaseController
                         'method' => $_POST['method'],
                         'batch_events' => (bool) $_POST['batch_events']
                     ];
+
+                    $data['config'] = json_encode([
+                        'sink_configuration' => $sink_config,
+                        'extra' => [
+                            'webhook_data_view_url' => null
+                        ]
+                    ]);
 
                     break;
             }
@@ -173,7 +186,7 @@ class Eventstreams extends BaseController
 
                 case 'validating':
                     $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-                    $arn = explode(':', $result['FetchSink']['Sink']->sinkConfiguration['arn']);
+                    $arn = explode(':', $result['FetchSink']['response']->sinkConfiguration['arn']);
                     $region = $arn[3];
                     $streamName = str_replace('stream/', '', $arn[5]);
 
@@ -197,10 +210,9 @@ class Eventstreams extends BaseController
                 $this->eventstreamSinksModel
                     ->where('sid', $sink->sid)
                     ->update(null, [
-                        'status' => $result['FetchSink']['Sink']->status
+                        'status' => $result['FetchSink']['response']->status
                     ]);
             }
-
         }
 
         $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
@@ -214,7 +226,7 @@ class Eventstreams extends BaseController
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
         // add check if sink is active
         // $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-        // if($result['FetchSink']['Sink']->status != 'active') {
+        // if($result['FetchSink']['response']->status != 'active') {
 
         // }
 
@@ -285,6 +297,12 @@ class Eventstreams extends BaseController
     }
 
     // manual test and validation for webhook sinks
+    public function FetchSink($sid) {
+        $result = $this->twilio->FetchSink($sid);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
     public function SinkTest($sid) {
         $result = $this->twilio->SinkTest($sid);
 

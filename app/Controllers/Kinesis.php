@@ -155,7 +155,7 @@ class Kinesis extends BaseController
 
             // fetch sinkconfiguration and get the kinesis data stream name
             $fetchSink = $this->twilio->FetchSink($sink->sid);
-            $arn = explode('stream/', $fetchSink['Sink']->sinkConfiguration['arn']);
+            $arn = explode('stream/', $fetchSink['response']->sinkConfiguration['arn']);
             $streamName = $arn[1];
             $activeStreams[] = $streamName;
         }

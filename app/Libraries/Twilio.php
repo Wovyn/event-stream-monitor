@@ -87,7 +87,7 @@ class Twilio {
     public function FetchSink($sid) {
         $result['error'] = false;
         try {
-            $result['Sink'] = $this->client->events->v1
+            $result['response'] = $this->client->events->v1
                 ->sinks($sid)
                 ->fetch();
         } catch (RestException $e) {
