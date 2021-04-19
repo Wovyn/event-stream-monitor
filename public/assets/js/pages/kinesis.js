@@ -140,7 +140,7 @@ var Kinesis = function() {
                     '</div>';
             });
 
-            $('.summary', form).append(summary);
+            summaryEl.append(summary);
         }
 
         return {

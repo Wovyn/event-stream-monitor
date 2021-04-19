@@ -1,4 +1,186 @@
 var Eventstreams = function() {
+    var appModal;
+    var FormWizard = function() {
+        let wizard, lastStep, $tree;
+
+        var initWizard = function(form) {
+            wizard = $('#smartwizard', form);
+            lastStep = $('.nav li', wizard).length - 1;
+
+            wizard.smartWizard({
+                selected: 0,
+                justified: true,
+                enableURLhash: false,
+                autoAdjustHeight: false,
+                toolbarSettings: {
+                    toolbarExtraButtons: [
+                        $('<button type="button" class="btn btn-finish btn-success hidden">Create Sink Instance</button>')
+                            .on('click', function() {
+                                $(this).addClass('disabled');
+
+                                Swal.fire({
+                                    title: 'Creating Sink Instance',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+
+                                        $.ajax({
+                                            url: '/eventstreams/add',
+                                            method: 'POST',
+                                            data: form.serialize(),
+                                            dataType: 'json',
+                                            success: function(response) {
+                                                Swal.fire({
+                                                    icon: response.error !== true ? 'success' : 'error',
+                                                    text: response.message
+                                                });
+
+                                                if(!response.error) {
+                                                    appModal.modal('hide');
+                                                    $dtTables['sink-table'].ajax.reload();
+                                                } else {
+                                                    console.log(response);
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            })
+                    ]
+                }
+            });
+
+            // html class fix
+            $('.toolbar', wizard).addClass('modal-footer');
+
+            // on leaveStep
+            wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+                // validate current step
+                if(!form.valid()) {
+                    return false;
+                }
+
+                // set prev button hidden on first step
+                if(nextStepIndex == 0) {
+                    $('.sw-btn-prev', form).addClass('hidden');
+                } else {
+                    $('.sw-btn-prev', form).removeClass('hidden');
+                }
+
+                // show/hide create data stream btn and next button
+                if(nextStepIndex == lastStep) {
+                    generateSummary(form);
+
+                    $('.sw-btn-next', form).addClass('hidden');
+                    $('.btn-finish', form).removeClass('hidden');
+                } else {
+                    $('.sw-btn-next', form).removeClass('hidden');
+                    $('.btn-finish', form).addClass('hidden');
+                }
+
+                animateBar(nextStepIndex);
+            });
+
+            // on showStep
+            wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
+                appModal.modal('layout');
+            });
+
+            // initialize animateBar
+            animateBar();
+
+            // set prev button hidden on first step
+            $('.sw-btn-prev', form).addClass('hidden');
+
+            // init elements
+            $('.form-select2', form).select2()
+                .on('select2:select', function (e) {
+                    if($(this).val()) {
+                        $(this)
+                            .closest('.form-group')
+                                .removeClass('has-error')
+                                .addClass('has-success')
+                            .find('.symbol')
+                                .removeClass('required')
+                                .addClass('ok');
+                    }
+                });
+        }
+
+        var animateBar = function(step) {
+            if (_.isUndefined(step)) {
+                step = 0;
+            };
+
+            numberOfSteps = $('.swMain > .nav > li').length;
+            var valueNow = Math.floor(100 / numberOfSteps * (step + 1));
+            $('.step-bar').css('width', valueNow + '%');
+        };
+
+        var generateSummary = function(form) {
+            // console.log(form.serializeArray());
+            let summaryEl = $('.summary', form),
+                sinkType = $('#sink_type', form).val(),
+                formValues = form.serializeArray(),
+                summary = '';
+
+            summaryEl.empty();
+
+            summary += '<div class="col-md-6">';
+            _.forEach(formValues, function(data) {
+                summary += '<div class="form-group">' +
+                    '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
+                    '<p class="form-control-static display-value">' + data.value + '</p>' +
+                    '</div>';
+            });
+            summary += '</div>';
+
+            summaryEl.append(summary);
+        }
+
+        return {
+            init: function(form) {
+                initWizard(form);
+
+                // initialize sink_type fields
+                $('#sink_type', form).on('change', function() {
+                    // console.log($(this).val());
+                    if($(this).val() == 'kinesis') {
+                        $('.sink-type .kinesis').show();
+                        $('.sink-type .webhook').hide();
+                    } else {
+                        $('.sink-type .kinesis').hide();
+                        $('.sink-type .webhook').show();
+                    }
+                });
+
+                // initialize subscription tree
+                let eventTypes = $.parseJSON($('#jstree', form).html());
+                $tree = $('#jstree', form).jstree({
+                    core: {
+                        data: eventTypes.jstree,
+                        multiple: true
+                    },
+                    checkbox: {
+                        keep_selected_style: false
+                    },
+                    search: {
+                        show_only_matches: true
+                    },
+                    types: {
+                        default: { icon: 'fa fa-hashtag' },
+                        parent: { icon: 'clip-folder' },
+                    },
+                    plugins: ['checkbox', 'types', 'wholerow']
+                });
+
+                // initialize fields
+                $('#external_id', form).inputHidden();
+
+                console.log(eventTypes);
+            }
+        };
+    }();
 
     var handleAddSink = function() {
         $('.add-sink-btn').on('click', function(e) {
@@ -8,73 +190,109 @@ var Eventstreams = function() {
                 return false;
             }
 
-            let $btn = $(this),
-                appModal = App.modal({
+            Swal.fire({
+                title: 'Loading Sink Wizard!',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            let $btn = $(this);
+
+            appModal = App.modal({
                 title: 'Create Sink Instance',
                 ajax: {
                     url: $btn.attr('href')
                 },
                 onShown: function(form) {
-                    $('#sink_type', form).on('change', function() {
-                        // console.log($(this).val());
-                        if($(this).val() == 'kinesis') {
-                            $('.sink-type .kinesis').show();
-                            $('.sink-type .webhook').hide();
-                        } else {
-                            $('.sink-type .kinesis').hide();
-                            $('.sink-type .webhook').show();
-                        }
-                    });
+                    console.log('initialize wizard');
 
-                    $('.form-select2', form).select2()
-                        .on('select2:select', function (e) {
-                            if($(this).val()) {
-                                $(this).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
-                            }
-                        });
+                    FormWizard.init(form);
                 },
-                // width: '960',
-                btn: {
-                    confirm: {
-                        text: 'Create Sink',
-                        onClick: function(form) {
-                            Swal.fire({
-                                title: 'Creating Sink Instance',
-                                allowOutsideClick: false,
-                                didOpen: () => {
-                                    Swal.showLoading();
-
-                                    $.ajax({
-                                        url: $btn.attr('href'),
-                                        method: 'POST',
-                                        data: form.serialize(),
-                                        dataType: 'json',
-                                        success: function(response) {
-                                            Swal.fire({
-                                                icon: response.error !== true ? 'success' : 'error',
-                                                text: response.message
-                                            });
-
-                                            if(!response.error) {
-                                                appModal.modal('hide');
-                                                $dtTables['sink-table'].ajax.reload();
-                                            } else {
-                                                console.log(response);
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-
-                            return false;
-                        }
-                    }
-                },
-                validate: true,
+                width: '960',
+                footer: false,
                 others: { backdrop: 'static', keyboard: false }
-            })
+            });
+
         });
-    }
+    };
+
+    // var handleAddSink = function() {
+    //     $('.add-sink-btn').on('click', function(e) {
+    //         e.preventDefault();
+
+    //         if(!App.checkUserTwilioKeys()) {
+    //             return false;
+    //         }
+
+    //         let $btn = $(this);
+    //             appModal = App.modal({
+    //             title: 'Create Sink Instance',
+    //             ajax: {
+    //                 url: $btn.attr('href')
+    //             },
+    //             onShown: function(form) {
+    //                 $('#sink_type', form).on('change', function() {
+    //                     // console.log($(this).val());
+    //                     if($(this).val() == 'kinesis') {
+    //                         $('.sink-type .kinesis').show();
+    //                         $('.sink-type .webhook').hide();
+    //                     } else {
+    //                         $('.sink-type .kinesis').hide();
+    //                         $('.sink-type .webhook').show();
+    //                     }
+    //                 });
+
+    //                 $('.form-select2', form).select2()
+    //                     .on('select2:select', function (e) {
+    //                         if($(this).val()) {
+    //                             $(this).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
+    //                         }
+    //                     });
+    //             },
+    //             // width: '960',
+    //             btn: {
+    //                 confirm: {
+    //                     text: 'Create Sink',
+    //                     onClick: function(form) {
+    //                         Swal.fire({
+    //                             title: 'Creating Sink Instance',
+    //                             allowOutsideClick: false,
+    //                             didOpen: () => {
+    //                                 Swal.showLoading();
+
+    //                                 $.ajax({
+    //                                     url: $btn.attr('href'),
+    //                                     method: 'POST',
+    //                                     data: form.serialize(),
+    //                                     dataType: 'json',
+    //                                     success: function(response) {
+    //                                         Swal.fire({
+    //                                             icon: response.error !== true ? 'success' : 'error',
+    //                                             text: response.message
+    //                                         });
+
+    //                                         if(!response.error) {
+    //                                             appModal.modal('hide');
+    //                                             $dtTables['sink-table'].ajax.reload();
+    //                                         } else {
+    //                                             console.log(response);
+    //                                         }
+    //                                     }
+    //                                 });
+    //                             }
+    //                         });
+
+    //                         return false;
+    //                     }
+    //                 }
+    //             },
+    //             validate: true,
+    //             others: { backdrop: 'static', keyboard: false }
+    //         })
+    //     });
+    // }
 
     var handleSubscriptionSink = function() {
         console.log('init handleSubscriptionSink');
@@ -297,16 +515,25 @@ var Eventstreams = function() {
                         {
                             targets: 2,
                             render: function(data, type, full, meta) {
-
                                 let config = $.parseJSON(full.config),
-                                    tooltip =
-                                    '<div class=\'text-left text-wrap\'>' +
-                                        '<b>Destination:</b> ' + config.sink_configuration.destination + '<br>' +
-                                        '<b>Batch Events:</b> ' + ( config.sink_configuration.batch_events ? 'true' : 'false' ) + '<br>' +
-                                        '<b>Method:</b> ' + config.sink_configuration.method + '<br>' +
-                                    '</div>';
+                                    tooltip;
 
-                                return '<span class="label label-' + (data.sink_type == 'webhook' ? 'info' : 'warning') + ' tip" data-html="true" title="' + tooltip + '"> ' + data + '</span>'
+                                if(full.sink_type == "webhook") {
+                                    tooltip =
+                                        '<div class=\'text-left text-wrap\'>' +
+                                            '<b>Destination:</b><br>' + config.sink_configuration.destination + '<br>' +
+                                            '<b>Batch Events:</b><br>' + (config.sink_configuration.batch_events ? 'true' : 'false') + '<br>' +
+                                            '<b>Method:</b><br>' + config.sink_configuration.method + '<br>' +
+                                        '</div>'
+                                } else {
+                                    tooltip =
+                                        '<div class=\'text-left text-wrap\'>' +
+                                            '<b>Stream ARN:</b><br>' + config.sink_configuration.arn + '<br>' +
+                                            '<b>Role ARN:</b><br>' + config.sink_configuration.role_arn + '<br>' +
+                                        '</div>';
+                                }
+
+                                return '<span class="label label-' + (full.sink_type == 'webhook' ? 'info' : 'warning') + ' tip" data-html="true" title="' + tooltip + '"> ' + data + '</span>'
                             }
                         },
                         {

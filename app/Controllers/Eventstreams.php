@@ -149,7 +149,10 @@ class Eventstreams extends BaseController
             'external_id' => $this->keys->external_id
         ];
         $data['kinesisDataStreams'] = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
-        return view('eventstreams/add_modal', $data);
+
+        $eventTypes = $this->twilio->ReadEventTypes();
+        $data['eventTypes'] = $this->twilio->JSTreeFormat($eventTypes['response'], []);
+        return view('eventstreams/wizard_modal', $data);
     }
 
     public function delete($id) {
