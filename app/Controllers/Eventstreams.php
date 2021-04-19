@@ -136,6 +136,13 @@ class Eventstreams extends BaseController
 
                 $result['save'] = $this->eventstreamSinksModel->save($data);
                 $result['sink_id'] = $this->eventstreamSinksModel->getInsertID();
+
+                // check if status is not active or failed
+                if(!in_array($data['status'], ['active', 'failed'])) {
+                    // validate sink
+                    log_message('debug', 'trigger subscription sink_validate sink_id: ' . $result['sink_id']);
+                    $this->sink_validate($result['sink_id']);
+                }
             }
 
             return $this->response->setJSON(json_encode([
@@ -226,15 +233,55 @@ class Eventstreams extends BaseController
         ]);
     }
 
-    public function subscriptions($id) {
-        $sink = $this->eventstreamSinksModel->where('id', $id)->first();
-        // add check if sink is active
-        // $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-        // if($result['FetchSink']['response']->status != 'active') {
+    public function sink_validate($sink_id) {
+        $sink = $this->eventstreamSinksModel->where('id', $sink_id)->first();
 
-        // }
+        // sink test
+        $result['SinkTest'] = $this->twilio->SinkTest($sink->sid);
 
-        $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();
+        // get stream name
+        $config = json_decode($sink->config);
+
+        $arn = explode(':', $config->sink_configuration->arn);
+        $region = $arn[3];
+        $streamName = str_replace('stream/', '', $arn[5]);
+
+        $this->kinesis->setRegion($region);
+        // repeat loop until sink is active
+        do {
+            $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
+            foreach ($result['GetAllRecords'] as $record) {
+                $recordData = json_decode($record['Data'], true);
+
+                if(!is_null($recordData)) {
+                    if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
+                        $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
+                    }
+                }
+            }
+
+            $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+        } while(!in_array($result['FetchSink']['response']->status, ['active', 'failed']));
+
+        // update status if active or failed
+        $this->eventstreamSinksModel
+            ->where('sid', $sink->sid)
+            ->update(null, [
+                'status' => $result['FetchSink']['response']->status
+            ]);
+    }
+
+    public function subscriptions($sink_id) {
+        $sink = $this->eventstreamSinksModel->where('id', $sink_id)->first();
+
+        // check if status is not active or failed
+        if(!in_array($sink->status, ['active', 'failed'])) {
+            // validate sink
+            log_message('debug', 'trigger subscription sink_validate sink_id: ' . $sink_id);
+            $this->sink_validate($sink_id);
+        }
+
+        $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $sink_id)->first();
         $subscriptions = $sink_subscription ? json_decode($sink_subscription->subscriptions) : [];
         $create = true;
 

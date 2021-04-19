@@ -31,7 +31,7 @@ var Eventstreams = function() {
                                             data: form.serialize(),
                                             dataType: 'json',
                                             success: function(response) {
-                                                console.log(response.result.sink_id);
+                                                // console.log(response.result.sink_id);
                                                 if(!response.error) {
                                                     // submit subscriptions
                                                     let selected = $tree.jstree('get_selected');
@@ -184,13 +184,13 @@ var Eventstreams = function() {
             });
             summary += '</div>';
 
-            // format
+            // console.log(subscriptions);
+
             if(subscriptions.length) {
+                // format
                 let events = {};
                 _.forEach(subscriptions, function (subscription, key) {
-                    if(subscription.parent == '#') {
-                        events[subscription.id] = [];
-                    } else {
+                    if (subscription.parent != '#') {
                         if (_.isUndefined(events[subscription.parent])) {
                             events[subscription.parent] = [];
                         }
@@ -211,6 +211,8 @@ var Eventstreams = function() {
                     summary += '</ul>';
                 });
                 summary += '</div></div>';
+
+                // console.log(events);
             } else {
                 summary += '<div class="col-md-6" >' +
                     '<div class="form-group">' +
@@ -661,7 +663,7 @@ var Eventstreams = function() {
                         $('.tip', nRow).tooltip();
                     },
                     fnInitComplete: function(settings, json) {
-                        handleSync();
+                        // handleSync();
                     }
                 }
             });
