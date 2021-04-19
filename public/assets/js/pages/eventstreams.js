@@ -128,10 +128,19 @@ var Eventstreams = function() {
 
             summary += '<div class="col-md-6">';
             _.forEach(formValues, function(data) {
-                summary += '<div class="form-group">' +
-                    '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
-                    '<p class="form-control-static display-value">' + data.value + '</p>' +
-                    '</div>';
+                if (sinkType == 'kinesis' && $.inArray(data.name, ['description', 'kinesis_data_stream', 'role_arn']) != -1) {
+                    summary += '<div class="form-group">' +
+                        '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
+                        '<p class="form-control-static display-value">' + data.value + '</p>' +
+                        '</div>';
+                }
+
+                if (sinkType == 'webhook' && $.inArray(data.name, ['description', 'destination_url', 'webhook_data_view_url', 'method', 'batch_events']) != -1) {
+                    summary += '<div class="form-group">' +
+                        '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
+                        '<p class="form-control-static display-value">' + data.value + '</p>' +
+                        '</div>';
+                }
             });
             summary += '</div>';
 
@@ -209,6 +218,9 @@ var Eventstreams = function() {
                     console.log('initialize wizard');
 
                     FormWizard.init(form);
+
+                    // loading phase end
+                    Swal.close();
                 },
                 width: '960',
                 footer: false,

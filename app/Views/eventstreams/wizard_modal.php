@@ -74,12 +74,12 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="role_arn">Role ARN</label>
-                                <input type="text" class="form-control" id="role_arn" value="<?php echo $kinesis['event_stream_role_arn'] ?>" readonly>
+                                <input type="text" class="form-control" id="role_arn" name="role_arn" value="<?php echo $kinesis['event_stream_role_arn'] ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="external_id">External ID</label>
                                 <div class="input-group input-append input-hidden-container input-hidden">
-                                    <input type="text" class="form-control" id="external_id" value="<?php echo $kinesis['external_id'] ?>" readonly>
+                                    <input type="text" class="form-control" id="external_id" name="external_id" value="<?php echo $kinesis['external_id'] ?>" readonly>
                                     <span class="input-group-addon add-on toggle"><i class="clip-eye"></i></span>
                                 </div>
                             </div>
