@@ -135,7 +135,7 @@ class Eventstreams extends BaseController
                 $data['status'] = $result['CreateSink']['CreatedSink']->status;
 
                 $result['save'] = $this->eventstreamSinksModel->save($data);
-                $result['id'] = $this->eventstreamSinksModel->getInsertID();
+                $result['sink_id'] = $this->eventstreamSinksModel->getInsertID();
             }
 
             return $this->response->setJSON(json_encode([
@@ -189,8 +189,8 @@ class Eventstreams extends BaseController
                     break;
 
                 case 'validating':
-                    $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-                    $arn = explode(':', $result['FetchSink']['response']->sinkConfiguration['arn']);
+                    $config = json_decode($sink->config);
+                    $arn = explode(':', $config['sink_configuration']['arn']);
                     $region = $arn[3];
                     $streamName = str_replace('stream/', '', $arn[5]);
 

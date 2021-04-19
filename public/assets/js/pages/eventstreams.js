@@ -31,33 +31,46 @@ var Eventstreams = function() {
                                             data: form.serialize(),
                                             dataType: 'json',
                                             success: function(response) {
+                                                console.log(response.result.sink_id);
                                                 if(!response.error) {
-                                                    // appModal.modal('hide');
                                                     // submit subscriptions
-                                                    $.ajax({
-                                                        url: '/eventstreams/subscriptions/' + response.id,
-                                                        method: 'POST',
-                                                        data: { subscriptions: selected },
-                                                        dataType: 'json',
-                                                        success: function (response) {
-                                                            if (response.message !== false) {
-                                                                Swal.fire({
-                                                                    icon: response.error !== true ? 'success' : 'error',
-                                                                    text: response.message
-                                                                });
-                                                            } else {
-                                                                Swal.close();
-                                                            }
+                                                    let selected = $tree.jstree('get_selected');
+                                                    _.pullAll(selected, eventTypes.parents);
 
-                                                            if (!response.error) {
-                                                                appModal.modal('hide');
-                                                            } else {
-                                                                console.log(response);
-                                                            }
-                                                        }
-                                                    });
+                                                    // check selected subscription length
+                                                    if(selected.length) {
+                                                        $.ajax({
+                                                            url: '/eventstreams/subscriptions/' + response.result.sink_id,
+                                                            method: 'POST',
+                                                            data: { subscriptions: selected },
+                                                            dataType: 'json',
+                                                            success: function (subResponse) {
+                                                                if (subResponse.message !== false) {
+                                                                    Swal.fire({
+                                                                        icon: subResponse.error !== true ? 'success' : 'error',
+                                                                        text: response.message
+                                                                    });
+                                                                } else {
+                                                                    Swal.close();
+                                                                }
 
-                                                    $dtTables['sink-table'].ajax.reload();
+                                                                if (!subResponse.error) {
+                                                                    appModal.modal('hide');
+                                                                    $dtTables['sink-table'].ajax.reload();
+                                                                } else {
+                                                                    console.log(subResponse);
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Swal.fire({
+                                                            icon: response.error !== true ? 'success' : 'error',
+                                                            text: response.message
+                                                        });
+
+                                                        appModal.modal('hide');
+                                                        $dtTables['sink-table'].ajax.reload();
+                                                    }
                                                 } else {
                                                     Swal.fire({
                                                         icon: 'error',
@@ -172,31 +185,39 @@ var Eventstreams = function() {
             summary += '</div>';
 
             // format
-            let events = {};
-            _.forEach(subscriptions, function (subscription, key) {
-                if(subscription.parent == '#') {
-                    events[subscription.id] = [];
-                } else {
-                    if (_.isUndefined(events[subscription.parent])) {
-                        events[subscription.parent] = [];
+            if(subscriptions.length) {
+                let events = {};
+                _.forEach(subscriptions, function (subscription, key) {
+                    if(subscription.parent == '#') {
+                        events[subscription.id] = [];
+                    } else {
+                        if (_.isUndefined(events[subscription.parent])) {
+                            events[subscription.parent] = [];
+                        }
+
+                        events[subscription.parent].push(subscription.id);
                     }
-
-                    events[subscription.parent].push(subscription.id);
-                }
-            });
-
-            // subscriptions
-            summary += '<div class="col-md-6" >' +
-                '<div class="form-group">' +
-                '<label class="control-label text-capitalize text-bold">Subscriptions:</label><br>';
-            _.forEach(events, function(eventparent, key) {
-                summary += '<b>' + key + '</b><ul>';
-                _.forEach(eventparent, function(eventchild) {
-                    summary += '<li>' + eventchild + '</li>';
                 });
-                summary += '</ul>';
-            });
-            summary += '</div></div>';
+
+                // subscriptions
+                summary += '<div class="col-md-6" >' +
+                    '<div class="form-group">' +
+                    '<label class="control-label text-capitalize text-bold">Subscriptions:</label><br>';
+                _.forEach(events, function(eventparent, key) {
+                    summary += '<b>' + key + '</b><ul>';
+                    _.forEach(eventparent, function(eventchild) {
+                        summary += '<li>' + eventchild + '</li>';
+                    });
+                    summary += '</ul>';
+                });
+                summary += '</div></div>';
+            } else {
+                summary += '<div class="col-md-6" >' +
+                    '<div class="form-group">' +
+                        '<label class="control-label text-capitalize text-bold">Subscriptions:</label><br>' +
+                        '<p class="help-block">No subscribed Events.</p>' +
+                    '</div></div>';
+            }
 
             summaryEl.append(summary);
         }
@@ -239,8 +260,6 @@ var Eventstreams = function() {
 
                 // initialize fields
                 $('#external_id', form).inputHidden();
-
-                console.log(eventTypes);
             }
         };
     }();
