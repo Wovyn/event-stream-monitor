@@ -1,7 +1,7 @@
 var Eventstreams = function() {
     var appModal;
     var FormWizard = function() {
-        let wizard, lastStep, $tree;
+        let wizard, lastStep, $tree, eventTypes;
 
         var initWizard = function(form) {
             wizard = $('#smartwizard', form);
@@ -24,21 +24,46 @@ var Eventstreams = function() {
                                     didOpen: () => {
                                         Swal.showLoading();
 
+                                        // create sink
                                         $.ajax({
                                             url: '/eventstreams/add',
                                             method: 'POST',
                                             data: form.serialize(),
                                             dataType: 'json',
                                             success: function(response) {
-                                                Swal.fire({
-                                                    icon: response.error !== true ? 'success' : 'error',
-                                                    text: response.message
-                                                });
-
                                                 if(!response.error) {
-                                                    appModal.modal('hide');
+                                                    // appModal.modal('hide');
+                                                    // submit subscriptions
+                                                    $.ajax({
+                                                        url: '/eventstreams/subscriptions/' + response.id,
+                                                        method: 'POST',
+                                                        data: { subscriptions: selected },
+                                                        dataType: 'json',
+                                                        success: function (response) {
+                                                            if (response.message !== false) {
+                                                                Swal.fire({
+                                                                    icon: response.error !== true ? 'success' : 'error',
+                                                                    text: response.message
+                                                                });
+                                                            } else {
+                                                                Swal.close();
+                                                            }
+
+                                                            if (!response.error) {
+                                                                appModal.modal('hide');
+                                                            } else {
+                                                                console.log(response);
+                                                            }
+                                                        }
+                                                    });
+
                                                     $dtTables['sink-table'].ajax.reload();
                                                 } else {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        text: response.message
+                                                    });
+
                                                     console.log(response);
                                                 }
                                             }
@@ -122,10 +147,12 @@ var Eventstreams = function() {
             let summaryEl = $('.summary', form),
                 sinkType = $('#sink_type', form).val(),
                 formValues = form.serializeArray(),
+                subscriptions = $tree.jstree('get_selected', true),
                 summary = '';
 
             summaryEl.empty();
 
+            // sink configuration
             summary += '<div class="col-md-6">';
             _.forEach(formValues, function(data) {
                 if (sinkType == 'kinesis' && $.inArray(data.name, ['description', 'kinesis_data_stream', 'role_arn']) != -1) {
@@ -143,6 +170,33 @@ var Eventstreams = function() {
                 }
             });
             summary += '</div>';
+
+            // format
+            let events = {};
+            _.forEach(subscriptions, function (subscription, key) {
+                if(subscription.parent == '#') {
+                    events[subscription.id] = [];
+                } else {
+                    if (_.isUndefined(events[subscription.parent])) {
+                        events[subscription.parent] = [];
+                    }
+
+                    events[subscription.parent].push(subscription.id);
+                }
+            });
+
+            // subscriptions
+            summary += '<div class="col-md-6" >' +
+                '<div class="form-group">' +
+                '<label class="control-label text-capitalize text-bold">Subscriptions:</label><br>';
+            _.forEach(events, function(eventparent, key) {
+                summary += '<b>' + key + '</b><ul>';
+                _.forEach(eventparent, function(eventchild) {
+                    summary += '<li>' + eventchild + '</li>';
+                });
+                summary += '</ul>';
+            });
+            summary += '</div></div>';
 
             summaryEl.append(summary);
         }
@@ -164,7 +218,7 @@ var Eventstreams = function() {
                 });
 
                 // initialize subscription tree
-                let eventTypes = $.parseJSON($('#jstree', form).html());
+                eventTypes = $.parseJSON($('#jstree', form).html());
                 $tree = $('#jstree', form).jstree({
                     core: {
                         data: eventTypes.jstree,

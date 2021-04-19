@@ -135,6 +135,7 @@ class Eventstreams extends BaseController
                 $data['status'] = $result['CreateSink']['CreatedSink']->status;
 
                 $result['save'] = $this->eventstreamSinksModel->save($data);
+                $result['id'] = $this->eventstreamSinksModel->getInsertID();
             }
 
             return $this->response->setJSON(json_encode([
