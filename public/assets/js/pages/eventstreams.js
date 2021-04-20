@@ -12,6 +12,7 @@ var Eventstreams = function() {
                 justified: true,
                 enableURLhash: false,
                 autoAdjustHeight: false,
+                keyboardSettings: { keyNavigation: false },
                 toolbarSettings: {
                     toolbarExtraButtons: [
                         $('<button type="button" class="btn btn-finish btn-success hidden">Create Sink Instance</button>')
@@ -648,13 +649,28 @@ var Eventstreams = function() {
                         },
                         {
                             targets: 6,
-                            width: '10%',
+                            width: '15%',
                             render: function(data, type, full, meta) {
-                                let options =
-                                    '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn ' + (full.status != 'active' ? 'disabled' : '') + ' tip" title="Edit Subscriptions"><i class="fa fa-sliders"></i></a>' +
-                                        '<a href="/eventstreams/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
-                                    '</div>';
+                                let options = '<div class="btn-group btn-group-sm">';
+
+                                options += '<a href="/eventstreams/edit/' +  data + '" class="btn btn-primary edit-btn tip" title="Edit"><i class="fa fa-pencil"></i></a>';
+
+                                if(full.sink_type == 'webhook') {
+                                    let config = $.parseJSON(full.config);
+
+                                    options +=
+                                        '<a href="' +
+                                            (!_.isEmpty(config.webhook_data_view_url) ? config.webhook_data_view_url : '#') +
+                                            '" target="_blank" class="btn btn-primary tip ' +
+                                            (!_.isEmpty(config.webhook_data_view_url) ? '' : 'disabled') + '" title="Data View URL">' +
+                                            (!_.isEmpty(config.webhook_data_view_url) ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>') +
+                                        '</a>';
+                                }
+
+                                options +=
+                                    '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn ' + (full.status != 'active' ? 'disabled' : '') + ' tip" title="Edit Subscriptions"><i class="fa fa-sliders"></i></a>' +
+                                    '<a href="/eventstreams/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
+                                '</div>';
 
                                 return options;
                             }

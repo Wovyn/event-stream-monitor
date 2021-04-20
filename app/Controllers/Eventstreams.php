@@ -101,8 +101,7 @@ class Eventstreams extends BaseController
                     ];
 
                     $data['config'] = json_encode([
-                        'sink_configuration' => $sink_config,
-                        'extra' => null
+                        'sink_configuration' => $sink_config
                     ]);
 
                     break;
@@ -116,9 +115,7 @@ class Eventstreams extends BaseController
 
                     $data['config'] = json_encode([
                         'sink_configuration' => $sink_config,
-                        'extra' => [
-                            'webhook_data_view_url' => null
-                        ]
+                        'webhook_data_view_url' => $_POST['webhook_data_view_url']
                     ]);
 
                     break;

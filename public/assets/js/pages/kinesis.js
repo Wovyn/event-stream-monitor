@@ -12,6 +12,7 @@ var Kinesis = function() {
                 justified: true,
                 enableURLhash: false,
                 autoAdjustHeight: false,
+                keyboardSettings: { keyNavigation: false },
                 toolbarSettings: {
                     toolbarExtraButtons: [
                         $('<button type="button" class="btn btn-finish btn-success hidden">Create Data Stream</button>')

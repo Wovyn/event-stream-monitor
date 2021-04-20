@@ -34,10 +34,7 @@ class AlterEventstreamSinksTable01 extends Migration
 
             // generate config data
             $config = [
-                'sink_configuration' => $fetchSink['response']->sinkConfiguration,
-                'extra' => [
-                    'webhook_data_view_url' => null
-                ]
+                'sink_configuration' => $fetchSink['response']->sinkConfiguration
             ];
 
             // update sink config field
