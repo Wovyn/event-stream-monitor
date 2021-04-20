@@ -111,7 +111,7 @@ class Eventstreams extends BaseController
                     $sink_config = [
                         'destination' => $_POST['destination_url'],
                         'method' => $_POST['method'],
-                        'batch_events' => (bool) $_POST['batch_events']
+                        'batch_events' => ($_POST['batch_events'] == 'true' ? true : false)
                     ];
 
                     $data['config'] = json_encode([
