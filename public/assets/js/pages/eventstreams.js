@@ -20,67 +20,72 @@ var Eventstreams = function() {
 
                                 Swal.fire({
                                     title: 'Creating Sink Instance',
-                                    allowOutsideClick: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
+                                    allowOutsideClick: false
+                                });
+                                Swal.showLoading();
 
-                                        // create sink
-                                        $.ajax({
-                                            url: '/eventstreams/add',
-                                            method: 'POST',
-                                            data: form.serialize(),
-                                            dataType: 'json',
-                                            success: function(response) {
-                                                // console.log(response.result.sink_id);
-                                                if(!response.error) {
-                                                    // submit subscriptions
-                                                    let selected = $tree.jstree('get_selected');
-                                                    _.pullAll(selected, eventTypes.parents);
+                                // create sink
+                                $.ajax({
+                                    url: '/eventstreams/add',
+                                    method: 'POST',
+                                    data: form.serialize(),
+                                    dataType: 'json',
+                                    success: function(response) {
+                                        // console.log(response.result.sink_id);
+                                        if(!response.error) {
+                                            // submit subscriptions
+                                            let selected = $tree.jstree('get_selected');
+                                            _.pullAll(selected, eventTypes.parents);
 
-                                                    // check selected subscription length
-                                                    if(selected.length) {
-                                                        $.ajax({
-                                                            url: '/eventstreams/subscriptions/' + response.result.sink_id,
-                                                            method: 'POST',
-                                                            data: { subscriptions: selected },
-                                                            dataType: 'json',
-                                                            success: function (subResponse) {
-                                                                if (subResponse.message !== false) {
-                                                                    Swal.fire({
-                                                                        icon: subResponse.error !== true ? 'success' : 'error',
-                                                                        text: response.message
-                                                                    });
-                                                                } else {
-                                                                    Swal.close();
-                                                                }
+                                            // check selected subscription length
+                                            if(selected.length) {
+                                                Swal.update({
+                                                    title: 'Updating Sink Subscription',
+                                                    showConfirmButton: false
+                                                });
 
-                                                                if (!subResponse.error) {
-                                                                    appModal.modal('hide');
-                                                                    $dtTables['sink-table'].ajax.reload();
-                                                                } else {
-                                                                    console.log(subResponse);
-                                                                }
-                                                            }
-                                                        });
-                                                    } else {
-                                                        Swal.fire({
-                                                            icon: response.error !== true ? 'success' : 'error',
-                                                            text: response.message
-                                                        });
+                                                Swal.showLoading();
 
-                                                        appModal.modal('hide');
-                                                        $dtTables['sink-table'].ajax.reload();
+                                                $.ajax({
+                                                    url: '/eventstreams/subscriptions/' + response.result.sink_id,
+                                                    method: 'POST',
+                                                    data: { subscriptions: selected },
+                                                    dataType: 'json',
+                                                    success: function (subResponse) {
+                                                        if (subResponse.message !== false) {
+                                                            Swal.fire({
+                                                                icon: subResponse.error !== true ? 'success' : 'error',
+                                                                text: response.message
+                                                            });
+                                                        } else {
+                                                            Swal.close();
+                                                        }
+
+                                                        if (!subResponse.error) {
+                                                            appModal.modal('hide');
+                                                            $dtTables['sink-table'].ajax.reload();
+                                                        } else {
+                                                            console.log(subResponse);
+                                                        }
                                                     }
-                                                } else {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        text: response.message
-                                                    });
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    icon: response.error !== true ? 'success' : 'error',
+                                                    text: response.message
+                                                });
 
-                                                    console.log(response);
-                                                }
+                                                appModal.modal('hide');
+                                                $dtTables['sink-table'].ajax.reload();
                                             }
-                                        });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                text: response.message
+                                            });
+
+                                            console.log(response);
+                                        }
                                     }
                                 });
                             })
