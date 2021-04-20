@@ -160,6 +160,11 @@ class Eventstreams extends BaseController
         return view('eventstreams/wizard_modal', $data);
     }
 
+    public function edit($id) {
+        $data['sink'] = $this->eventstreamSinksModel->where('id', $id)->first();
+        return view('eventstreams/edit_modal', $data);
+    }
+
     public function delete($id) {
         // check if sink has subscription
         $sink_subscription = $this->sinkSubscriptionsModel->where('sink_id', $id)->first();

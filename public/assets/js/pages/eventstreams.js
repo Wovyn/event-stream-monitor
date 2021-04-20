@@ -387,6 +387,22 @@ var Eventstreams = function() {
     //     });
     // }
 
+    var handleEditSink = function() {
+        console.log('init handleEditSink');
+        $(document).on('click', '.edit-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this);
+
+            App.modal({
+                title: 'Edit Sink Instance',
+                ajax: {
+                    url: $btn.attr('href')
+                }
+            });
+        });
+    }
+
     var handleSubscriptionSink = function() {
         console.log('init handleSubscriptionSink');
         $(document).on('click', '.subscriptions-btn', function(e) {
@@ -691,6 +707,7 @@ var Eventstreams = function() {
 
             App.validationSetDefault();
             handleAddSink();
+            handleEditSink();
             handleSubscriptionSink();
             handleDeleteSink();
         }
