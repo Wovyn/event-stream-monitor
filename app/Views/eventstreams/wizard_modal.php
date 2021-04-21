@@ -87,11 +87,11 @@
                         <div class="webhook">
                             <div class="form-group">
                                 <label class="control-label" for="destination_url">Destination URL</label>
-                                <input type="text" class="form-control" id="destination_url" name="destination_url" placeholder="Destination URL" required>
+                                <input type="text" class="form-control" id="destination_url" name="destination_url" placeholder="Destination URL" required data-rule-url>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="webhook_data_view_url">Webhook Data View URL</label>
-                                <input type="text" class="form-control" id="webhook_data_view_url" name="webhook_data_view_url" placeholder="Webhook Data View URL">
+                                <input type="text" class="form-control" id="webhook_data_view_url" name="webhook_data_view_url" placeholder="Webhook Data View URL" data-rule-url>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="method">Method</label>

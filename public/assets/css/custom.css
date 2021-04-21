@@ -81,7 +81,7 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 .jstree-default .jstree-clicked .jstree-checkbox:before { content: "\e0fd"; }
 
 /* input hidden */
-.input-hidden input { -webkit-text-security: disc; -moz-text-security: disc; text-security: disc; }
+.input-hidden input, .input-hidden .form-control-static { -webkit-text-security: disc; -moz-text-security: disc; text-security: disc; }
 .input-hidden .toggle:hover { cursor: pointer; }
 .input-hidden .toggle i:before { content: "\e0bc"; }
 
@@ -100,3 +100,4 @@ ul.main-navigation-menu>li>a i { width: 16px; text-align: center; }
 .checkbox, .radio { padding-left: 20px; }
 
 .text-wrap { overflow-wrap: break-word; }
+.border-0 { border: 0; }

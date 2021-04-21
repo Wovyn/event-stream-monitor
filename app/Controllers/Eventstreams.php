@@ -161,7 +161,13 @@ class Eventstreams extends BaseController
     }
 
     public function edit($id) {
-        $data['sink'] = $this->eventstreamSinksModel->where('id', $id)->first();
+        $sink = $this->eventstreamSinksModel->where('id', $id)->first();
+
+        if($_POST) {
+
+        }
+
+        $data['sink'] = $sink;
         return view('eventstreams/edit_modal', $data);
     }
 

@@ -398,7 +398,20 @@ var Eventstreams = function() {
                 title: 'Edit Sink Instance',
                 ajax: {
                     url: $btn.attr('href')
-                }
+                },
+                onShow: function(form) {
+                    $('#external_id', form).inputHidden();
+                },
+                btn: {
+                    confirm: {
+                        text: 'Update Sink Instance',
+                        onClick: function(form) {
+
+                        }
+                    }
+                },
+                width: '960',
+                validate: true
             });
         });
     }
