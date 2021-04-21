@@ -164,7 +164,29 @@ class Eventstreams extends BaseController
         $sink = $this->eventstreamSinksModel->where('id', $id)->first();
 
         if($_POST) {
+            $result = [];
+            $config = json_decode($sink->config);
 
+            switch ($sink->sink_type) {
+                case 'webhook':
+                        $config->webhook_data_view_url = $_POST['webhook_data_view_url'];
+
+                    break;
+
+                case 'kinesis':
+
+                    break;
+            }
+
+            $result['update'] = $this->eventstreamSinksModel->update($id, [
+                'config' => json_encode($config)
+            ]);
+
+            return $this->response->setJSON(json_encode([
+                'error' => ($result['update'] ? false : true),
+                'message' => ($result['update'] ? 'Sink Instance Updated!' : 'Something went wrong.'),
+                'result' => $result
+            ]));
         }
 
         $data['sink'] = $sink;

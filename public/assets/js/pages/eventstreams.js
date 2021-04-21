@@ -406,7 +406,24 @@ var Eventstreams = function() {
                     confirm: {
                         text: 'Update Sink Instance',
                         onClick: function(form) {
+                            $.ajax({
+                                url: $btn.attr('href'),
+                                method: 'POST',
+                                data: form.serialize(),
+                                // dataType: 'json',
+                                success: function(response) {
+                                    Swal.fire({
+                                        icon: response.error !== true ? 'success' : 'error',
+                                        text: response.message
+                                    });
 
+                                    if(!response.error) {
+                                        $dtTables['sink-table'].ajax.reload();
+                                    } else {
+                                        console.log(response);
+                                    }
+                                }
+                            });
                         }
                     }
                 },
