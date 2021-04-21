@@ -81,37 +81,33 @@ var Dashboard = function() {
                 if(_.isEmpty(data)) {
                     $('#d3-hierarchy').append('<p class="text-center">No Event Streams were found in the Database.</p>');
                 } else {
-                    hierarchy.chart({
+                    CollapseTree.chart({
                         container: $('#d3-hierarchy'),
+                        depth: 3,
                         font: {
                             family: 'Open Sans',
                             size: 12
                         },
+                        margin: {top: 10, right: 120, bottom: 10, left: 120},
                         data: {
                             name: 'Event Streams',
                             children: data
                         }
                     });
+
+                    // hierarchy.chart({
+                    //     container: $('#d3-hierarchy'),
+                    //     font: {
+                    //         family: 'Open Sans',
+                    //         size: 12
+                    //     },
+                    //     data: {
+                    //         name: 'Event Streams',
+                    //         children: data
+                    //     }
+                    // });
                 }
             });
-
-            // CollapseTree.chart({
-            //     container: $('#d3-hierarchy'),
-            //     points: {
-            //         height: 15,
-            //         depth: 3
-            //     },
-            //     margin: ({top: 10, right: 120, bottom: 10, left: 40}),
-            //     data: {
-            //         name: 'Event Streams',
-            //         children: [
-            //             { name: 'analytics' },
-            //             { name: 'animate' },
-            //             { name: 'data' },
-            //             { name: 'display' }
-            //         ]
-            //     }
-            // });
         }
     }
 }();

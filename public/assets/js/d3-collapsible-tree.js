@@ -2,7 +2,9 @@ var CollapseTree = function() {
 
     var chart = function(options) {
         const root = d3.hierarchy(options.data),
-            dy = options.container.width();
+            width = options.container.width(),
+            dx = options.font.size * 2,
+            dy = options.container.width() / options.depth;
 
         root.x0 = dy / 2;
         root.y0 = 0;
@@ -13,8 +15,9 @@ var CollapseTree = function() {
         });
 
       const svg = d3.create("svg")
-          .attr("viewBox", [-margin.left, -margin.top, width, dx])
-          .style("font", "10px sans-serif")
+          .attr("viewBox", [-options.margin.left, -options.margin.top, width, dx])
+          .attr("font-family", options.font.family)
+          .attr("font-size", options.font.size)
           .style("user-select", "none");
 
       const gLink = svg.append("g")
@@ -28,6 +31,7 @@ var CollapseTree = function() {
           .attr("pointer-events", "all");
 
       function update(source) {
+        console.log(source);
         const duration = d3.event && d3.event.altKey ? 2500 : 250;
         const nodes = root.descendants().reverse();
         const links = root.links();
@@ -42,11 +46,11 @@ var CollapseTree = function() {
           if (node.x > right.x) right = node;
         });
 
-        const height = right.x - left.x + margin.top + margin.bottom;
+        const height = right.x - left.x + options.margin.top + options.margin.bottom;
 
         const transition = svg.transition()
             .duration(duration)
-            .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
+            .attr("viewBox", [-options.margin.left, left.x - options.margin.top, width, height])
             .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
 
         // Update the nodes…
@@ -112,18 +116,18 @@ var CollapseTree = function() {
         const linkEnter = link.enter().append("path")
             .attr("d", d => {
               const o = {x: source.x0, y: source.y0};
-              return diagonal({source: o, target: o});
+              return diagonal(o);
             });
 
         // Transition links to their new position.
         link.merge(linkEnter).transition(transition)
-            .attr("d", diagonal);
+            .attr("d", diagonal({x: 0, y: 0}));
 
         // Transition exiting nodes to the parent's new position.
         link.exit().transition(transition).remove()
             .attr("d", d => {
               const o = {x: source.x, y: source.y};
-              return diagonal({source: o, target: o});
+              return diagonal(o);
             });
 
         // Stash the old positions for transition.
@@ -142,11 +146,11 @@ var CollapseTree = function() {
       update(root);
 
       function tree() {
-        d3.tree().nodeSize([dx, dy]);
+        d3.tree().nodeSize([dx, dy])(root);
       }
 
-      function diagonal() {
-        d3.linkHorizontal().x(d => d.y).y(d => d.x)
+      function diagonal(o) {
+        d3.linkHorizontal().x(d => o.y).y(d => o.x)(root);
       }
 
       options.container.append(svg.node());
