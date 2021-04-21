@@ -79,7 +79,7 @@ var Dashboard = function() {
 
             $.get('/dashboard/chartdata', function(data) {
                 if(_.isEmpty(data)) {
-                    $('#d3-hierarchy').append('<p class="text-center">No Event Streams were found in the Database.</p>');
+                    $('#d3-hierarchy').append('<p class="text-center">There are currently no Event Stream Sinks defined!</p>');
                 } else {
                     CollapseTree.chart({
                         container: $('#d3-hierarchy'),
