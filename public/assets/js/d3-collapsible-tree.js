@@ -38,6 +38,7 @@ var CollapseTree = function() {
         const nodes = root.descendants().reverse();
         const links = root.links();
 
+
         // Compute the new tree layout.
         tree(root);
 
@@ -117,20 +118,20 @@ var CollapseTree = function() {
 
         // Enter any new links at the parent's previous position.
         const linkEnter = link.enter().append("path")
-            .attr("d", d => {
-              const o = {x: source.x0, y: source.y0};
-              return diagonal(o);
-            });
+        .attr("d", d => {
+          const o = {x: source.x0, y: source.y0};
+          return diagonal({source: o, target: o});
+        });
 
         // Transition links to their new position.
         link.merge(linkEnter).transition(transition)
-            .attr("d", diagonal({x: 0, y: 0}));
+            .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
 
         // Transition exiting nodes to the parent's new position.
         link.exit().transition(transition).remove()
             .attr("d", d => {
               const o = {x: source.x, y: source.y};
-              return diagonal(o);
+              return diagonal({source: o, target: o});
             });
 
         // Stash the old positions for transition.
