@@ -83,7 +83,7 @@ var Dashboard = function() {
                 } else {
                     CollapseTree.chart({
                         container: $('#d3-hierarchy'),
-                        depth: 3,
+                        spacing: 4,
                         font: {
                             family: 'Open Sans',
                             size: 12

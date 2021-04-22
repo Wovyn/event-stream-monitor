@@ -1,37 +1,39 @@
 var CollapseTree = function() {
 
-    var chart = function(options) {
+    var chart = {};
+    chart.init = function(options) {
         const root = d3.hierarchy(options.data),
             width = options.container.width(),
             dx = options.font.size * 2,
-            dy = options.container.width() / options.depth;
+            dy = options.container.width() / options.spacing;
 
         root.x0 = dy / 2;
         root.y0 = 0;
-        root.descendants().forEach((d, i) => {
-            d.id = i;
-            d._children = d.children;
-            if (d.depth && d.data.name.length !== 7) d.children = null;
+        root.descendants().forEach((datapoint, key) => {
+            datapoint.id = key;
+            datapoint._children = datapoint.children;
+            if (datapoint.depth && datapoint.data.name.length !== options.spacing) {
+              datapoint.children = null;
+            }
         });
 
-      const svg = d3.create("svg")
-          .attr("viewBox", [-options.margin.left, -options.margin.top, width, dx])
-          .attr("font-family", options.font.family)
-          .attr("font-size", options.font.size)
-          .style("user-select", "none");
+        const svg = d3.create('svg')
+            .attr('viewBox', [-options.margin.left, -options.margin.top, width, dx])
+            .attr('font-family', options.font.family)
+            .attr('font-size', options.font.size)
+            .style('user-select', 'none');
 
-      const gLink = svg.append("g")
-          .attr("fill", "none")
-          .attr("stroke", "#555")
-          .attr("stroke-opacity", 0.4)
-          .attr("stroke-width", 1.5);
+        const gLink = svg.append('g')
+            .attr('fill', 'none')
+            .attr('stroke', '#555')
+            .attr('stroke-opacity', 0.4)
+            .attr('stroke-width', 1.5);
 
-      const gNode = svg.append("g")
-          .attr("cursor", "pointer")
-          .attr("pointer-events", "all");
+        const gNode = svg.append('g')
+            .attr('cursor', 'pointer')
+            .attr('pointer-events', 'all');
 
       function update(source) {
-        console.log(source);
         const duration = d3.event && d3.event.altKey ? 2500 : 250;
         const nodes = root.descendants().reverse();
         const links = root.links();
@@ -63,22 +65,23 @@ var CollapseTree = function() {
             .attr("fill-opacity", 0)
             .attr("stroke-opacity", 0)
             .on("click", (event, d) => {
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } else {
+                    d.children = d._children;
+                    d._children = null;
+                }
 
-              if (d.children) {
-        d._children = d.children;
-        d.children = null;
-      } else {
-        d.children = d._children;
-        d._children = null;
-      }
-               if (d.parent) {
-        d.parent.children.forEach(function(element) {
-          if (d !== element) {
-            collapse(element);
-          }
-        });
-      }
-              update(d);
+                if (d.parent) {
+                    d.parent.children.forEach(function(element) {
+                        if (d !== element) {
+                            collapse(element);
+                        }
+                    });
+                }
+
+                update(d);
             });
 
         nodeEnter.append("circle")
@@ -136,13 +139,15 @@ var CollapseTree = function() {
           d.y0 = d.y;
         });
       }
-    function collapse(d) {
-      if (d.children) {
-        d._children = d.children;
-        d._children.forEach(collapse);
-        d.children = null;
-      }
-    }
+
+        function collapse(datapoint) {
+            if (datapoint.children) {
+                datapoint._children = datapoint.children;
+                datapoint._children.forEach(collapse);
+                // d.children = null;
+            }
+        }
+
       update(root);
 
       function tree() {
@@ -157,6 +162,6 @@ var CollapseTree = function() {
     }
 
     return {
-        chart: chart
+        chart: chart.init
     }
 }();
