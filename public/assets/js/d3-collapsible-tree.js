@@ -4,8 +4,8 @@ var CollapseTree = function() {
     chart.init = function(options) {
         const root = d3.hierarchy(options.data),
             width = options.container.width(),
-            dx = options.font.size * 2,
-            dy = options.container.width() / options.spacing;
+            dx = options.node_spacingX,
+            dy = options.container.width() / options.node_spacingY;
 
         root.x0 = dy / 2;
         root.y0 = 0;
@@ -34,10 +34,9 @@ var CollapseTree = function() {
             .attr('pointer-events', 'all');
 
         function update(source) {
-            const duration = d3.event && d3.event.altKey ? 2500 : 250;
+            const duration = options.transition_duration;
             const nodes = root.descendants().reverse();
             const links = root.links();
-
 
             // Compute the new tree layout.
             tree(root);
@@ -66,6 +65,12 @@ var CollapseTree = function() {
                 .attr("fill-opacity", 0)
                 .attr("stroke-opacity", 0)
                 .on("click", (event, d) => {
+
+                    // main parent click
+                    // if(!d.parent) {
+                    //     return;
+                    // }
+
                     if (d.children) {
                         d._children = d.children;
                         d.children = null;
@@ -74,26 +79,26 @@ var CollapseTree = function() {
                         d._children = null;
                     }
 
-                    if (d.parent) {
-                        d.parent.children.forEach(function(element) {
-                            if (d !== element) {
-                                collapse(element);
-                            }
-                        });
-                    }
+                    // if (d.parent) {
+                    //     d.parent.children.forEach(function(element) {
+                    //         if (d !== element) {
+                    //             collapse(element);
+                    //         }
+                    //     });
+                    // }
 
                     update(d);
                 });
 
             nodeEnter.append("circle")
                 .attr("r", 2.5)
-                .attr("fill", d => d._children ? "#555" : "#999")
+                .attr("fill", d => d._children || d.children ? "#555" : "#999")
                 .attr("stroke-width", 10);
 
             nodeEnter.append("text")
                 .attr("dy", "0.31em")
-                .attr("x", d => d._children ? -6 : 6)
-                .attr("text-anchor", d => d._children ? "end" : "start")
+                .attr("x", d => d._children || d.children ? -6 : 6)
+                .attr("text-anchor", d => d._children || d.children ? "end" : "start")
                 .text(d => d.data.name)
             .clone(true).lower()
                 .attr("stroke-linejoin", "round")
@@ -139,7 +144,7 @@ var CollapseTree = function() {
                 if (datapoint.children) {
                     datapoint._children = datapoint.children;
                     datapoint._children.forEach(collapse);
-                    // d.children = null;
+                    // datapoint.children = null;
                 }
             }
 
