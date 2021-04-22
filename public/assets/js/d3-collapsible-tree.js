@@ -33,133 +33,123 @@ var CollapseTree = function() {
             .attr('cursor', 'pointer')
             .attr('pointer-events', 'all');
 
-      function update(source) {
-        const duration = d3.event && d3.event.altKey ? 2500 : 250;
-        const nodes = root.descendants().reverse();
-        const links = root.links();
+        function update(source) {
+            const duration = d3.event && d3.event.altKey ? 2500 : 250;
+            const nodes = root.descendants().reverse();
+            const links = root.links();
 
 
-        // Compute the new tree layout.
-        tree(root);
+            // Compute the new tree layout.
+            tree(root);
 
-        let left = root;
-        let right = root;
-        root.eachBefore(node => {
-          if (node.x < left.x) left = node;
-          if (node.x > right.x) right = node;
-        });
-
-        const height = right.x - left.x + options.margin.top + options.margin.bottom;
-
-        const transition = svg.transition()
-            .duration(duration)
-            .attr("viewBox", [-options.margin.left, left.x - options.margin.top, width, height])
-            .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
-
-        // Update the nodes…
-        const node = gNode.selectAll("g")
-          .data(nodes, d => d.id);
-
-        // Enter any new nodes at the parent's previous position.
-        const nodeEnter = node.enter().append("g")
-            .attr("transform", d => `translate(${source.y0},${source.x0})`)
-            .attr("fill-opacity", 0)
-            .attr("stroke-opacity", 0)
-            .on("click", (event, d) => {
-                if (d.children) {
-                    d._children = d.children;
-                    d.children = null;
-                } else {
-                    d.children = d._children;
-                    d._children = null;
-                }
-
-                if (d.parent) {
-                    d.parent.children.forEach(function(element) {
-                        if (d !== element) {
-                            collapse(element);
-                        }
-                    });
-                }
-
-                update(d);
+            let left = root;
+            let right = root;
+            root.eachBefore(node => {
+                if (node.x < left.x) left = node;
+                if (node.x > right.x) right = node;
             });
 
-        nodeEnter.append("circle")
-            .attr("r", 2.5)
-            .attr("fill", d => d._children ? "#555" : "#999")
-            .attr("stroke-width", 10);
+            const height = right.x - left.x + options.margin.top + options.margin.bottom;
 
-        nodeEnter.append("text")
-            .attr("dy", "0.31em")
-            .attr("x", d => d._children ? -6 : 6)
-            .attr("text-anchor", d => d._children ? "end" : "start")
-            .text(d => d.data.name)
-          .clone(true).lower()
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-width", 3)
-            .attr("stroke", "white");
+            const transition = svg.transition()
+                .duration(duration)
+                .attr("viewBox", [-options.margin.left, left.x - options.margin.top, width, height])
+                .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
 
-        // Transition nodes to their new position.
-        const nodeUpdate = node.merge(nodeEnter).transition(transition)
-            .attr("transform", d => `translate(${d.y},${d.x})`)
-            .attr("fill-opacity", 1)
-            .attr("stroke-opacity", 1);
+            // Update the nodes…
+            const node = gNode.selectAll("g")
+                .data(nodes, d => d.id);
 
-        // Transition exiting nodes to the parent's new position.
-        const nodeExit = node.exit().transition(transition).remove()
-            .attr("transform", d => `translate(${source.y},${source.x})`)
-            .attr("fill-opacity", 0)
-            .attr("stroke-opacity", 0);
+            // Enter any new nodes at the parent's previous position.
+            const nodeEnter = node.enter().append("g")
+                .attr("transform", d => `translate(${source.y0},${source.x0})`)
+                .attr("fill-opacity", 0)
+                .attr("stroke-opacity", 0)
+                .on("click", (event, d) => {
+                    if (d.children) {
+                        d._children = d.children;
+                        d.children = null;
+                    } else {
+                        d.children = d._children;
+                        d._children = null;
+                    }
 
-        // Update the links…
-        const link = gLink.selectAll("path")
-          .data(links, d => d.target.id);
+                    if (d.parent) {
+                        d.parent.children.forEach(function(element) {
+                            if (d !== element) {
+                                collapse(element);
+                            }
+                        });
+                    }
 
-        // Enter any new links at the parent's previous position.
-        const linkEnter = link.enter().append("path")
-        .attr("d", d => {
-          const o = {x: source.x0, y: source.y0};
-          return diagonal({source: o, target: o});
-        });
+                    update(d);
+                });
 
-        // Transition links to their new position.
-        link.merge(linkEnter).transition(transition)
-            .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+            nodeEnter.append("circle")
+                .attr("r", 2.5)
+                .attr("fill", d => d._children ? "#555" : "#999")
+                .attr("stroke-width", 10);
 
-        // Transition exiting nodes to the parent's new position.
-        link.exit().transition(transition).remove()
-            .attr("d", d => {
-              const o = {x: source.x, y: source.y};
-              return diagonal({source: o, target: o});
+            nodeEnter.append("text")
+                .attr("dy", "0.31em")
+                .attr("x", d => d._children ? -6 : 6)
+                .attr("text-anchor", d => d._children ? "end" : "start")
+                .text(d => d.data.name)
+            .clone(true).lower()
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-width", 3)
+                .attr("stroke", "white");
+
+            // Transition nodes to their new position.
+            const nodeUpdate = node.merge(nodeEnter).transition(transition)
+                .attr("transform", d => `translate(${d.y},${d.x})`)
+                .attr("fill-opacity", 1)
+                .attr("stroke-opacity", 1);
+
+            // Transition exiting nodes to the parent's new position.
+            const nodeExit = node.exit().transition(transition).remove()
+                .attr("transform", d => `translate(${source.y},${source.x})`)
+                .attr("fill-opacity", 0)
+                .attr("stroke-opacity", 0);
+
+            // Update the links…
+            const link = gLink.selectAll("path")
+                .data(links, d => d.target.id);
+
+            // Enter any new links at the parent's previous position.
+            const linkEnter = link.enter().append("path")
+                .attr("d", d => d3.linkHorizontal().x(d => source.y).y(d => source.x)(root));
+
+            // Transition links to their new position.
+            link.merge(linkEnter).transition(transition)
+                .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+
+            // Transition exiting nodes to the parent's new position.
+            link.exit().transition(transition).remove()
+                .attr("d", d => d3.linkHorizontal().x(d => source.y0).y(d => source.x0)(root));
+
+            // Stash the old positions for transition.
+            root.eachBefore(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
             });
-
-        // Stash the old positions for transition.
-        root.eachBefore(d => {
-          d.x0 = d.x;
-          d.y0 = d.y;
-        });
-      }
-
-        function collapse(datapoint) {
-            if (datapoint.children) {
-                datapoint._children = datapoint.children;
-                datapoint._children.forEach(collapse);
-                // d.children = null;
-            }
         }
 
-      update(root);
+            function collapse(datapoint) {
+                if (datapoint.children) {
+                    datapoint._children = datapoint.children;
+                    datapoint._children.forEach(collapse);
+                    // d.children = null;
+                }
+            }
 
-      function tree() {
-        d3.tree().nodeSize([dx, dy])(root);
-      }
+          update(root);
 
-      function diagonal(o) {
-        d3.linkHorizontal().x(d => o.y).y(d => o.x)(root);
-      }
+          function tree() {
+            return d3.tree().nodeSize([dx, dy])(root);
+          }
 
-      options.container.append(svg.node());
+          options.container.append(svg.node());
     }
 
     return {
