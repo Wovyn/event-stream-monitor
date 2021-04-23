@@ -414,21 +414,22 @@
                     </fieldset>
 
                     <fieldset>
-                        <legend>Access policy</legend>
-                        <div class="form-group">
-                            <label class="control-label" for="access_policy">JSON defined access policy</label>
-
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-md-6">
-                    <fieldset>
                         <legend>Encryption</legend>
                         <div class="form-group">
                             <label class="checkbox">
                                 <input type="checkbox" value="true" name="note_to_node_encryption" id="note_to_node_encryption" checked="checked" />
                                 Node-to-node encryption
                             </label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Access policy</legend>
+                        <div class="form-group">
+                            <!-- <label class="control-label" for="access_policy">JSON defined access policy</label> -->
+                            <div id="access_policy" style="height: 300px"></div>
+                            <input type="hidden" id="aws_account" value="<?php echo $aws_account ?>">
                         </div>
                     </fieldset>
                 </div>

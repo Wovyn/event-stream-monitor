@@ -38,6 +38,7 @@ class ElasticSearch extends BaseController
             '/bower_components/datatables/media/js/dataTables.bootstrap.js',
             '/bower_components/jquery-validation/dist/jquery.validate.min.js',
             '/bower_components/jQuery-Smart-Wizard/js/jquery.smartWizard.js',
+            '/bower_components/ace/ace.js',
             '/assets/js/pages/elasticsearch.js'
         );
 
@@ -45,6 +46,11 @@ class ElasticSearch extends BaseController
     }
 
     public function add() {
+        if($_POST) {
+            echo json_encode($_POST);
+        }
+
+        $data['aws_account'] = $this->keys->aws_account;
         $data['regions'] = GetAwsRegions($this->keys);
         return view('elasticsearch/wizard_modal', $data);
     }

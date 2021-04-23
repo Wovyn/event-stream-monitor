@@ -229,6 +229,7 @@ var Kinesis = function() {
                 confirmButtonText: 'Delete',
                 cancelButtonText: 'Cancel',
                 showLoaderOnConfirm: true,
+                allowOutsideClick: false,
                 preConfirm: () => {
                     return fetch($btn.attr('href')).
                         then(response => {

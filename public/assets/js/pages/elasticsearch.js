@@ -1,7 +1,7 @@
 var Elasticsearch = function() {
     var appModal,
         FormWizard = function() {
-        let wizard, wizardForm, lastStep;
+        let wizard, wizardForm, lastStep, editor;
 
         var initWizard = function(form) {
             wizard = $('#smartwizard', form);
@@ -68,6 +68,38 @@ var Elasticsearch = function() {
                     $('.sw-btn-prev', form).removeClass('hidden');
                 }
 
+                // set access policy json after step 2
+                if(nextStepIndex == 2) {
+                    fetch('https://api.ipify.org/?format=json')
+                        .then(response => response.json())
+                        .then(data => {
+                            // generate default access_policy json
+                            let aws_account = $('#aws_account').val(),
+                                region = $('#region option:selected', form).html(),
+                                domain_name = $('#domain_name', form).val(),
+                                default_policy = {
+                                    "Version":"2012-10-17",
+                                    "Statement":[
+                                        {
+                                            "Effect":"Allow",
+                                            "Principal":{
+                                                "AWS":"*"
+                                            },
+                                            "Action":"es:*",
+                                            "Resource":"arn:aws:es:us-east-1:" + aws_account + ":domain/" + domain_name + "/*",
+                                            "Condition":{
+                                                "IpAddress":{
+                                                    "aws:SourceIp":data.ip
+                                                }
+                                            }
+                                        }
+                                    ]
+                                };
+
+                            editor.setValue(JSON.stringify(default_policy, null, 4));
+                        });
+                }
+
                 // show/hide create data stream btn and next button
                 if(nextStepIndex == lastStep) {
                     generateSummary(form);
@@ -118,6 +150,11 @@ var Elasticsearch = function() {
                 btn: $('#ultrawarm_data_node', form),
                 elements: [ $('#ulrawarm_container', form) ]
             });
+
+            // init access policy
+            editor = ace.edit($('#access_policy', form)[0]);
+            editor.setTheme("ace/theme/xcode");
+            editor.session.setMode("ace/mode/json");
         }
 
         var animateBar = function(step) {
