@@ -174,14 +174,14 @@ var Eventstreams = function() {
             // sink configuration
             summary += '<div class="col-md-6">';
             _.forEach(formValues, function(data) {
-                if (sinkType == 'kinesis' && $.inArray(data.name, ['description', 'kinesis_data_stream', 'role_arn']) != -1) {
+                if (sinkType == 'kinesis' && $.inArray(data.name, ['description', 'data_view_url', 'kinesis_data_stream', 'role_arn']) != -1) {
                     summary += '<div class="form-group">' +
                         '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
                         '<p class="form-control-static display-value">' + data.value + '</p>' +
                         '</div>';
                 }
 
-                if (sinkType == 'webhook' && $.inArray(data.name, ['description', 'destination_url', 'webhook_data_view_url', 'method', 'batch_events']) != -1) {
+                if (sinkType == 'webhook' && $.inArray(data.name, ['description', 'data_view_url', 'destination_url', 'method', 'batch_events']) != -1) {
                     summary += '<div class="form-group">' +
                         '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
                         '<p class="form-control-static display-value">' + data.value + '</p>' +
@@ -697,23 +697,15 @@ var Eventstreams = function() {
                             targets: 6,
                             width: '15%',
                             render: function(data, type, full, meta) {
-                                let options = '<div class="btn-group btn-group-sm">';
-
-                                options += '<a href="/eventstreams/edit/' +  data + '" class="btn btn-primary edit-btn tip" title="Edit"><i class="fa fa-pencil"></i></a>';
-
-                                if(full.sink_type == 'webhook') {
-                                    let config = $.parseJSON(full.config);
-
-                                    options +=
-                                        '<a href="' +
-                                            (!_.isEmpty(config.webhook_data_view_url) ? config.webhook_data_view_url : '#') +
-                                            '" target="_blank" class="btn btn-primary tip ' +
-                                            (!_.isEmpty(config.webhook_data_view_url) ? '' : 'disabled') + '" title="Data View URL">' +
-                                            (!_.isEmpty(config.webhook_data_view_url) ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>') +
-                                        '</a>';
-                                }
-
-                                options +=
+                                let config = $.parseJSON(full.config),
+                                    options = '<div class="btn-group btn-group-sm">' +
+                                    '<a href="/eventstreams/edit/' +  data + '" class="btn btn-primary edit-btn tip" title="Edit"><i class="fa fa-pencil"></i></a>' +
+                                    '<a href="' +
+                                        (!_.isEmpty(config.data_view_url) ? config.data_view_url : '#') +
+                                        '" target="_blank" class="btn btn-primary tip ' +
+                                        (!_.isEmpty(config.data_view_url) ? '' : 'disabled') + '" title="Data View URL">' +
+                                        (!_.isEmpty(config.data_view_url) ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>') +
+                                    '</a>' +
                                     '<a href="/eventstreams/subscriptions/' +  data + '" class="btn btn-primary subscriptions-btn ' + (full.status != 'active' ? 'disabled' : '') + ' tip" title="Edit Subscriptions"><i class="fa fa-sliders"></i></a>' +
                                     '<a href="/eventstreams/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                 '</div>';

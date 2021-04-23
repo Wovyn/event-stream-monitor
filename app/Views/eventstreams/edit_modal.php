@@ -46,19 +46,10 @@
     <div class="col-md-6">
         <fieldset>
             <legend class="border-0">Optional:</legend>
-            <?php if ($sink->sink_type == "webhook"): ?>
-                <div class="form-group">
-                    <label class="control-label" for="webhook_data_view_url">Data View URL:</label>
-                    <input type="text" placeholder="Data View URL" class="form-control" id="webhook_data_view_url" name="webhook_data_view_url" value="<?php echo isset($config->webhook_data_view_url) ? $config->webhook_data_view_url : '' ?>" data-rule-url>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($sink->sink_type == "kinesis"): ?>
-                <div class="alert alert-info">
-                    <i class="fa fa-info-circle"></i>
-                    <strong>Heads up!</strong> Coming soon!
-                </div>
-            <?php endif; ?>
+            <div class="form-group">
+                <label class="control-label" for="data_view_url">Data View URL:</label>
+                <input type="text" placeholder="Data View URL" class="form-control" id="data_view_url" name="data_view_url" value="<?php echo isset($config->data_view_url) ? $config->data_view_url : '' ?>" data-rule-url>
+            </div>
         </fieldset>
     </div>
 </div>

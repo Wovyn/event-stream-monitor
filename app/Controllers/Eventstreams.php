@@ -100,10 +100,6 @@ class Eventstreams extends BaseController
                         'external_id' => $this->keys->external_id
                     ];
 
-                    $data['config'] = json_encode([
-                        'sink_configuration' => $sink_config
-                    ]);
-
                     break;
 
                 case 'webhook':
@@ -113,13 +109,13 @@ class Eventstreams extends BaseController
                         'batch_events' => ($_POST['batch_events'] == 'true' ? true : false)
                     ];
 
-                    $data['config'] = json_encode([
-                        'sink_configuration' => $sink_config,
-                        'webhook_data_view_url' => $_POST['webhook_data_view_url']
-                    ]);
-
                     break;
             }
+
+            $data['config'] = json_encode([
+                'sink_configuration' => $sink_config,
+                'data_view_url' => $_POST['data_view_url']
+            ]);
 
             $result['CreateSink'] = $this->twilio->CreateSink([
                 'description' => $data['description'],
@@ -167,16 +163,18 @@ class Eventstreams extends BaseController
             $result = [];
             $config = json_decode($sink->config);
 
-            switch ($sink->sink_type) {
-                case 'webhook':
-                        $config->webhook_data_view_url = $_POST['webhook_data_view_url'];
+            // switch ($sink->sink_type) {
+            //     case 'webhook':
+            //             $config->webhook_data_view_url = $_POST['webhook_data_view_url'];
 
-                    break;
+            //         break;
 
-                case 'kinesis':
+            //     case 'kinesis':
 
-                    break;
-            }
+            //         break;
+            // }
+
+            $config->data_view_url = $_POST['data_view_url'];
 
             $result['update'] = $this->eventstreamSinksModel->update($id, [
                 'config' => json_encode($config)

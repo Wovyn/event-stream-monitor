@@ -90,10 +90,6 @@
                                 <input type="text" class="form-control" id="destination_url" name="destination_url" placeholder="Destination URL" required data-rule-url>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="webhook_data_view_url">Webhook Data View URL</label>
-                                <input type="text" class="form-control" id="webhook_data_view_url" name="webhook_data_view_url" placeholder="Webhook Data View URL" data-rule-url>
-                            </div>
-                            <div class="form-group">
                                 <label class="control-label" for="method">Method</label>
                                 <select name="method" id="method" class="form-control">
                                     <option value="post">POST</option>
@@ -109,6 +105,10 @@
                             </div>
                         </div>
                     </fieldset>
+                    <div class="form-group">
+                        <label class="control-label" for="data_view_url">Data View URL</label>
+                        <input type="text" class="form-control" id="data_view_url" name="data_view_url" placeholder="Data View URL" data-rule-url>
+                    </div>
                 </div>
             </div>
         </div>
