@@ -17,17 +17,21 @@ var CollapseTree = function() {
             }
         });
 
+
+        // init svg element
         const svg = d3.create('svg')
             .attr('viewBox', [-options.margin.left, -options.margin.top, width, dx])
             .attr('font-family', options.font.family)
             .attr('font-size', options.font.size)
             .style('user-select', 'none');
 
+        // intit g element for lines
         const gLink = svg.append('g')
             .attr('fill', 'none')
             .attr('stroke', '#555')
             .attr('stroke-opacity', 0.4)
             .attr('stroke-width', 1.5);
+
 
         const gNode = svg.append('g')
             .attr('cursor', 'pointer')
@@ -59,18 +63,14 @@ var CollapseTree = function() {
             const node = gNode.selectAll("g")
                 .data(nodes, d => d.id);
 
+            // console.log(node);
+
             // Enter any new nodes at the parent's previous position.
             const nodeEnter = node.enter().append("g")
                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
                 .attr("fill-opacity", 0)
                 .attr("stroke-opacity", 0)
                 .on("click", (event, d) => {
-
-                    // main parent click
-                    // if(!d.parent) {
-                    //     return;
-                    // }
-
                     if (d.children) {
                         d._children = d.children;
                         d.children = null;
@@ -140,21 +140,13 @@ var CollapseTree = function() {
             });
         }
 
-            function collapse(datapoint) {
-                if (datapoint.children) {
-                    datapoint._children = datapoint.children;
-                    datapoint._children.forEach(collapse);
-                    // datapoint.children = null;
-                }
-            }
+        update(root);
 
-          update(root);
-
-          function tree() {
+        function tree() {
             return d3.tree().nodeSize([dx, dy])(root);
-          }
+        }
 
-          options.container.append(svg.node());
+        options.container.append(svg.node());
     }
 
     return {
