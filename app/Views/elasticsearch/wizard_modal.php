@@ -94,7 +94,7 @@
                         <legend>Configure Domain</legend>
                         <div class="form-group">
                             <label class="control-label" for="domain_name">Elasticsearch Domain Name</label>
-                            <input type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Elasticsearch Domain Name" data-rule-domainname required>
+                            <input type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Elasticsearch Domain Name" data-rule-domain-name required>
                             <p class="help-block">The name must start with a lowercase letter and must be between 3 and 28 characters. Valid characters are a-z (lowercase only), 0-9, and - (hyphen).</p>
                         </div>
                     </fieldset>

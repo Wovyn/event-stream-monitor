@@ -323,7 +323,7 @@ var App = function () {
             return /^[a-zA-Z0-9_.-]+$/.test(value);
         }, 'Please remove spaces or use underscore instead.');
 
-        $.validator.addMethod('domainname', function (value, element) {
+        $.validator.addMethod('domain-name', function (value, element) {
             return /^[a-z0-9-]+$/.test(value);
         }, 'Valid characters are a-z (lowercase only), 0-9, and - (hyphen).');
     }

@@ -41,25 +41,46 @@ class Migrate extends \CodeIgniter\Controller {
         }
     }
 
+    public function list($namespace = 'App') {
+        $this->migrate->setNamespace($namespace);
+
+        echo '<pre>' , var_dump($this->migrate->findMigrations()) , '</pre>';
+    }
+
+    public function manual($migration_name, $namespace = 'App') {
+        $this->migrate->setNamespace($namespace);
+
+        $result = [];
+        foreach ($this->migrate->findMigrations() as $migration) {
+            if($migration->name == $migration_name) {
+                $result = $this->do_migrate($migration->namespace, $migration->path);
+            }
+        }
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
     public function check() {
         $this->migrate->setNamespace(null);
 
         $result = [];
         foreach ($this->migrate->findMigrations() as $migration) {
             if($this->db->tableExists('migrations')) {
-                $check_migration = $this->db->table('migrations')->getWhere(['version' => $migration->version, 'class' => $migration->class]);
-                if(!count($check_migration->getResult())) {
-                    $result[] = [
-                        'version' => $migration->version,
-                        'name' => $migration->name,
-                        'result' => $this->do_migrate($migration->path, $migration->namespace),
-                    ];
+                if(!strpos($migration->name, 'skip')) {
+                    $check_migration = $this->db->table('migrations')->getWhere(['version' => $migration->version, 'class' => $migration->class]);
+                    if(!count($check_migration->getResult())) {
+                        $result[] = [
+                            'version' => $migration->version,
+                            'name' => $migration->name,
+                            'result' => $this->do_migrate($migration->path, $migration->namespace),
+                        ];
+                    }
                 }
             } else {
                 $result[] = [
                     'version' => $migration->version,
                     'name' => $migration->name,
-                    'result' => $this->do_migrate($migration->path, $migration->namespace)
+                    'result' => $this->do_migrate($migration->namespace, $migration->path)
                 ];
 
                 if($migration->name == 'install_ion_auth') {
@@ -71,7 +92,7 @@ class Migrate extends \CodeIgniter\Controller {
         return $this->response->setJSON(json_encode($result));
     }
 
-    public function do_migrate($path, $namespace) {
+    public function do_migrate($namespace, $path) {
         $result = [];
 
         try {
