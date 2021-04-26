@@ -131,19 +131,19 @@
                             <label class="control-label" for="availability_zones">Availability Zones</label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="3" name="availability_zones" class="availability_zones" checked="checked" />
+                                    <input type="radio" value="3-AZ" name="availability_zones" class="availability_zones" checked="checked" />
                                     3-AZ (Recommended for production workloads with higher availability requirements)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="2-AZ" name="availability_zones" class="availability_zones" />
                                     2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="1" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="1-AZ" name="availability_zones" class="availability_zones" />
                                     1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
@@ -397,7 +397,8 @@
                     <h3 class="StepTitle">Step 4</h3>
                 </div>
                 <div class="col-md-6">
-                    <fieldset>
+                    <!-- to be updated -->
+                    <fieldset class="hidden">
                         <legend>Network configuration</legend>
                         <div class="form-group">
                             <!--
@@ -417,7 +418,13 @@
                         <legend>Encryption</legend>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="true" name="note_to_node_encryption" id="note_to_node_encryption" checked="checked" />
+                                <input type="checkbox" value="enable" name="require_https" id="require_https" />
+                                Require HTTPS for all traffic to the domain
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox">
+                                <input type="checkbox" value="enable" name="note_to_node_encryption" id="note_to_node_encryption" checked="checked" />
                                 Node-to-node encryption
                             </label>
                         </div>
@@ -428,7 +435,8 @@
                         <legend>Access policy</legend>
                         <div class="form-group">
                             <!-- <label class="control-label" for="access_policy">JSON defined access policy</label> -->
-                            <div id="access_policy" style="height: 300px"></div>
+                            <div id="access_policy_json" style="height: 300px"></div>
+                            <input type="hidden" id="access_policy" name="access_policy">
                             <input type="hidden" id="aws_account" value="<?php echo $aws_account ?>">
                         </div>
                     </fieldset>
@@ -438,9 +446,29 @@
 
        <div id="step-5" class="tab-pane" role="tabpanel">
            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12">
                     <h3 class="StepTitle">Step 5</h3>
-
+                </div>
+                <div class="summary">
+                    <div class="col-md-6">
+                        <fieldset id="details-field">
+                            <legend class="border-0">Details:</legend>
+                        </fieldset>
+                        <fieldset id="data-nodes-field">
+                            <legend class="border-0">Data Nodes:</legend>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset id="dedicated-instances-field">
+                            <legend class="border-0">Dedicated Instances:</legend>
+                        </fieldset>
+                        <fieldset id="network-confi-field">
+                            <legend class="border-0">Network Configuration:</legend>
+                        </fieldset>
+                        <fieldset id="access-policy-field">
+                            <legend class="border-0">Access Policy:</legend>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
        </div>

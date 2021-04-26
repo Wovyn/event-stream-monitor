@@ -100,6 +100,11 @@ var Elasticsearch = function() {
                         });
                 }
 
+                if(nextStepIndex == 3) {
+                    // process access_policy
+                    // $('#access_policy', form).val(editor.getValue());
+                }
+
                 // show/hide create data stream btn and next button
                 if(nextStepIndex == lastStep) {
                     generateSummary(form);
@@ -152,9 +157,13 @@ var Elasticsearch = function() {
             });
 
             // init access policy
-            editor = ace.edit($('#access_policy', form)[0]);
+            editor = ace.edit($('#access_policy_json', form)[0]);
             editor.setTheme("ace/theme/xcode");
             editor.session.setMode("ace/mode/json");
+
+            editor.session.on('change', function(delta) {
+                $('#access_policy', form).val(editor.getValue());
+            });
         }
 
         var animateBar = function(step) {
@@ -169,26 +178,115 @@ var Elasticsearch = function() {
 
         var generateSummary = function(form) {
             // console.log(form.serializeArray());
-            let summaryEl = $('.summary', form),
-                formValues = form.serializeArray(),
-                summary = '';
+            let formValues = form.serializeArray(),
+                summary = '',
+                fieldTemplate = _.template('<div class="form-group">' +
+                    '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
+                    '<p class="form-control-static display-value"><%= value %></p>' +
+                    '</div>'),
+                prefieldTemplate = _.template('<div class="form-group">' +
+                    '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
+                    '<pre class="form-control-static display-value"><%= value %></pre>' +
+                    '</div>');
 
-            summaryEl.empty();
+            let detailsField = $('#details-field', form),
+                dataNodesField = $('#data-nodes-field', form),
+                dedicatedInstancesField = $('#dedicated-instances-field', form),
+                networkConfigField = $('#network-confi-field', form),
+                accessPolicyField = $('#access-policy-field', form);
+
+            detailsField.empty().append('<legend class="border-0">Details:</legend>');
+            dataNodesField.empty().append('<legend class="border-0">Data Nodes:</legend>');
+            dedicatedInstancesField.empty().append('<legend class="border-0">Dedicated Instances:</legend>');
+            networkConfigField.empty().append('<legend class="border-0">Network Configuration:</legend>');
+            accessPolicyField.empty().append('<legend class="border-0">Access Policy:</legend>');
 
             _.forEach(formValues, function(data) {
 
-                switch(data.name) {
-                    case 'region':
+                // append detail fields
+                if(_.findIndex(['region', 'domain_name', 'auto_tune'], d => d == data.name) != -1) {
+                    if(data.name == 'region') {
                         data.value = $('#region option:selected', form).html() + ' | ' + data.value;
+                    }
 
-                        break;
+                    detailsField.append(
+                        fieldTemplate({
+                            name: _.startCase(data.name),
+                            value: data.value
+                        })
+                    );
                 }
 
-                summary += '<div class="form-group">' +
-                    '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
-                    '<p class="form-control-static display-value">' + data.value + '</p>' +
-                    '</div>';
+                // append data node fields
+                if(_.findIndex(['availability_zones', 'instance_type', 'number_of_nodes', 'ebs_volume_type', 'ebs_storage_size_per_node'], d => d == data.name) != -1) {
+                    dataNodesField.append(
+                        fieldTemplate({
+                            name: _.startCase(data.name),
+                            value: data.value
+                        })
+                    );
+                }
+
+                // dedicated instances fields
+                if(_.findIndex(['dedicated_master_nodes', 'dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes', 'ultrawarm_data_node', 'number_of_warm_data_nodes'], d => d == data.name) != -1) {
+                    dedicatedInstancesField.append(
+                        fieldTemplate({
+                            name: _.startCase(data.name),
+                            value: data.value
+                        })
+                    );
+                }
+
+                // network config fields
+                if(_.findIndex(['network_configuration', 'require_https', 'note_to_node_encryption'], d => d == data.name) != -1) {
+                    networkConfigField.append(
+                        fieldTemplate({
+                            name: _.startCase(data.name),
+                            value: data.value
+                        })
+                    );
+                }
+
+                // network config fields
+                if(_.findIndex(['access_policy'], d => d == data.name) != -1) {
+                    accessPolicyField.append(
+                        prefieldTemplate({
+                            name: _.startCase(data.name),
+                            value: data.value
+                        })
+                    );
+                }
             });
+
+            // _.forEach(formValues, function(data) {
+            //     switch(data.name) {
+            //         case 'region':
+            //             data.value = $('#region option:selected', form).html() + ' | ' + data.value;
+
+            //             summary += fieldTemplate({
+            //                 name: _.startCase(data.name),
+            //                 value: data.value
+            //             });
+
+            //             break;
+
+            //         case 'access_policy':
+            //             summary += prefieldTemplate({
+            //                 name: _.startCase(data.name),
+            //                 value: data.value
+            //             });
+
+            //             break;
+
+            //         default:
+            //             summary += fieldTemplate({
+            //                 name: _.startCase(data.name),
+            //                 value: data.value
+            //             });
+
+            //             break;
+            //     }
+            // });
 
             $('.summary', form).append(summary);
         }
