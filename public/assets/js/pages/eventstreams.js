@@ -167,31 +167,34 @@ var Eventstreams = function() {
                 sinkType = $('#sink_type', form).val(),
                 formValues = form.serializeArray(),
                 subscriptions = $tree.jstree('get_selected', true),
-                summary = '';
+                summary = '',
+                fieldTemplate = _.template('<div class="form-group">' +
+                    '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
+                    '<p class="form-control-static display-value"><%= value %></p>' +
+                    '</div>');
 
             summaryEl.empty();
 
             // sink configuration
             summary += '<div class="col-md-6">';
             _.forEach(formValues, function(data) {
-                if (sinkType == 'kinesis' && $.inArray(data.name, ['description', 'data_view_url', 'kinesis_data_stream', 'role_arn']) != -1) {
-                    summary += '<div class="form-group">' +
-                        '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
-                        '<p class="form-control-static display-value">' + data.value + '</p>' +
-                        '</div>';
+                if (sinkType == 'kinesis' && _.findIndex(['description', 'data_view_url', 'kinesis_data_stream', 'role_arn'], d => d == data.name) != -1) {
+                    summary += fieldTemplate({
+                        name: _.startCase(data.name),
+                        value: data.value
+                    });
                 }
 
-                if (sinkType == 'webhook' && $.inArray(data.name, ['description', 'data_view_url', 'destination_url', 'method', 'batch_events']) != -1) {
-                    summary += '<div class="form-group">' +
-                        '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
-                        '<p class="form-control-static display-value">' + data.value + '</p>' +
-                        '</div>';
+                if (sinkType == 'webhook' && _.findIndex(['description', 'data_view_url', 'destination_url', 'method', 'batch_events'], d => d == data.name) != -1) {
+                    summary += fieldTemplate({
+                        name: _.startCase(data.name),
+                        value: data.value
+                    });
                 }
             });
             summary += '</div>';
 
             // console.log(subscriptions);
-
             if(subscriptions.length) {
                 // format
                 let events = {};

@@ -119,10 +119,13 @@ var Kinesis = function() {
         };
 
         var generateSummary = function(form) {
-            // console.log(form.serializeArray());
             let summaryEl = $('.summary', form),
                 formValues = form.serializeArray(),
-                summary = '';
+                summary = '',
+                fieldTemplate = _.template('<div class="form-group">' +
+                    '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
+                    '<p class="form-control-static display-value"><%= value %></p>' +
+                    '</div>');
 
             summaryEl.empty();
 
@@ -135,10 +138,10 @@ var Kinesis = function() {
                         break;
                 }
 
-                summary += '<div class="form-group">' +
-                    '<label class="control-label text-capitalize text-bold">' + data.name + ':</label>' +
-                    '<p class="form-control-static display-value">' + data.value + '</p>' +
-                    '</div>';
+                summary += fieldTemplate({
+                    name: _.startCase(data.name),
+                    value: data.value
+                });
             });
 
             summaryEl.append(summary);
