@@ -250,7 +250,7 @@
                             <select name="ebs_volume_type" id="ebs_volume_type" class="form-control form-select2" required data-placeholder="Select an EBS volume type" style="width: 100%">
                                 <option></option>
                                 <option value="gp2" selected="selected">General Purpose (SSD)</option>
-                                <option value="io1">Provisioned IOPS (SSD)</option>
+                                <!-- <option value="io1">Provisioned IOPS (SSD)</option> -->
                                 <option value="standard">Magnetic</option>
                             </select>
                         </div>
@@ -381,7 +381,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label" for="number_of_warm_data_nodes">Number of warm data nodes</label>
-                                        <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" required>
+                                        <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" data-rule-min="2" required>
                                         <p class="help-block">UltraWarm requires a minimum of two warm nodes.</p>
                                     </div>
                                 </div>

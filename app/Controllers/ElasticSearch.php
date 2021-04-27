@@ -47,7 +47,73 @@ class ElasticSearch extends BaseController
 
     public function add() {
         if($_POST) {
-            echo json_encode($_POST);
+            // compile create elasticsearch domain request
+            $request = [
+                'ElasticsearchVersion' => '7.10',
+                'AccessPolicies' => $_POST['access_policy'],
+                'DomainName' => $_POST['domain_name'],
+                'AutoTuneOptions' => [
+                    'DesiredState' => $_POST['auto_tune'],
+                    // 'MaintenanceSchedules'
+                ],
+                'ElasticsearchClusterConfig' => [
+                    'ZoneAwarenessEnabled' => true,
+                    'ZoneAwarenessConfig' => [
+                        'AvailabilityZoneCount' => (int) $_POST['availability_zones']
+                    ],
+                    'InstanceType' => $_POST['instance_type'],
+                    'InstanceCount' => (int) $_POST['number_of_nodes']
+                ],
+                'EBSOptions' => [
+                    'EBSEnabled' => true,
+                    // 'Iops' => <integer>,
+                    'VolumeSize' => (int) $_POST['ebs_storage_size_per_node'],
+                    'VolumeType' => $_POST['ebs_volume_type'],
+                ],
+                'NodeToNodeEncryptionOptions' => [
+                    'Enabled' => isset($_POST['note_to_node_encryption']),
+                ],
+
+                // custom domain
+                'DomainEndpointOptions' => [
+                    'EnforceHTTPS' => isset($_POST['require_https']),
+                    'CustomEndpointEnabled' => false,
+                    // 'CustomEndpoint' => '<string>',
+                    // 'CustomEndpointCertificateArn' => '<string>',
+                    // 'TLSSecurityPolicy' => 'Policy-Min-TLS-1-0-2019-07|Policy-Min-TLS-1-2-2019-07',
+                ],
+
+                // Fine–grained access control
+                'AdvancedSecurityOptions' => [
+                    'Enabled' => false
+                    // 'SAMLOptions'
+                ],
+                // Amazon Cognito authentication
+                'CognitoOptions' => [
+                    'Enabled' => false
+                ]
+            ];
+
+            if(isset($_POST['dedicated_master_nodes'])) {
+                $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);
+                $request['ElasticsearchClusterConfig']['DedicatedMasterType'] = $_POST['dedicated_master_node_instance_type'];
+                $request['ElasticsearchClusterConfig']['DedicatedMasterCount'] = (int) $_POST['dedicated_master_node_number_of_nodes'];
+
+                if(isset($_POST['ultrawarm_data_node'])) {
+                    $request['ElasticsearchClusterConfig']['WarmEnabled'] = isset($_POST['ultrawarm_data_node']);
+                    $request['ElasticsearchClusterConfig']['WarmType'] = $_POST['ultrawarm_instance_type'];
+                    $request['ElasticsearchClusterConfig']['WarmCount'] = (int) $_POST['number_of_warm_data_nodes'];
+                }
+            }
+
+            $this->elasticsearch->setRegion($_POST['region']);
+            $result['CreateElasticsearchDomain'] = $this->elasticsearch->CreateElasticsearchDomain($request);
+
+            echo 'Request: <br>';
+            echo '<pre>', var_dump($request) , '</pre>';
+
+            echo 'Result: <br>';
+            echo '<pre>', var_dump($result['CreateElasticsearchDomain']) , '</pre>';
         }
 
         $data['aws_account'] = $this->keys->aws_account;
