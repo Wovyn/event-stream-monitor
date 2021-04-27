@@ -5,13 +5,16 @@ class ElasticSearch extends BaseController
 {
 
     protected $authKeysModel,
+        $elasticsearchModel,
         $elasticsearch,
+        $awsconfig,
         $keys;
 
     public function __construct() {
         parent::__construct();
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
+        $this->elasticsearchModel = new \App\Models\ElasticsearchModel();
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
@@ -20,6 +23,8 @@ class ElasticSearch extends BaseController
                 'secret' => $this->keys->aws_secret
             ]);
         }
+
+        $this->awsconfig = new \Config\Aws();
     }
 
     public function index() {
@@ -43,6 +48,32 @@ class ElasticSearch extends BaseController
         );
 
         return view('elasticsearch/index', $this->data);
+    }
+
+    public function get_dt_listing() {
+        $order = $_POST['columns'][$_POST['order'][0]['column']]['name'];
+        $sort = $_POST['order'][0]['dir'];
+        $offset = $_POST['start'];
+        $limit = $_POST['length'];
+        // $search = $_POST['search']['value'];
+
+        $rows = $this->elasticsearchModel
+            ->where('user_id', $this->data['user']->id)
+            ->orderBy($order, $sort)
+            ->findAll($limit, $offset);
+
+        foreach ($rows as $row) {
+            $row->region_name = $this->awsconfig->regions[$row->region];
+        }
+
+        $total = $this->elasticsearchModel->countAll();
+        $tbl = array(
+            "iTotalRecords"=> $total,
+            "iTotalDisplayRecords"=> $total,
+            "aaData"=> $rows
+        );
+
+        return $this->response->setJSON(json_encode($tbl));
     }
 
     public function add() {
@@ -109,11 +140,20 @@ class ElasticSearch extends BaseController
             $this->elasticsearch->setRegion($_POST['region']);
             $result['CreateElasticsearchDomain'] = $this->elasticsearch->CreateElasticsearchDomain($request);
 
-            echo 'Request: <br>';
-            echo '<pre>', var_dump($request) , '</pre>';
+            if(!$result['CreateElasticsearchDomain']['error']) {
+                $result['save'] = $this->elasticsearchModel->save([
+                    'user_id' => $this->data['user']->id,
+                    'region' => $_POST['region'],
+                    'domain_name' => $_POST['domain_name'],
+                    'status' => 'processing'
+                ]);
+            }
 
-            echo 'Result: <br>';
-            echo '<pre>', var_dump($result['CreateElasticsearchDomain']) , '</pre>';
+            return $this->response->setJSON(json_encode([
+                'error' => $result['CreateElasticsearchDomain']['error'],
+                'message' => ($result['CreateElasticsearchDomain']['error'] ? $result['CreateElasticsearchDomain']['message'] : 'Successfully created Elasticsearch Domain!'),
+                'result' => $result
+            ]));
         }
 
         $data['aws_account'] = $this->keys->aws_account;
@@ -121,10 +161,29 @@ class ElasticSearch extends BaseController
         return view('elasticsearch/wizard_modal', $data);
     }
 
+    function delete($id) {
+        $domain = $this->elasticsearchModel->where('id', $id)->first();
+
+        $this->elasticsearch->setRegion($domain->region);
+        $result['DeleteElasticsearchDomain'] = $this->elasticsearch->DeleteElasticsearchDomain([
+            'DomainName' => $domain->domain_name
+        ]);
+
+        if(!$result['DeleteElasticsearchDomain']['error']) {
+            $result['delete'] = $this->elasticsearchModel->where('id', $id)->delete();
+        }
+
+        return $this->response->setJSON(json_encode([
+            'error' => $result['DeleteElasticsearchDomain']['error'],
+            'message' => ($result['DeleteElasticsearchDomain']['error'] ? $result['DeleteElasticsearchDomain']['message'] : 'Successfully deleted Data Stream!'),
+            'result' => $result
+        ]));
+    }
+
     // manual test for elasticsearch
     public function CreateElasticsearchDomain() {
         $result = $this->elasticsearch->CreateElasticsearchDomain([
-            'DomainName' => 'esm-test-02',
+            'DomainName' => 'esm-test-01',
             'EBSOptions' => [
                 'EBSEnabled' => true,
                 'VolumeSize' => 10,

@@ -46,7 +46,8 @@
                     <thead>
                         <tr>
                             <th>Region</th>
-                            <th>DomainName</th>
+                            <th>Domain Name</th>
+                            <th>Status</th>
                             <th>Created</th>
                             <th>Last Updated</th>
                             <th>Options</th>

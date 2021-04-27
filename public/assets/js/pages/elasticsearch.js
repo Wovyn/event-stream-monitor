@@ -342,81 +342,124 @@ var Elasticsearch = function() {
         });
     }
 
+    var handleDelete = function() {
+        console.log('init handleDelete');
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this);
+
+            Swal.fire({
+                icon: 'warning',
+                text: 'Are you sure you want to delete the Domain?',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+                preConfirm: () => {
+                    return fetch($btn.attr('href')).
+                        then(response => {
+                            return response.json();
+                        });
+                }
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        icon: result.value.error !== true ? 'success' : 'error',
+                        text: result.value.message
+                    });
+
+                    if(!result.value.error) {
+                        $dtTables['elasticsearch-table'].ajax.reload();
+                    } else {
+                        console.log(result.value);
+                    }
+                }
+            });
+        });
+    }
+
     return {
         init: function() {
             console.log('Elasticsearch.init');
 
             App.globalPageChecks();
 
-            // App.dt.extend();
-            // App.dt.init({
-            //     id: 'kinesis-table',
-            //     autoUpdate: 60000,
-            //     settings: {
-            //         processing: true,
-            //         serverSide: true,
-            //         ajax: {
-            //             url: '/kinesis/get_dt_listing',
-            //             type: 'post'
-            //         },
-            //         columns: [
-            //             { name: 'region', data: 'region_name' },
-            //             { name: 'name', data: 'name' },
-            //             { name: 'shards', data: 'shards' },
-            //             { name: 'created_at', data: 'created_at' },
-            //             { name: 'updated_at', data: 'updated_at' },
-            //             { name: 'options', data: 'id', searchable: false, sortable: false }
-            //         ],
-            //         columnDefs: [
-            //             {
-            //                 targets: 0,
-            //                 render: function(data, type, full, meta) {
-            //                     return '<span data-html="true" title="' + full.region + '" class="tip">' + data + '</span>';
-            //                 }
-            //             },
-            //             {
-            //                 targets:[3,4],
-            //                 render: function(data, type, full, meta) {
-            //                     let utcTime = moment.tz(data, 'UTC'),
-            //                         localTime = moment.tz(data, 'UTC').tz(App.timezone),
-            //                         tooltip =
-            //                             '<div class=\'text-left\'>' +
-            //                                 '<b>UTC:</b> ' + utcTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
-            //                                 '<b>Local:</b> ' + localTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
-            //                             '</div>';
+            App.dt.extend();
+            App.dt.init({
+                id: 'elasticsearch-table',
+                autoUpdate: 60000,
+                settings: {
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '/elasticsearch/get_dt_listing',
+                        type: 'post'
+                    },
+                    columns: [
+                        { name: 'region', data: 'region_name' },
+                        { name: 'domain_name', data: 'domain_name' },
+                        { name: 'status', data: 'status' },
+                        { name: 'created_at', data: 'created_at' },
+                        { name: 'updated_at', data: 'updated_at' },
+                        { name: 'options', data: 'id', searchable: false, sortable: false }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            render: function(data, type, full, meta) {
+                                return '<span data-html="true" title="' + full.region + '" class="tip">' + data + '</span>';
+                            }
+                        },
+                        {
+                            targets: 2,
+                            render: function(data, type, full, meta) {
+                                return '<span class="label label-' + (data == 'processing' ? 'warning' : 'success') + '">' + data + '</span>';
+                            }
+                        },
+                        {
+                            targets:[3,4],
+                            render: function(data, type, full, meta) {
+                                let utcTime = moment.tz(data, 'UTC'),
+                                    localTime = moment.tz(data, 'UTC').tz(App.timezone),
+                                    tooltip =
+                                        '<div class=\'text-left\'>' +
+                                            '<b>UTC:</b> ' + utcTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
+                                            '<b>Local:</b> ' + localTime.format("MMM DD, YYYY h:mm:ss a") + '<br/>' +
+                                        '</div>';
 
-            //                     if(data) {
-            //                         return '<span data-html="true" title="' + tooltip + '" class="tip">' + localTime.fromNow() + '</span>';
-            //                     } else {
-            //                         return '';
-            //                     }
-            //                 }
-            //             },
-            //             {
-            //                 targets: 5,
-            //                 width: '12.5%',
-            //                 render: function(data, type, full, meta) {
-            //                     let options =
-            //                         '<div class="btn-group btn-group-sm">' +
-            //                             // '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>' +
-            //                             '<a href="/kinesis/view/' +  data + '" class="btn btn-primary view-btn"><i class="fa fa-eye"></i></a>' +
-            //                             '<a href="/kinesis/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
-            //                         '</div>';
+                                if(data) {
+                                    return '<span data-html="true" title="' + tooltip + '" class="tip">' + localTime.fromNow() + '</span>';
+                                } else {
+                                    return '';
+                                }
+                            }
+                        },
+                        {
+                            targets: 5,
+                            width: '12.5%',
+                            render: function(data, type, full, meta) {
+                                let options =
+                                    '<div class="btn-group btn-group-sm">' +
+                                        '<a href="/elasticsearch/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
+                                    '</div>';
 
-            //                     return options;
-            //                 }
-            //             }
-            //         ],
-            //         fnCreatedRow: function (nRow, aData, iDataIndex) {
-            //             console.log('fnCreatedRow');
-            //             $('.tip', nRow).tooltip();
-            //         }
-            //     }
-            // });
+                                return options;
+                            }
+                        }
+                    ],
+                    fnCreatedRow: function (nRow, aData, iDataIndex) {
+                        console.log('fnCreatedRow');
+                        $('.tip', nRow).tooltip();
+                    }
+                }
+            });
 
             App.validationSetDefault();
 
             handleAdd();
+            handleDelete();
         }
     }
 }();

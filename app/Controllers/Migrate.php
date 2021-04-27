@@ -66,7 +66,7 @@ class Migrate extends \CodeIgniter\Controller {
         $result = [];
         foreach ($this->migrate->findMigrations() as $migration) {
             if($this->db->tableExists('migrations')) {
-                if(!strpos($migration->name, 'skip')) {
+                if(!strpos($migration->name, 'testing')) {
                     $check_migration = $this->db->table('migrations')->getWhere(['version' => $migration->version, 'class' => $migration->class]);
                     if(!count($check_migration->getResult())) {
                         $result[] = [

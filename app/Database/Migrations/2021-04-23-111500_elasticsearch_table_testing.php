@@ -26,6 +26,9 @@ class Elasticsearch_table_skip extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '250',
             ],
+            'status' => [
+                'type' => 'TEXT'
+            ],
             'created_at' => [
                 'type' => 'TIMESTAMP'
             ],
