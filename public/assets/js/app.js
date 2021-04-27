@@ -326,6 +326,10 @@ var App = function () {
         $.validator.addMethod('domain-name', function (value, element) {
             return /^[a-z0-9-]+$/.test(value);
         }, 'Valid characters are a-z (lowercase only), 0-9, and - (hyphen).');
+
+        $.validator.addMethod('multiple-of', function (value, element, int) {
+            return parseInt(value, 10) % int == 0;
+        }, $.validator.format('Value must be a multiple of {0}.'));
     }
 
     var customs = {};

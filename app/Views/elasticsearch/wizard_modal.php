@@ -104,12 +104,12 @@
                         <div class="form-group">
                             <label class="control-label" for="auto_tune">Auto-Tune</label>
                             <label class="radio">
-                                <input type="radio" value="disable" name="auto_tune" />
+                                <input type="radio" value="DISABLED" name="auto_tune" />
                                 Disable
                                 <p class="help-block">No automated changes to your cluster. Amazon ES will still send occasional recommendations for how to optimize cluster performance.</p>
                             </label>
                             <label class="radio">
-                                <input type="radio" value="enable" name="auto_tune" checked="checked" />
+                                <input type="radio" value="ENABLED" name="auto_tune" checked="checked" />
                                 Enable
                                 <p class="help-block">Automatically makes node-level changes that require no downtime, such as tuning queues and cache sizes.</p>
                             </label>
@@ -131,19 +131,19 @@
                             <label class="control-label" for="availability_zones">Availability Zones</label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="3-AZ" name="availability_zones" class="availability_zones" checked="checked" />
+                                    <input type="radio" value="3" name="availability_zones" class="availability_zones" checked="checked" />
                                     3-AZ (Recommended for production workloads with higher availability requirements)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="2-AZ" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" />
                                     2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="1-AZ" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="1" name="availability_zones" class="availability_zones" />
                                     1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
@@ -233,7 +233,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="number_of_nodes">Number of nodes</label>
-                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="3" required>
+                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="3" required data-rule-multiple-of="3">
                             <p class="help-block">For three Availability Zones, we recommend instances in multiples of three for equal distribution across the Availability Zones.</p>
                         </div>
                     </fieldset>
@@ -361,30 +361,31 @@
                                     <option value="5">5</option>
                                 </select>
                             </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>UltraWarm data nodes</legend>
-                        <div class="form-group">
-                            <label class="checkbox">
-                                <input type="checkbox" value="enable" name="ultrawarm_data_node" id="ultrawarm_data_node" />
-                                Enable UltraWarm data nodes
-                            </label>
-                        </div>
-                        <div id="ulrawarm_container" style="display: none">
-                            <div class="form-group">
-                                <label class="control-label" for="ultrawarm_instance_type">Instance type</label>
-                                <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%">
-                                    <option></option>
-                                    <option value="ultrawarm1.medium.elasticsearch" selected="selected">ultrawarm1.medium.elasticsearch (default)</option>
-                                    <option value="ultrawarm1.large.elasticsearch">ultrawarm1.large.elasticsearch</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="number_of_warm_data_nodes">Number of warm data nodes</label>
-                                <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" required>
-                                <p class="help-block">UltraWarm requires a minimum of two warm nodes.</p>
-                            </div>
+
+                            <fieldset>
+                                <legend>UltraWarm data nodes</legend>
+                                <div class="form-group">
+                                    <label class="checkbox">
+                                        <input type="checkbox" value="enable" name="ultrawarm_data_node" id="ultrawarm_data_node" />
+                                        Enable UltraWarm data nodes
+                                    </label>
+                                </div>
+                                <div id="ulrawarm_container" style="display: none">
+                                    <div class="form-group">
+                                        <label class="control-label" for="ultrawarm_instance_type">Instance type</label>
+                                        <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%">
+                                            <option></option>
+                                            <option value="ultrawarm1.medium.elasticsearch" selected="selected">ultrawarm1.medium.elasticsearch (default)</option>
+                                            <option value="ultrawarm1.large.elasticsearch">ultrawarm1.large.elasticsearch</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="number_of_warm_data_nodes">Number of warm data nodes</label>
+                                        <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" required>
+                                        <p class="help-block">UltraWarm requires a minimum of two warm nodes.</p>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                     </fieldset>
                 </div>

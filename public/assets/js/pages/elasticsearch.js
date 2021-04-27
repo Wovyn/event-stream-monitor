@@ -156,6 +156,12 @@ var Elasticsearch = function() {
                 elements: [ $('#ulrawarm_container', form) ]
             });
 
+            // update number of nodes validation rule when availability zone changes
+            $('.availability_zones', form).on('click', function() {
+                $('#number_of_nodes', form).rules('remove', 'multiple-of');
+                $('#number_of_nodes', form).rules('add', { 'multiple-of': $(this).val() });
+            });
+
             // init access policy
             editor = ace.edit($('#access_policy_json', form)[0]);
             editor.setTheme("ace/theme/xcode");
