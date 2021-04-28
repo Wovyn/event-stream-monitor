@@ -72,7 +72,7 @@ class Migrate extends \CodeIgniter\Controller {
                         $result[] = [
                             'version' => $migration->version,
                             'name' => $migration->name,
-                            'result' => $this->do_migrate($migration->path, $migration->namespace),
+                            'result' => $this->do_migrate($migration->namespace, $migration->path),
                         ];
                     }
                 }

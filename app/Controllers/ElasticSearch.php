@@ -44,6 +44,7 @@ class ElasticSearch extends BaseController
             '/bower_components/jquery-validation/dist/jquery.validate.min.js',
             '/bower_components/jQuery-Smart-Wizard/js/jquery.smartWizard.js',
             '/bower_components/ace/ace.js',
+            '/assets/js/eventstream.js',
             '/assets/js/pages/elasticsearch.js'
         );
 
@@ -74,6 +75,36 @@ class ElasticSearch extends BaseController
         );
 
         return $this->response->setJSON(json_encode($tbl));
+    }
+
+    public function sync() {
+        $domains = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
+        foreach ($domains as $domain) {
+            switch ($domain->status) {
+                case 'processing':
+                    $describe = $this->elasticsearch->DescribeElasticsearchDomain([
+                        'DomainName' => $domain->domain_name
+                    ]);
+
+                    if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
+                        $this->elasticsearchModel
+                            ->update($domain->id, [
+                                'status' => 'active',
+                                'settings' => json_encode([
+                                    'Endpoint' => $describe['response']['DomainStatus']['Endpoint'],
+                                ])
+                            ]);
+                    }
+
+                    break;
+            }
+        }
+
+        $data = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
+        $es = new \App\Libraries\EventStream();
+        $es->event([
+            'data' => json_encode($data)
+        ]);
     }
 
     public function add() {
@@ -181,27 +212,6 @@ class ElasticSearch extends BaseController
     }
 
     // manual test for elasticsearch
-    public function CreateElasticsearchDomain() {
-        $result = $this->elasticsearch->CreateElasticsearchDomain([
-            'DomainName' => 'esm-test-01',
-            'EBSOptions' => [
-                'EBSEnabled' => true,
-                'VolumeSize' => 10,
-                'VolumeType' => 'gp2'
-            ]
-        ]);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
-    public function DeleteElasticsearchDomain($domain) {
-        $result = $this->elasticsearch->DeleteElasticsearchDomain([
-            'DomainName' => $domain
-        ]);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
     public function DescribeElasticsearchDomain($domain) {
         $result = $this->elasticsearch->DescribeElasticsearchDomain([
             'DomainName' => $domain

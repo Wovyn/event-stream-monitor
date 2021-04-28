@@ -40,6 +40,7 @@ var Elasticsearch = function() {
                                                     appModal.modal('hide');
                                                     $dtTables['elasticsearch-table'].ajax.reload();
                                                 } else {
+                                                    $(this).removeClass('disabled');
                                                     console.log(response);
                                                 }
                                             }
@@ -380,6 +381,33 @@ var Elasticsearch = function() {
         });
     }
 
+    var handleSync = function() {
+        EventStream.init('stream', {
+            url: '/elasticsearch/sync',
+            events: [
+                {
+                    type: 'message',
+                    listener: function(data) {
+                        let newData = JSON.parse(data);
+
+                        // console.log(newData);
+
+                        _.forEach(newData, function(rowData) {
+                            let row = $('tr#' + rowData.id),
+                                status = $dtTables['elasticsearch-table'].cell($('td:eq(1)', row)).data();
+
+                            if(status != rowData.status) {
+                                // trigger table reload
+                                $dtTables['elasticsearch-table'].ajax.reload();
+                            }
+                        });
+                    }
+                }
+            ],
+            timeout: 60000
+        });
+    }
+
     return {
         init: function() {
             console.log('Elasticsearch.init');
@@ -450,8 +478,14 @@ var Elasticsearch = function() {
                         }
                     ],
                     fnCreatedRow: function (nRow, aData, iDataIndex) {
-                        console.log('fnCreatedRow');
+                        // add id to row
+                        $(nRow).attr('id', aData.id);
+
+                        // init tooltips in row
                         $('.tip', nRow).tooltip();
+                    },
+                    fnInitComplete: function(settings, json) {
+                        handleSync();
                     }
                 }
             });

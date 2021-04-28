@@ -9,7 +9,8 @@ class ElasticsearchModel extends BaseModel {
         'user_id',
         'region',
         'domain_name',
-        'status' // (processing, active)
+        'status', // [processing, active, deleting]
+        'settings'
     ];
 
 }

@@ -29,6 +29,10 @@ class Elasticsearch_table_skip extends Migration
             'status' => [
                 'type' => 'TEXT'
             ],
+            'settings' => [
+                'type' => 'TEXT',
+                'null' => TRUE
+            ],
             'created_at' => [
                 'type' => 'TIMESTAMP'
             ],

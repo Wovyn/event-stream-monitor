@@ -419,7 +419,7 @@
                         <legend>Encryption</legend>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="require_https" id="require_https" />
+                                <input type="checkbox" value="enable" name="require_https" id="require_https" checked="checked" />
                                 Require HTTPS for all traffic to the domain
                             </label>
                         </div>
