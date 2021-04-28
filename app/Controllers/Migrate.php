@@ -47,12 +47,12 @@ class Migrate extends \CodeIgniter\Controller {
         echo '<pre>' , var_dump($this->migrate->findMigrations()) , '</pre>';
     }
 
-    public function manual($migration_name, $namespace = 'App') {
+    public function manual($migration_name, $version, $namespace = 'App') {
         $this->migrate->setNamespace($namespace);
 
         $result = [];
         foreach ($this->migrate->findMigrations() as $migration) {
-            if($migration->name == $migration_name) {
+            if($migration->name == $migration_name && $migration->version == $version) {
                 $result = $this->do_migrate($migration->namespace, $migration->path);
             }
         }
