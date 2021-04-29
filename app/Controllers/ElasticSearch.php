@@ -81,7 +81,7 @@ class ElasticSearch extends BaseController
         $domains = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
         foreach ($domains as $domain) {
             switch ($domain->status) {
-                case 'processing':
+                case 'loading':
                     $describe = $this->elasticsearch->DescribeElasticsearchDomain([
                         'DomainName' => $domain->domain_name
                     ]);

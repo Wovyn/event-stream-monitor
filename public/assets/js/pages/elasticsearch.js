@@ -442,7 +442,7 @@ var Elasticsearch = function() {
 
                         _.forEach(newData, function(rowData) {
                             let row = $('tr#' + rowData.id),
-                                status = $dtTables['elasticsearch-table'].cell($('td:eq(1)', row)).data();
+                                status = $dtTables['elasticsearch-table'].cell($('td:eq(2)', row)).data();
 
                             if(status != rowData.status) {
                                 // trigger table reload
