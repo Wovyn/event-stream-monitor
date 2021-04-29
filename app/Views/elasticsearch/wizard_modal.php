@@ -250,14 +250,19 @@
                             <select name="ebs_volume_type" id="ebs_volume_type" class="form-control form-select2" required data-placeholder="Select an EBS volume type" style="width: 100%">
                                 <option></option>
                                 <option value="gp2" selected="selected">General Purpose (SSD)</option>
-                                <!-- <option value="io1">Provisioned IOPS (SSD)</option> -->
+                                <option value="io1">Provisioned IOPS (SSD)</option>
                                 <option value="standard">Magnetic</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="ebs_storage_size_per_node">EBS storage size per node</label>
-                            <input type="number" class="form-control" id="ebs_storage_size_per_node" name="ebs_storage_size_per_node" placeholder="EBS storage size per node" value="10" required>
-                            <p class="help-block">Total cluster size will be {ebs_storage_size_per_node*2} GiB (EBS volume size x Instance count).</p>
+                            <input type="number" class="form-control" id="ebs_storage_size_per_node" name="ebs_storage_size_per_node" placeholder="EBS storage size per node" value="10" required data-rule-min="10" data-rule-max="1024">
+                            <p class="help-block">Total cluster size is EBS volume size x Instance count.</p>
+                        </div>
+                        <div id="provisioned-iops-field" class="form-group" style="display: none;">
+                            <label class="control-label" for="provisioned_iops">Provisioned IOPS</label>
+                            <input type="number" class="form-control" id="provisioned_iops" name="provisioned_iops" placeholder="Provisioned IOPS" value="1000" required data-rule-min="1000" data-rule-max="16000">
+                            <p class="help-block">The provisioned IOPS value must be an integer between 1000 and 16000.</p>
                         </div>
                     </fieldset>
                 </div>

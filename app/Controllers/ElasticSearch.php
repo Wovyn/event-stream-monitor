@@ -128,7 +128,6 @@ class ElasticSearch extends BaseController
                 ],
                 'EBSOptions' => [
                     'EBSEnabled' => true,
-                    // 'Iops' => <integer>,
                     'VolumeSize' => (int) $_POST['ebs_storage_size_per_node'],
                     'VolumeType' => $_POST['ebs_volume_type'],
                 ],
@@ -155,6 +154,10 @@ class ElasticSearch extends BaseController
                     'Enabled' => false
                 ]
             ];
+
+            if($_POST['ebs_volume_type'] == 'io1') {
+                $request['EBSOptions']['Iops'] = (int) $_POST['provisioned_iops'];
+            }
 
             if(isset($_POST['dedicated_master_nodes'])) {
                 $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);

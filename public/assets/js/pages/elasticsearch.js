@@ -163,6 +163,43 @@ var Elasticsearch = function() {
                 $('#number_of_nodes', form).rules('add', { 'multiple-of': $(this).val() });
             });
 
+            $('#ebs_volume_type', form).select2()
+                .on('select2:select', function (e) {
+                    $('#provisioned-iops-field', form).hide();
+
+                    switch($(this).val()) {
+                        case 'gp2':
+                            $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
+                            $('#ebs_storage_size_per_node', form).rules('add', {
+                                min: 10,
+                                max: 1024
+                            });
+
+                            break;
+
+                        case 'io1':
+                            $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
+                            $('#ebs_storage_size_per_node', form).rules('add', {
+                                min: 35,
+                                max: 1024
+                            });
+
+                            $('#provisioned-iops-field', form).show();
+
+                            break;
+
+                        case 'standard':
+                            $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
+                            $('#ebs_storage_size_per_node', form).rules('add', {
+                                min: 10,
+                                max: 100
+                            });
+
+                            break;
+
+                    }
+                });
+
             // init access policy
             editor = ace.edit($('#access_policy_json', form)[0]);
             editor.setTheme("ace/theme/xcode");
@@ -225,13 +262,24 @@ var Elasticsearch = function() {
                 }
 
                 // append data node fields
-                if(_.findIndex(['availability_zones', 'instance_type', 'number_of_nodes', 'ebs_volume_type', 'ebs_storage_size_per_node'], d => d == data.name) != -1) {
-                    dataNodesField.append(
-                        fieldTemplate({
-                            name: _.startCase(data.name),
-                            value: data.value
-                        })
-                    );
+                if(_.findIndex(['availability_zones', 'instance_type', 'number_of_nodes', 'ebs_volume_type', 'ebs_storage_size_per_node', 'provisioned_iops'], d => d == data.name) != -1) {
+                    if(data.name == 'provisioned_iops') {
+                        if($('#ebs_volume_type', form).val() == 'io1') {
+                            dataNodesField.append(
+                                fieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        }
+                    } else {
+                        dataNodesField.append(
+                            fieldTemplate({
+                                name: _.startCase(data.name),
+                                value: data.value
+                            })
+                        );
+                    }
                 }
 
                 // dedicated instances fields
