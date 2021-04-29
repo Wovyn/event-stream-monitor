@@ -127,7 +127,7 @@
                             <span class="selected"></span>
                         </a>
                     </li>
-                    <li class="secret" style="display: none">
+                    <li>
                         <a href="/elasticsearch">
                             <i class="clip-search"></i>
                             <span class="title"> AWS Elasticsearch </span>

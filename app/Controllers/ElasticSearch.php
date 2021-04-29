@@ -176,7 +176,7 @@ class ElasticSearch extends BaseController
                     'user_id' => $this->data['user']->id,
                     'region' => $_POST['region'],
                     'domain_name' => $_POST['domain_name'],
-                    'status' => 'processing'
+                    'status' => 'loading'
                 ]);
             }
 

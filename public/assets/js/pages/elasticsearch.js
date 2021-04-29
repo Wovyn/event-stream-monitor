@@ -443,7 +443,7 @@ var Elasticsearch = function() {
                         {
                             targets: 2,
                             render: function(data, type, full, meta) {
-                                return '<span class="label label-' + (data == 'processing' ? 'warning' : 'success') + '">' + data + '</span>';
+                                return '<span class="label label-' + (data == 'loading' ? 'warning' : 'success') + '">' + data + '</span>';
                             }
                         },
                         {
@@ -466,7 +466,7 @@ var Elasticsearch = function() {
                         },
                         {
                             targets: 5,
-                            width: '12.5%',
+                            width: '10%',
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
