@@ -70,9 +70,41 @@ var Elasticsearch = function() {
                 }
 
                 // get certificates and setup custom domain endpoint
-                // if(nextStepIndex == 1) {
-                //     fetch('/elasticsearch/certificates/' + )
-                // }
+                if(nextStepIndex == 1) {
+                    let currentRegion = $('#aws_certificate', form).data('region');
+
+                    // check if region has been changed
+                    if($('#region option:selected', form).val() != currentRegion) {
+                        // set loading
+                        $('#aws_certificate', form).parent().addClass('loading');
+                        // reset options
+                        $('#aws_certificate', form).empty();
+
+                        // set current region
+                        $('#aws_certificate', form).data('region', $('#region option:selected', form).val());
+
+                        // update options
+                        fetch('/elasticsearch/certificates/' + $('#region option:selected', form).val())
+                            .then(response => response.json())
+                            .then(data => {
+                                let options = [];
+
+                                if(data.certificates.length) {
+                                    _.forEach(data.certificates, function(certificate, key) {
+                                        options.push({ id: certificate.CertificateArn, text: certificate.DomainName, selected: false });
+                                    });
+                                }
+
+                                // update options
+                                $('#aws_certificate', form).select2({
+                                    placeholder: 'Select an AWS Certificate',
+                                    data: options
+                                });
+
+                                $('#aws_certificate', form).parent().removeClass('loading');
+                            });
+                    }
+                }
 
                 // set access policy json after step 2
                 if(nextStepIndex == 2) {
@@ -80,7 +112,7 @@ var Elasticsearch = function() {
                         .then(response => response.json())
                         .then(data => {
                             // generate default access_policy json
-                            let aws_account = $('#aws_account').val(),
+                            let aws_account = $('#aws_account', form).val(),
                                 region = $('#region option:selected', form).val(),
                                 domain_name = $('#domain_name', form).val(),
                                 default_policy = {
@@ -259,17 +291,29 @@ var Elasticsearch = function() {
             _.forEach(formValues, function(data) {
 
                 // append detail fields
-                if(_.findIndex(['region', 'domain_name', 'auto_tune'], d => d == data.name) != -1) {
+                if(_.findIndex(['region', 'domain_name', 'aws_certificate', 'custom_hostname', 'auto_tune'], d => d == data.name) != -1) {
+                    let toAppend = true;
+
                     if(data.name == 'region') {
                         data.value = $('#region option:selected', form).html() + ' | ' + data.value;
                     }
 
-                    detailsField.append(
-                        fieldTemplate({
-                            name: _.startCase(data.name),
-                            value: data.value
-                        })
-                    );
+                    if(data.name == 'aws_certificate' && !$('#custom_endpoint', form).is(':checked')) {
+                        toAppend = false;
+                    }
+
+                    if(data.name == 'custom_hostname' && !$('#custom_endpoint', form).is(':checked')) {
+                        toAppend = false;
+                    }
+
+                    if(toAppend) {
+                        detailsField.append(
+                            fieldTemplate({
+                                name: _.startCase(data.name),
+                                value: data.value
+                            })
+                        );
+                    }
                 }
 
                 // append data node fields

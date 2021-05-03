@@ -165,8 +165,8 @@ class ElasticSearch extends BaseController
 
             if(isset($_POST['custom_endpoint'])) {
                 $request['DomainEndpointOptions']['CustomEndpointEnabled'] = isset($_POST['custom_endpoint']);
-                $request['DomainEndpointOptions']['CustomEndpoint'] = '<string>';
-                $request['DomainEndpointOptions']['CustomEndpointCertificateArn'] = '<string>';
+                $request['DomainEndpointOptions']['CustomEndpoint'] = $_POST['custom_hostname'];
+                $request['DomainEndpointOptions']['CustomEndpointCertificateArn'] = $_POST['aws_certificate'];
             }
 
             if(isset($_POST['dedicated_master_nodes'])) {
@@ -224,14 +224,14 @@ class ElasticSearch extends BaseController
         ]));
     }
 
-    public function Certificates($region) {
+    public function certificates($region) {
         $this->acm->setRegion($region);
         $result = $this->acm->listCertificates();
 
-        $this->response->setJSON(json_encode([
+        return $this->response->setJSON(json_encode([
             'error' => $result['error'],
             'message' => ($result['error'] ? $result['message'] : 'Successfully fetched Certificates.'),
-            'result' => $result['response']
+            'certificates' => ($result['error'] ? [] : $result['response']['CertificateSummaryList'])
         ]));
     }
 

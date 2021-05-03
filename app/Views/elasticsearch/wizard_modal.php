@@ -97,24 +97,23 @@
                             <input type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Elasticsearch Domain Name" data-rule-domain-name required>
                             <p class="help-block">The name must start with a lowercase letter and must be between 3 and 28 characters. Valid characters are a-z (lowercase only), 0-9, and - (hyphen).</p>
                         </div>
-                        <div class="enable_custom_endpoint" style="display: none">
+                        <div class="form-group">
+                            <label class="checkbox">
+                                <input type="checkbox" value="enable" name="custom_endpoint" id="custom_endpoint" />
+                                Enable custom endpoint
+                            </label>
+                        </div>
+                        <div id="custom_endpoint_container" style="display: none">
                             <div class="form-group">
-                                <label class="checkbox">
-                                    <input type="checkbox" value="enable" name="custom_endpoint" id="custom_endpoint" />
-                                    Enable custom endpoint
-                                </label>
+                                <label class="control-label" for="aws_certificate">AWS Certificate</label>
+                                <select name="aws_certificate" id="aws_certificate" class="form-control form-select2" required data-placeholder="Select an AWS Certificate" data-region="" style="width: 100%">
+                                    <option></option>
+                                </select>
+                                <p class="help-block">Certified Domains on AWS Certificate Manager.</p>
                             </div>
-                            <div id="custom_endpoint_container" style="display: none">
-                                <div class="form-group">
-                                    <label class="control-label" for="aws_certificate">AWS Certificate</label>
-                                    <select name="aws_certificate" id="aws_certificate" class="form-control form-select2" required data-placeholder="Select an AWS Certificate" style="width: 100%">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label" for="custom_hostname">Custom hostname</label>
-                                    <input type="text" class="form-control" id="custom_hostname" name="custom_hostname" placeholder="example.yourdomain.com" data-rule-domain-name required>
-                                </div>
+                            <div class="form-group">
+                                <label class="control-label" for="custom_hostname">Custom hostname</label>
+                                <input type="text" class="form-control" id="custom_hostname" name="custom_hostname" placeholder="example.yourdomain.com" data-rule-valid-url required>
                             </div>
                         </div>
                     </fieldset>

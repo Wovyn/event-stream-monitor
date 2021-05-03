@@ -330,6 +330,11 @@ var App = function () {
         $.validator.addMethod('multiple-of', function (value, element, int) {
             return parseInt(value, 10) % int == 0;
         }, $.validator.format('Value must be a multiple of {0}.'));
+
+        $.validator.addMethod('valid-url', function(value, element) {
+            var url = $.validator.methods.url.bind(this);
+            return url(value, element) || url('http://' + value, element);
+        }, 'Please enter a valid URL');
     }
 
     var customs = {};

@@ -101,3 +101,6 @@ ul.main-navigation-menu>li>a i { width: 16px; text-align: center; }
 
 .text-wrap { overflow-wrap: break-word; }
 .border-0 { border: 0; }
+
+.form-group.loading { position: relative; }
+.form-group.loading:before { content: "\f110"; font: normal normal normal 14px/1 FontAwesome; -webkit-animation: fa-spin 2s infinite linear; animation: fa-spin 2s infinite linear; position: absolute; left: -20px; top: 2px; }
