@@ -69,6 +69,11 @@ var Elasticsearch = function() {
                     $('.sw-btn-prev', form).removeClass('hidden');
                 }
 
+                // get certificates and setup custom domain endpoint
+                // if(nextStepIndex == 1) {
+                //     fetch('/elasticsearch/certificates/' + )
+                // }
+
                 // set access policy json after step 2
                 if(nextStepIndex == 2) {
                     fetch('https://api.ipify.org/?format=json')
@@ -76,7 +81,7 @@ var Elasticsearch = function() {
                         .then(data => {
                             // generate default access_policy json
                             let aws_account = $('#aws_account').val(),
-                                region = $('#region option:selected', form).html(),
+                                region = $('#region option:selected', form).val(),
                                 domain_name = $('#domain_name', form).val(),
                                 default_policy = {
                                     "Version":"2012-10-17",
@@ -87,7 +92,7 @@ var Elasticsearch = function() {
                                                 "AWS":"*"
                                             },
                                             "Action":"es:*",
-                                            "Resource":"arn:aws:es:us-east-1:" + aws_account + ":domain/" + domain_name + "/*",
+                                            "Resource":"arn:aws:es:" + region + ":" + aws_account + ":domain/" + domain_name + "/*",
                                             "Condition":{
                                                 "IpAddress":{
                                                     "aws:SourceIp":data.ip
@@ -144,6 +149,12 @@ var Elasticsearch = function() {
                                 .addClass('ok');
                     }
                 });
+
+            // enable custom domain
+            App.customs.activeToggle({
+                btn: $('#custom_endpoint', form),
+                elements: [ $('#custom_endpoint_container', form) ]
+            });
 
             // dedicated master nodes
             App.customs.activeToggle({
@@ -375,7 +386,7 @@ var Elasticsearch = function() {
             let $btn = $(this);
 
             appModal = App.modal({
-                title: 'Create Data Stream',
+                title: 'Create Elasticsearch Domain',
                 ajax: {
                     url: $btn.attr('href')
                 },
@@ -437,8 +448,6 @@ var Elasticsearch = function() {
                     type: 'message',
                     listener: function(data) {
                         let newData = JSON.parse(data);
-
-                        // console.log(newData);
 
                         _.forEach(newData, function(rowData) {
                             let row = $('tr#' + rowData.id),

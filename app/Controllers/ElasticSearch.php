@@ -7,6 +7,7 @@ class ElasticSearch extends BaseController
     protected $authKeysModel,
         $elasticsearchModel,
         $elasticsearch,
+        $acm,
         $awsconfig,
         $keys;
 
@@ -19,6 +20,11 @@ class ElasticSearch extends BaseController
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
             $this->elasticsearch = new \App\Libraries\Elasticsearch([
+                'access' => $this->keys->aws_access,
+                'secret' => $this->keys->aws_secret
+            ]);
+
+            $this->acm = new \App\Libraries\Acm([
                 'access' => $this->keys->aws_access,
                 'secret' => $this->keys->aws_secret
             ]);
@@ -138,9 +144,7 @@ class ElasticSearch extends BaseController
                 // custom domain
                 'DomainEndpointOptions' => [
                     'EnforceHTTPS' => isset($_POST['require_https']),
-                    'CustomEndpointEnabled' => false,
-                    // 'CustomEndpoint' => '<string>',
-                    // 'CustomEndpointCertificateArn' => '<string>',
+                    'CustomEndpointEnabled' => false
                     // 'TLSSecurityPolicy' => 'Policy-Min-TLS-1-0-2019-07|Policy-Min-TLS-1-2-2019-07',
                 ],
 
@@ -157,6 +161,12 @@ class ElasticSearch extends BaseController
 
             if($_POST['ebs_volume_type'] == 'io1') {
                 $request['EBSOptions']['Iops'] = (int) $_POST['provisioned_iops'];
+            }
+
+            if(isset($_POST['custom_endpoint'])) {
+                $request['DomainEndpointOptions']['CustomEndpointEnabled'] = isset($_POST['custom_endpoint']);
+                $request['DomainEndpointOptions']['CustomEndpoint'] = '<string>';
+                $request['DomainEndpointOptions']['CustomEndpointCertificateArn'] = '<string>';
             }
 
             if(isset($_POST['dedicated_master_nodes'])) {
@@ -214,11 +224,29 @@ class ElasticSearch extends BaseController
         ]));
     }
 
+    public function Certificates($region) {
+        $this->acm->setRegion($region);
+        $result = $this->acm->listCertificates();
+
+        $this->response->setJSON(json_encode([
+            'error' => $result['error'],
+            'message' => ($result['error'] ? $result['message'] : 'Successfully fetched Certificates.'),
+            'result' => $result['response']
+        ]));
+    }
+
     // manual test for elasticsearch
     public function DescribeElasticsearchDomain($domain) {
         $result = $this->elasticsearch->DescribeElasticsearchDomain([
             'DomainName' => $domain
         ]);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
+    public function ListCertificates() {
+        $this->acm->setRegion('us-east-2');
+        $result = $this->acm->listCertificates();
 
         echo '<pre>' , var_dump($result) , '</pre>';
     }
