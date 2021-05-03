@@ -78,7 +78,12 @@ var Elasticsearch = function() {
                         // set loading
                         $('#aws_certificate', form).parent().addClass('loading');
                         // reset options
-                        $('#aws_certificate', form).empty();
+                        $('#aws_certificate', form)
+                            .empty()
+                            .append('<options></options>');
+
+                        // reset custom hostname
+                        $('#custom_hostname', form).val('');
 
                         // set current region
                         $('#aws_certificate', form).data('region', $('#region option:selected', form).val());
@@ -429,6 +434,14 @@ var Elasticsearch = function() {
 
             let $btn = $(this);
 
+            // add loading phase
+            Swal.fire({
+                title: 'Loading Elasticsearch Wizard',
+                allowOutsideClick: false
+            });
+
+            Swal.showLoading();
+
             appModal = App.modal({
                 title: 'Create Elasticsearch Domain',
                 ajax: {
@@ -436,6 +449,9 @@ var Elasticsearch = function() {
                 },
                 onShown: function(form) {
                     console.log('initialize wizard');
+
+                    // end loading phase
+                    Swal.close();
 
                     FormWizard.init(form);
                 },
