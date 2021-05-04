@@ -2,10 +2,14 @@
 
 use CodeIgniter\Database\Migration;
 
-class Elasticsearch_table_skip extends Migration
+class ElasticsearchTable extends Migration
 {
     public function up()
     {
+        if($this->db->tableExists('elasticsearch')) {
+            $this->forge->dropTable('elasticsearch', TRUE);
+        }
+
         $fields = [
             'id' => [
                 'type' => 'MEDIUMINT',
