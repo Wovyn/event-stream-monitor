@@ -138,7 +138,7 @@ class Profile extends \App\Controllers\BaseController
         //     $result['message'] = 'Before using the portal, you must enter your API Keys for Twilio and AWS.';
         // }
 
-        return json_encode($result);
+        return $this->response->setJSON(json_encode($result));
     }
 
     public function user_defaults() {

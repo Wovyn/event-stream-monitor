@@ -535,20 +535,118 @@ var App = function () {
     }
 
     var globalPageChecks = function() {
+        let validDefaults;
 
-        checkUserDefaults();
-
+        // check if user has already updated defaults
         if(_.isNull(window.localStorage.getItem('HasUpdatedDefaults'))) {
-            return false;
+            validDefaults = checkuser.defaults();
+
+            validDefaults.then(result => {
+                if(result) {
+                    if($.inArray(window.location.pathname, ['/dashboard', '/eventstreams']) > -1) {
+                        checkuser.twilio();
+                    }
+
+                    if($.inArray(window.location.pathname, ['/kinesis', '/elasticsearch']) > -1) {
+                        checkuser.aws();
+                    }
+                }
+            });
         }
 
         if($.inArray(window.location.pathname, ['/dashboard', '/eventstreams']) > -1) {
-            checkUserTwilioKeys();
+            // check if user has updated defaults and has twilio keys
+            if(!_.isNull(window.localStorage.getItem('HasUpdatedDefaults')) && _.isNull(window.localStorage.getItem('HasTwilioKeys'))) {
+                checkuser.twilio();
+            }
         }
 
         if($.inArray(window.location.pathname, ['/kinesis', '/elasticsearch']) > -1) {
-            checkUserAwsKeys();
+            // check if user has updated defaults and has aws keys
+            if(!_.isNull(window.localStorage.getItem('HasUpdatedDefaults')) && _.isNull(window.localStorage.getItem('HasAwsKeys'))) {
+                checkuser.aws();
+            }
         }
+    }
+
+    var checkuser = {};
+
+    checkuser.defaults = function() {
+        return fetch('/user/profile/user_defaults')
+            .then(response => response.json())
+            .then(data => {
+                if(!data.email_updated || !data.password_updated) {
+                    let message = '';
+
+                    message += (!data.email_updated) ? '<p>Email needs to be updated.</p>' : '';
+                    message += (!data.password_updated) ? '<p>Password needs to be updated.</p>' : '';
+
+                    Swal.fire({
+                        html: message,
+                        icon: 'warning',
+                        allowOutsideClick: false,
+                        showCloseButton: false
+                    }).then((result) => {
+                        if(result.isConfirmed) {
+                            window.location = '/user/profile#edit_account';
+                        }
+                    });
+
+                    return false;
+                }
+
+                window.localStorage.setItem('HasUpdatedDefaults', true);
+                return true;
+            });
+    }
+
+    checkuser.twilio = function() {
+        return fetch('/user/profile/auth_keys')
+            .then(response => response.json())
+            .then(data => {
+                if(_.isEmpty(data.keys.twilio_sid) || _.isEmpty(data.keys.twilio_secret)) {
+                    Swal.fire({
+                        text: 'Before using the portal, you must enter your Twilio API Keys.',
+                        icon: 'warning',
+                        confirmButtonText: 'Configure',
+                        allowOutsideClick: false,
+                        showCloseButton: false
+                    }).then((result) => {
+                        if(result.isConfirmed) {
+                            window.location = '/user/profile';
+                        }
+                    });
+
+                    return false;
+                }
+
+                window.localStorage.setItem('HasTwilioKeys', true);
+                return true;
+            });
+    }
+
+    checkuser.aws = function() {
+        return fetch('/user/profile/auth_keys')
+            .then(response => response.json())
+            .then(data => {
+                if(_.isEmpty(data.keys.aws_access) || _.isEmpty(data.keys.aws_secret)) {
+                    Swal.fire({
+                        text: 'To use any AWS related services, you must configure your AWS API Keys and parameters in your profile.',
+                        icon: 'warning',
+                        allowOutsideClick: false,
+                        showCloseButton: false,
+                        confirmButtonText: 'Configure',
+                        showCancelButton: true,
+                        cancelButtonText: 'Close'
+                    }).then((result) => {
+                        if(result.isConfirmed) {
+                            window.location = '/user/profile';
+                        }
+                    });
+                } else {
+                    window.localStorage.setItem('HasAwsKeys', true);
+                }
+            });
     }
 
     return {
@@ -585,6 +683,7 @@ var App = function () {
         //         }
         //     });
         // },
+        checkuser: checkuser,
         customs: customs
     }
 }();
