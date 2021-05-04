@@ -330,7 +330,7 @@ class Eventstreams extends BaseController
                 // create subscription
                 $types = [];
                 foreach ($_POST['subscriptions'] as $subscription) {
-                    $types[] = ['typeId' => $subscription];
+                    $types[] = ['type' => $subscription];
                 }
 
                 $result['CreateSubscription'] = $this->twilio->CreateSubscription([
@@ -338,6 +338,15 @@ class Eventstreams extends BaseController
                     'sid' => $sink->sid,
                     'types' => $types
                 ]);
+
+                // check if CreateSubscription is successful
+                // if($result['CreateSubscription']['error']) {
+                //     return $this->response->setJSON(json_encode([
+                //         'error' => $result['CreateSubscription']['error'],
+                //         'message' => ($result['CreateSubscription']['error'] ? $result['CreateSubscription']['message'] : 'Successfully updated Sink Event Subscriptions!'),
+                //         'result' => $result
+                //     ]));
+                // }
 
                 if($sink_subscription) {
                     // update current sink_subscription
