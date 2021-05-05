@@ -254,6 +254,12 @@ var Elasticsearch = function() {
                     }
                 });
 
+            // fine grained access control
+            App.customs.activeToggle({
+                btn: $('#fine_grain_access_control', form),
+                elements: [ $('#fine_grain_options_container', form) ]
+            });
+
             // init access policy
             editor = ace.edit($('#access_policy_json', form)[0]);
             editor.setTheme("ace/theme/xcode");
@@ -371,7 +377,7 @@ var Elasticsearch = function() {
                 }
 
                 // network config fields
-                if(_.findIndex(['network_configuration', 'require_https', 'note_to_node_encryption'], d => d == data.name) != -1) {
+                if(_.findIndex(['network_configuration','fine_grain_access_control', 'master_username', 'require_https', 'note_to_node_encryption', 'enable_encryption_of_data_at_rest'], d => d == data.name) != -1) {
                     networkConfigField.append(
                         fieldTemplate({
                             name: _.startCase(data.name),

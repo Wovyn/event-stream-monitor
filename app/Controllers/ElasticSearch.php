@@ -137,10 +137,12 @@ class ElasticSearch extends BaseController
                     'VolumeSize' => (int) $_POST['ebs_storage_size_per_node'],
                     'VolumeType' => $_POST['ebs_volume_type'],
                 ],
+                'EncryptionAtRestOptions' => [
+                    'Enabled' => isset($_POST['enable_encryption_of_data_at_rest']),
+                ],
                 'NodeToNodeEncryptionOptions' => [
                     'Enabled' => isset($_POST['note_to_node_encryption']),
                 ],
-
                 // custom domain
                 'DomainEndpointOptions' => [
                     'EnforceHTTPS' => isset($_POST['require_https']),
@@ -150,8 +152,9 @@ class ElasticSearch extends BaseController
 
                 // Fine–grained access control
                 'AdvancedSecurityOptions' => [
-                    'Enabled' => false
-                    // 'SAMLOptions'
+                    // 'SAMLOptions' => [
+                    //     'Enabled' => false,
+                    // ]
                 ],
                 // Amazon Cognito authentication
                 'CognitoOptions' => [
@@ -167,6 +170,15 @@ class ElasticSearch extends BaseController
             if(isset($_POST['custom_endpoint'])) {
                 $request['DomainEndpointOptions']['CustomEndpoint'] = $_POST['custom_hostname'];
                 $request['DomainEndpointOptions']['CustomEndpointCertificateArn'] = $_POST['aws_certificate'];
+            }
+
+            $request['AdvancedSecurityOptions']['Enabled'] = isset($_POST['fine_grain_access_control']);
+            $request['AdvancedSecurityOptions']['InternalUserDatabaseEnabled'] = isset($_POST['fine_grain_access_control']);
+            if(isset($_POST['fine_grain_access_control'])) {
+                $request['AdvancedSecurityOptions']['MasterUserOptions'] = [
+                    'MasterUserName' => $_POST['master_username'],
+                    'MasterUserPassword' => $_POST['master_password']
+                ];
             }
 
             $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);

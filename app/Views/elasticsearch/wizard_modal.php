@@ -442,17 +442,61 @@
                     </fieldset>
 
                     <fieldset>
+                        <legend>Fine-grained access control</legend>
+                        <div class="form-group">
+                            <label class="checkbox" for="fine_grain_access_control">
+                                <input type="checkbox" value="enable" name="fine_grain_access_control" id="fine_grain_access_control" />
+                                Enable fine-grained access control
+                            </label>
+                        </div>
+                        <div id="fine_grain_options_container" style="display: none">
+                            <div class="form-group">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" value="create_master_user" name="fine_grain_option" class="fine_grain_option" checked="checked" />
+                                        Create master user
+                                        <p class="help-block">By creating a master user, your domain will have the internal user database enabled with HTTP basic authentication.</p>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="create_master_user_fields">
+                                <div class="form-group">
+                                    <label class="control-label" for="master_username">Master username</label>
+                                    <input type="text" class="form-control" id="master_username" name="master_username" placeholder="Master username" data-rule-minlength="1" data-rule-maxlength="16" required>
+                                    <p class="help-block">Must be between 1 and 16 characters.</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="master_password">Master password</label>
+                                    <input type="password" class="form-control" id="master_password" name="master_password" placeholder="Master password" data-rule-minlength="8" data-rule-passwordExt required>
+                                    <p class="help-block">Must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="confirm_master_password">Confirm master password</label>
+                                    <input type="password" class="form-control" id="confirm_master_password" name="confirm_master_password" placeholder="Master password" data-rule-equalTo="#master_password">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
                         <legend>Encryption</legend>
                         <div class="form-group">
-                            <label class="checkbox">
+                            <label class="checkbox" for="require_https">
                                 <input type="checkbox" value="enable" name="require_https" id="require_https" checked="checked" />
                                 Require HTTPS for all traffic to the domain
                             </label>
                         </div>
                         <div class="form-group">
-                            <label class="checkbox">
+                            <label class="checkbox" for="note_to_node_encryption">
                                 <input type="checkbox" value="enable" name="note_to_node_encryption" id="note_to_node_encryption" />
                                 Node-to-node encryption
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox" for="enable_encryption_of_data_at_rest">
+                                <input type="checkbox" value="enable" name="enable_encryption_of_data_at_rest" id="enable_encryption_of_data_at_rest" />
+                                Enable encryption of data at rest
                             </label>
                         </div>
                     </fieldset>
