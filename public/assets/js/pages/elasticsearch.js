@@ -260,6 +260,16 @@ var Elasticsearch = function() {
                 elements: [ $('#fine_grain_options_container', form) ]
             });
 
+            $('#fine_grain_access_control', form).on('click', function() {
+                if($(this).is(':checked')) {
+                    $('#note_to_node_encryption', form).rules('add', 'required');
+                    $('#enable_encryption_of_data_at_rest   ', form).rules('add', 'required');
+                } else {
+                    $('#note_to_node_encryption', form).rules('remove', 'required');
+                    $('#enable_encryption_of_data_at_rest   ', form).rules('remove', 'required');
+                }
+            });
+
             // init access policy
             editor = ace.edit($('#access_policy_json', form)[0]);
             editor.setTheme("ace/theme/xcode");
@@ -335,16 +345,13 @@ var Elasticsearch = function() {
 
                 // append data node fields
                 if(_.findIndex(['availability_zones', 'instance_type', 'number_of_nodes', 'ebs_volume_type', 'ebs_storage_size_per_node', 'provisioned_iops'], d => d == data.name) != -1) {
-                    if(data.name == 'provisioned_iops') {
-                        if($('#ebs_volume_type', form).val() == 'io1') {
-                            dataNodesField.append(
-                                fieldTemplate({
-                                    name: _.startCase(data.name),
-                                    value: data.value
-                                })
-                            );
-                        }
-                    } else {
+                    let toAppend = true;
+
+                    if(data.name == 'provisioned_iops' && $('#ebs_volume_type', form).val() != 'io1') {
+                        toAppend = false;
+                    }
+
+                    if(toAppend) {
                         dataNodesField.append(
                             fieldTemplate({
                                 name: _.startCase(data.name),
@@ -378,12 +385,20 @@ var Elasticsearch = function() {
 
                 // network config fields
                 if(_.findIndex(['network_configuration','fine_grain_access_control', 'master_username', 'require_https', 'note_to_node_encryption', 'enable_encryption_of_data_at_rest'], d => d == data.name) != -1) {
-                    networkConfigField.append(
-                        fieldTemplate({
-                            name: _.startCase(data.name),
-                            value: data.value
-                        })
-                    );
+                    let toAppend = true;
+
+                    if(data.name == 'master_username' && !$('#fine_grain_access_control', form).is(':checked')) {
+                        toAppend = false;
+                    }
+
+                    if(toAppend) {
+                        networkConfigField.append(
+                            fieldTemplate({
+                                name: _.startCase(data.name),
+                                value: data.value
+                            })
+                        );
+                    }
                 }
 
                 // network config fields
