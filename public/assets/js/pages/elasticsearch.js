@@ -345,13 +345,25 @@ var Elasticsearch = function() {
                 }
 
                 // dedicated instances fields
-                if(_.findIndex(['dedicated_master_nodes', 'dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes', 'ultrawarm_data_node', 'number_of_warm_data_nodes'], d => d == data.name) != -1) {
-                    dedicatedInstancesField.append(
-                        fieldTemplate({
-                            name: _.startCase(data.name),
-                            value: data.value
-                        })
-                    );
+                if(_.findIndex(['dedicated_master_nodes', 'dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes', 'ultrawarm_data_node', 'ultrawarm_instance_type', 'number_of_warm_data_nodes'], d => d == data.name) != -1) {
+                    let toAppend = true;
+
+                    if(_.findIndex(['dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes'], d => d == data.name) != -1 && !$('#dedicated_master_nodes', form).is(':checked')) {
+                        toAppend = false;
+                    }
+
+                    if(_.findIndex(['ultrawarm_instance_type', 'number_of_warm_data_nodes'], d => d == data.name) != -1 && !$('#ultrawarm_data_node', form).is(':checked')) {
+                        toAppend = false;
+                    }
+
+                    if(toAppend) {
+                        dedicatedInstancesField.append(
+                            fieldTemplate({
+                                name: _.startCase(data.name),
+                                value: data.value
+                            })
+                        );
+                    }
                 }
 
                 // network config fields
