@@ -17,7 +17,9 @@ var Elasticsearch = function() {
                     toolbarExtraButtons: [
                         $('<button type="button" class="btn btn-finish btn-success hidden">Create Elasticsearch</button>')
                             .on('click', function() {
-                                $(this).addClass('disabled');
+                                let $btn = $(this);
+
+                                $btn.addClass('disabled');
 
                                 Swal.fire({
                                     title: 'Creating Elasticsearch',
@@ -40,7 +42,7 @@ var Elasticsearch = function() {
                                                     appModal.modal('hide');
                                                     $dtTables['elasticsearch-table'].ajax.reload();
                                                 } else {
-                                                    $(this).removeClass('disabled');
+                                                    $btn.removeClass('disabled');
                                                     console.log(response);
                                                 }
                                             }

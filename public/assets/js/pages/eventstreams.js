@@ -17,7 +17,9 @@ var Eventstreams = function() {
                     toolbarExtraButtons: [
                         $('<button type="button" class="btn btn-finish btn-success hidden">Create Sink Instance</button>')
                             .on('click', function() {
-                                $(this).addClass('disabled');
+                                let $btn = $(this);
+
+                                $btn.addClass('disabled');
 
                                 Swal.fire({
                                     title: 'Creating Sink Instance',
@@ -66,6 +68,7 @@ var Eventstreams = function() {
                                                             appModal.modal('hide');
                                                             $dtTables['sink-table'].ajax.reload();
                                                         } else {
+                                                            $btn.removeClass('disabled');
                                                             console.log(subResponse);
                                                         }
                                                     }
@@ -220,8 +223,6 @@ var Eventstreams = function() {
                     summary += '</ul>';
                 });
                 summary += '</div></div>';
-
-                // console.log(events);
             } else {
                 summary += '<div class="col-md-6" >' +
                     '<div class="form-group">' +

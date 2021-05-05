@@ -17,7 +17,9 @@ var Kinesis = function() {
                     toolbarExtraButtons: [
                         $('<button type="button" class="btn btn-finish btn-success hidden">Create Data Stream</button>')
                             .on('click', function() {
-                                $(this).addClass('disabled');
+                                let $btn = $(this);
+
+                                $btn.addClass('disabled');
 
                                 Swal.fire({
                                     title: 'Creating Data Stream',
@@ -40,6 +42,7 @@ var Kinesis = function() {
                                                     appModal.modal('hide');
                                                     $dtTables['kinesis-table'].ajax.reload();
                                                 } else {
+                                                    $btn.removeClass('disabled');
                                                     console.log(response);
                                                 }
                                             }
