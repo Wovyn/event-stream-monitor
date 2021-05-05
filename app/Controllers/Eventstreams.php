@@ -384,22 +384,4 @@ class Eventstreams extends BaseController
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
 
-    // manual test and validation for webhook sinks
-    public function FetchSink($sid) {
-        $result = $this->twilio->FetchSink($sid);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
-    public function SinkTest($sid) {
-        $result = $this->twilio->SinkTest($sid);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
-    public function SinkValid($sid, $test_id) {
-        $result = $this->twilio->SinkValid($sid, $test_id);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
 }

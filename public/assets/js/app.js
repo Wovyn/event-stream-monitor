@@ -335,6 +335,22 @@ var App = function () {
             var url = $.validator.methods.url.bind(this);
             return url(value, element) || url('http://' + value, element);
         }, 'Please enter a valid URL');
+
+        $.validator.addMethod('passwordExt', function(value, element, param) {
+            if (this.optional(element)) {
+                return true;
+            } else if (!/[A-Z]/.test(value)) {
+                return false;
+            } else if (!/[a-z]/.test(value)) {
+                return false;
+            } else if (!/[0-9]/.test(value)) {
+                return false;
+            } else if (!/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(value)) {
+                return false;
+            }
+
+            return true;
+        }, 'Please enter a valid password. Requires 1 uppercase letter, 1 lowercase letter, 1 number character, and 1 special character.');
     }
 
     var customs = {};
