@@ -163,22 +163,22 @@ class ElasticSearch extends BaseController
                 $request['EBSOptions']['Iops'] = (int) $_POST['provisioned_iops'];
             }
 
+            $request['DomainEndpointOptions']['CustomEndpointEnabled'] = isset($_POST['custom_endpoint']);
             if(isset($_POST['custom_endpoint'])) {
-                $request['DomainEndpointOptions']['CustomEndpointEnabled'] = isset($_POST['custom_endpoint']);
                 $request['DomainEndpointOptions']['CustomEndpoint'] = $_POST['custom_hostname'];
                 $request['DomainEndpointOptions']['CustomEndpointCertificateArn'] = $_POST['aws_certificate'];
             }
 
+            $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);
             if(isset($_POST['dedicated_master_nodes'])) {
-                $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);
                 $request['ElasticsearchClusterConfig']['DedicatedMasterType'] = $_POST['dedicated_master_node_instance_type'];
                 $request['ElasticsearchClusterConfig']['DedicatedMasterCount'] = (int) $_POST['dedicated_master_node_number_of_nodes'];
+            }
 
-                if(isset($_POST['ultrawarm_data_node'])) {
-                    $request['ElasticsearchClusterConfig']['WarmEnabled'] = isset($_POST['ultrawarm_data_node']);
-                    $request['ElasticsearchClusterConfig']['WarmType'] = $_POST['ultrawarm_instance_type'];
-                    $request['ElasticsearchClusterConfig']['WarmCount'] = (int) $_POST['number_of_warm_data_nodes'];
-                }
+            $request['ElasticsearchClusterConfig']['WarmEnabled'] = isset($_POST['ultrawarm_data_node']);
+            if(isset($_POST['ultrawarm_data_node'])) {
+                $request['ElasticsearchClusterConfig']['WarmType'] = $_POST['ultrawarm_instance_type'];
+                $request['ElasticsearchClusterConfig']['WarmCount'] = (int) $_POST['number_of_warm_data_nodes'];
             }
 
             $this->elasticsearch->setRegion($_POST['region']);
