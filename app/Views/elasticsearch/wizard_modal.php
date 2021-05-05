@@ -150,22 +150,24 @@
                             <label class="control-label" for="availability_zones">Availability Zones</label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="3" name="availability_zones" class="availability_zones" checked="checked" />
+                                    <input type="radio" value="3" name="availability_zones" class="availability_zones" />
                                     3-AZ (Recommended for production workloads with higher availability requirements)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" checked="checked" />
                                     2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
+                            <!--
                             <div class="radio">
                                 <label>
                                     <input type="radio" value="1" name="availability_zones" class="availability_zones" />
                                     1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
+                            -->
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="instance_type">Instance type</label>
@@ -252,7 +254,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="number_of_nodes">Number of nodes</label>
-                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="3" required data-rule-multiple-of="3">
+                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="2" required data-rule-multiple-of="2">
                             <p class="help-block">For three Availability Zones, we recommend instances in multiples of three for equal distribution across the Availability Zones.</p>
                         </div>
                     </fieldset>
@@ -290,11 +292,11 @@
                         <legend>Dedicated master nodes</legend>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="dedicated_master_nodes" id="dedicated_master_nodes" checked="checked" />
+                                <input type="checkbox" value="enable" name="dedicated_master_nodes" id="dedicated_master_nodes" />
                                 Enable Dedicated master nodes
                             </label>
                         </div>
-                        <div id="dedicated_container">
+                        <div id="dedicated_container" style="display: none">
                             <div class="form-group">
                                 <label class="control-label" for="dedicated_master_node_instance_type">Instance type</label>
                                 <select name="dedicated_master_node_instance_type" id="dedicated_master_node_instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
@@ -449,7 +451,7 @@
                         </div>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="note_to_node_encryption" id="note_to_node_encryption" checked="checked" />
+                                <input type="checkbox" value="enable" name="note_to_node_encryption" id="note_to_node_encryption" />
                                 Node-to-node encryption
                             </label>
                         </div>

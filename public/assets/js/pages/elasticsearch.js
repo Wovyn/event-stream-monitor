@@ -136,7 +136,7 @@ var Elasticsearch = function() {
                                           "Condition": {
                                             "IpAddress": {
                                               "aws:SourceIp": [
-                                                ' * ' + data.ip
+                                                data.ip
                                               ]
                                             }
                                           },
@@ -145,7 +145,7 @@ var Elasticsearch = function() {
                                       ]
                                     };
 
-                            editor.setValue(JSON.stringify(default_policy, null, 4));
+                            editor.setValue(JSON.stringify(default_policy, null, 2));
                         });
                 }
 
