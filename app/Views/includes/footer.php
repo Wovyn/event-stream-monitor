@@ -12,6 +12,12 @@
             <span class="go-top"><i class="clip-chevron-up"></i></span>
         </div>
     </div>
+    <script>
+        var Config = {};
+        Config.sTime = <?php echo $meta['sessionExpiration'] ?>;
+        Config.upTime = <?php echo $meta['sessionTimeToUpdate'] ?>;
+        Config.waitTime = 600;
+    </script>
     <!-- end: FOOTER -->
     <!--[if lt IE 9]>
         <script src="/bower_components/respond/dest/respond.min.js"></script>

@@ -53,10 +53,14 @@ class BaseController extends Controller
 		$this->data['css'] = [];
         $this->data['scripts'] = [];
 
+        $app_config = new \Config\App();
+
         $this->data['meta'] = [
         	'title' => 'Event Stream Monitor',
         	'header' => null,
-        	'subheader' => null
+        	'subheader' => null,
+        	'sessionExpiration' => $app_config->sessionExpiration,
+        	'sessionTimeToUpdate' => $app_config->sessionTimeToUpdate
         ];
 	}
 

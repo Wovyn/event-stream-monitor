@@ -670,15 +670,19 @@ var App = function () {
         if(_.isFunction($.sessionTimeout)) {
             console.log('Init sessionTimer');
 
+            let warnTime = (Config.sTime - Config.waitTime) * 1000,
+                redirTime = Config.sTime * 1000,
+                interval = (Config.upTime - 30) * 1000;
+
             $.sessionTimeout({
                 title: 'Session Timeout Notification',
                 message: 'Your session is about to expire.',
                 keepAliveUrl: '/auth/keepAlive',
-                keepAliveInterval: 270000, // every 4 mins and 30 sec
+                keepAliveInterval: interval, // every 4 mins and 30 sec
                 redirUrl: '/auth/logout',
                 logoutUrl: '/auth/logout',
-                warnAfter: 6300000, // 2700000, // 45 mins // 6300000, // warn after 1 hour and 45 min
-                redirAfter: 6900000, // 3600000, // 1 hour // 6900000, // redirect after 1 hour and 55 mins
+                warnAfter: warnTime, // 1 hr 50 mins
+                redirAfter: redirTime, // 2 hrs
                 countdownSmart: true,
                 countdownMessage: 'Redirecting in {timer}',
                 countdownBar: true
