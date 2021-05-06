@@ -27,6 +27,7 @@
     <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/bower_components/bootstrap-modal/js/bootstrap-modal.js"></script>
     <script type="text/javascript" src="/bower_components/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+    <script type="text/javascript" src="/bower_components/bootstrap-session-timeout/bootstrap-session-timeout.js"></script>
     <script type="text/javascript" src="/bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
     <script type="text/javascript" src="/bower_components/blockUI/jquery.blockUI.js"></script>
     <script type="text/javascript" src="/bower_components/iCheck/icheck.min.js"></script>

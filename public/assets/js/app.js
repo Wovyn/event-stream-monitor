@@ -665,6 +665,27 @@ var App = function () {
             });
     }
 
+    var sessionTimer = function() {
+        // check if sesstionTimeout is defined
+        if(_.isFunction($.sessionTimeout)) {
+            console.log('Init sessionTimer');
+
+            $.sessionTimeout({
+                title: 'Session Timeout Notification',
+                message: 'Your session is about to expire.',
+                keepAliveUrl: '/auth/keepAlive',
+                keepAliveInterval: 270000, // every 4 mins and 30 sec
+                redirUrl: '/auth/logout',
+                logoutUrl: '/auth/logout',
+                warnAfter: 6300000, // 2700000, // 45 mins // 6300000, // warn after 1 hour and 45 min
+                redirAfter: 6900000, // 3600000, // 1 hour // 6900000, // redirect after 1 hour and 55 mins
+                countdownSmart: true,
+                countdownMessage: 'Redirecting in {timer}',
+                countdownBar: true
+            });
+        }
+    }
+
     return {
         init: function() {
             console.log('App.init');
@@ -677,6 +698,8 @@ var App = function () {
             customs.hiddenNavs();
             customs.inputCounterInit();
             customs.inputHiddenInit();
+
+            sessionTimer();
         },
         modal: modal,
         dt: dt,

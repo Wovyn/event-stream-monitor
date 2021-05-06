@@ -182,6 +182,11 @@ class Auth extends \IonAuth\Controllers\Auth {
         return view('auth/lockscreen', $this->data);
     }
 
+    public function keepAlive() {
+        // regenerate user session
+        $this->session->regenerate();
+    }
+
     public function emailTest() {
         $email = \Config\Services::email();
 
