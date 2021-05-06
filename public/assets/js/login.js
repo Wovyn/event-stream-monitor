@@ -264,7 +264,14 @@ var Login = function () {
                         title: 'Migration Update Notice',
                         body: summary,
                         width: 640,
-                        footer: false
+                        btn: {
+                            confirm: {
+                                class: 'hidden'
+                            },
+                            cancel: {
+                                text: 'Close'
+                            }
+                        },
                     });
                 }
 
