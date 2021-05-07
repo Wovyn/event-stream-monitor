@@ -257,7 +257,18 @@ var Elasticsearch = function() {
             // fine grained access control
             App.customs.activeToggle({
                 btn: $('#fine_grain_access_control', form),
-                elements: [ $('#fine_grain_options_container', form) ]
+                elements: [ $('#fine_grain_options_container', form), $('#allow_open_access_container', form) ],
+                callback: function(btn, elements) {
+                    if(!btn.is(':checked') && $('#allow_open_access', form).is(':checked')) {
+                        $('#allow_open_access', form).prop('checked', false);
+                        $('#access_policy_container', form).show();
+                    }
+                }
+            });
+
+            App.customs.activeToggle({
+                btn: $('#allow_open_access', form),
+                elements: [ $('#access_policy_container', form) ]
             });
 
             $('#fine_grain_access_control', form).on('click', function() {
@@ -402,13 +413,30 @@ var Elasticsearch = function() {
                 }
 
                 // network config fields
-                if(_.findIndex(['access_policy'], d => d == data.name) != -1) {
-                    accessPolicyField.append(
-                        prefieldTemplate({
-                            name: _.startCase(data.name),
-                            value: data.value
-                        })
-                    );
+                if(_.findIndex(['access_policy', 'allow_open_access'], d => d == data.name) != -1) {
+                    let toAppend = true;
+
+                    if(data.name == 'access_policy' && $('#allow_open_access', form).is(':checked')) {
+                        toAppend = false;
+                    }
+
+                    if(toAppend) {
+                        if(data.name == 'access_policy') {
+                            accessPolicyField.append(
+                                prefieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        } else {
+                            accessPolicyField.append(
+                                fieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        }
+                    }
                 }
             });
 

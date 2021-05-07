@@ -426,22 +426,20 @@ var App = function () {
         let $settings = $.extend(true, {
             btn: null,
             elements: null,
-            condition: function(btn) {
-                return btn.is(':checked');
-            }
+            callback: function(btn, elements) { }
         }, options);
 
         $settings.btn.on('click', function() {
             // check condition display if condition is true; hide if false
-            if($settings.condition($(this))) {
-                $.each($settings.elements, function(key, element) {
-                    element.show();
-                });
-            } else {
-                $.each($settings.elements, function(key, element) {
+            _.forEach($settings.elements, function(element, key) {
+                if(element.is(':visible')) {
                     element.hide();
-                });
-            }
+                } else {
+                    element.show();
+                }
+            });
+
+            $settings.callback($settings.btn, $settings.elements);
         });
     }
 

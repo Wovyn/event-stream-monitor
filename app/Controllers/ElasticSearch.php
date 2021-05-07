@@ -118,8 +118,8 @@ class ElasticSearch extends BaseController
             // compile create elasticsearch domain request
             $request = [
                 'ElasticsearchVersion' => '7.10',
-                'AccessPolicies' => $_POST['access_policy'],
                 'DomainName' => $_POST['domain_name'],
+                'AccessPolicies' => $_POST['access_policy'],
                 'AutoTuneOptions' => [
                     'DesiredState' => $_POST['auto_tune'],
                     // 'MaintenanceSchedules'
@@ -182,6 +182,10 @@ class ElasticSearch extends BaseController
                     'MasterUserName' => $_POST['master_username'],
                     'MasterUserPassword' => $_POST['master_password']
                 ];
+
+                if(isset($_POST['allow_open_access'])) {
+                    unset($request['AccessPolicies']);
+                }
             }
 
             $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);
