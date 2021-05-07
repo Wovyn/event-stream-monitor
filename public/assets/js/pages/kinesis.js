@@ -178,6 +178,14 @@ var Kinesis = function() {
 
             let $btn = $(this);
 
+            // add loading phase
+            Swal.fire({
+                title: 'Loading Kinesis Wizard',
+                allowOutsideClick: false
+            });
+
+            Swal.showLoading();
+
             appModal = App.modal({
                 title: 'Create Data Stream',
                 ajax: {
@@ -185,6 +193,9 @@ var Kinesis = function() {
                 },
                 onShown: function(form) {
                     console.log('initialize wizard');
+
+                    // end loading phase
+                    Swal.close();
 
                     FormWizard.init(form);
                 },
@@ -316,8 +327,8 @@ var Kinesis = function() {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
                                         // '<a href="/kinesis/edit/' +  data + '" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>' +
-                                        '<a href="/kinesis/view/' +  data + '" class="btn btn-primary view-btn"><i class="fa fa-eye"></i></a>' +
-                                        '<a href="/kinesis/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
+                                        '<a href="/kinesis/view/' +  data + '" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
+                                        '<a href="/kinesis/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 
                                 return options;

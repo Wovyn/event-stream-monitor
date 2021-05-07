@@ -217,7 +217,7 @@ class ElasticSearch extends BaseController
         return view('elasticsearch/wizard_modal', $data);
     }
 
-    function delete($id) {
+    public function delete($id) {
         $domain = $this->elasticsearchModel->where('id', $id)->first();
 
         $this->elasticsearch->setRegion($domain->region);
@@ -247,13 +247,25 @@ class ElasticSearch extends BaseController
         ]));
     }
 
+    public function view($id) {
+        $domain = $this->elasticsearchModel->where('id', $id)->first();
+
+        $result = $this->elasticsearch->DescribeElasticsearchDomain([
+            'DomainName' => $domain->domain_name
+        ]);
+
+        $data['domain'] = $result['response']['DomainStatus'];
+
+        return view('elasticsearch/view_modal', $data);
+    }
+
     // manual test for elasticsearch
     public function DescribeElasticsearchDomain($domain) {
         $result = $this->elasticsearch->DescribeElasticsearchDomain([
             'DomainName' => $domain
         ]);
 
-        echo '<pre>' , var_dump($result) , '</pre>';
+        echo '<pre>' , var_dump($result['response']['DomainStatus']) , '</pre>';
     }
 
     public function ListCertificates() {

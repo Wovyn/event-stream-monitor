@@ -501,6 +501,33 @@ var Elasticsearch = function() {
         });
     }
 
+    var handleView = function() {
+        console.log('init handleView');
+        $(document).on('click', '.view-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this),
+                $row = $btn.parents('tr').get(0),
+                data = $dtTables['elasticsearch-table'].row($row).data();
+
+            App.modal({
+                title: data.domain_name + ' - Summary',
+                ajax: {
+                    url: $btn.attr('href')
+                },
+                width: '1060',
+                btn: {
+                    confirm: {
+                        class: 'hidden'
+                    },
+                    cancel: {
+                        text: 'Close'
+                    }
+                }
+            })
+        });
+    }
+
     var handleDelete = function() {
         console.log('init handleDelete');
         $(document).on('click', '.delete-btn', function(e) {
@@ -626,7 +653,8 @@ var Elasticsearch = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/elasticsearch/delete/' +  data + '" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i></a>' +
+                                        '<a href="/elasticsearch/view/' +  data + '" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
+                                        '<a href="/elasticsearch/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 
                                 return options;
@@ -650,6 +678,7 @@ var Elasticsearch = function() {
 
             handleAdd();
             handleDelete();
+            handleView();
         }
     }
 }();
