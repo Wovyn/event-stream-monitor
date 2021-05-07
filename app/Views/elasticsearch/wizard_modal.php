@@ -160,14 +160,14 @@
                                     2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
-                            <!--
+
                             <div class="radio">
                                 <label>
                                     <input type="radio" value="1" name="availability_zones" class="availability_zones" />
                                     1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
-                            -->
+
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="instance_type">Instance type</label>
