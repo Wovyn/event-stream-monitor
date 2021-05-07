@@ -236,14 +236,14 @@
                                     <option value="r4.16xlarge.elasticsearch">r4.16xlarge.elasticsearch</option>
                                 </optgroup>
                                 <optgroup label="r5 (Memory optimized)">
-                                    <option value="r5.large.elasticsearch" selected="selected">r5.large.elasticsearch (default)</option>
+                                    <option value="r5.large.elasticsearch">r5.large.elasticsearch</option>
                                     <option value="r5.xlarge.elasticsearch">r5.xlarge.elasticsearch</option>
                                     <option value="r5.2xlarge.elasticsearch">r5.2xlarge.elasticsearch</option>
                                     <option value="r5.4xlarge.elasticsearch">r5.4xlarge.elasticsearch</option>
                                     <option value="r5.12xlarge.elasticsearch">r5.12xlarge.elasticsearch</option>
                                 </optgroup>
                                 <optgroup label="t2">
-                                    <option value="t2.small.elasticsearch">t2.small.elasticsearch</option>
+                                    <option value="t2.small.elasticsearch" selected="selected">t2.small.elasticsearch</option>
                                     <option value="t2.medium.elasticsearch">t2.medium.elasticsearch</option>
                                 </optgroup>
                                 <optgroup label="t3 (General purpose)">
@@ -254,7 +254,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="number_of_nodes">Number of nodes</label>
-                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="2" required data-rule-multiple-of="1">
+                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="1" required data-rule-multiple-of="1">
                             <p class="help-block">For three Availability Zones, we recommend instances in multiples of three for equal distribution across the Availability Zones.</p>
                         </div>
                     </fieldset>
@@ -364,14 +364,14 @@
                                         <option value="r4.16xlarge.elasticsearch">r4.16xlarge.elasticsearch</option>
                                     </optgroup>
                                     <optgroup label="r5 (Memory optimized)">
-                                        <option value="r5.large.elasticsearch" selected="selected">r5.large.elasticsearch (default)</option>
+                                        <option value="r5.large.elasticsearch">r5.large.elasticsearch</option>
                                         <option value="r5.xlarge.elasticsearch">r5.xlarge.elasticsearch</option>
                                         <option value="r5.2xlarge.elasticsearch">r5.2xlarge.elasticsearch</option>
                                         <option value="r5.4xlarge.elasticsearch">r5.4xlarge.elasticsearch</option>
                                         <option value="r5.12xlarge.elasticsearch">r5.12xlarge.elasticsearch</option>
                                     </optgroup>
                                     <optgroup label="t2">
-                                        <option value="t2.small.elasticsearch">t2.small.elasticsearch</option>
+                                        <option value="t2.small.elasticsearch" selected="selected">t2.small.elasticsearch</option>
                                         <option value="t2.medium.elasticsearch">t2.medium.elasticsearch</option>
                                     </optgroup>
                                     <optgroup label="t3 (General purpose)">
@@ -383,7 +383,7 @@
                             <div class="form-group">
                                 <label class="control-label" for="dedicated_master_node_number_of_nodes">Number of nodes</label>
                                 <select name="dedicated_master_node_number_of_nodes" id="dedicated_master_node_number_of_nodes" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
-                                    <option value="3" selected="selected">3 (default)</option>
+                                    <option value="3" selected="selected">3</option>
                                     <option value="5">5</option>
                                 </select>
                             </div>
@@ -401,7 +401,7 @@
                                         <label class="control-label" for="ultrawarm_instance_type">Instance type</label>
                                         <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%">
                                             <option></option>
-                                            <option value="ultrawarm1.medium.elasticsearch" selected="selected">ultrawarm1.medium.elasticsearch (default)</option>
+                                            <option value="ultrawarm1.medium.elasticsearch" selected="selected">ultrawarm1.medium.elasticsearch</option>
                                             <option value="ultrawarm1.large.elasticsearch">ultrawarm1.large.elasticsearch</option>
                                         </select>
                                     </div>
