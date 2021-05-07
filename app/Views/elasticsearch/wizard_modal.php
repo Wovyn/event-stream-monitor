@@ -156,14 +156,14 @@
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" checked="checked" />
+                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" />
                                     2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
 
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="1" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="1" name="availability_zones" class="availability_zones" checked="checked" />
                                     1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
@@ -254,7 +254,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="number_of_nodes">Number of nodes</label>
-                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="2" required data-rule-multiple-of="2">
+                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="2" required data-rule-multiple-of="1">
                             <p class="help-block">For three Availability Zones, we recommend instances in multiples of three for equal distribution across the Availability Zones.</p>
                         </div>
                     </fieldset>

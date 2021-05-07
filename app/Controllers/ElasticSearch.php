@@ -125,10 +125,6 @@ class ElasticSearch extends BaseController
                     // 'MaintenanceSchedules'
                 ],
                 'ElasticsearchClusterConfig' => [
-                    'ZoneAwarenessEnabled' => true,
-                    'ZoneAwarenessConfig' => [
-                        'AvailabilityZoneCount' => (int) $_POST['availability_zones']
-                    ],
                     'InstanceType' => $_POST['instance_type'],
                     'InstanceCount' => (int) $_POST['number_of_nodes']
                 ],
@@ -161,6 +157,13 @@ class ElasticSearch extends BaseController
                     'Enabled' => false
                 ]
             ];
+
+            $request['ElasticsearchClusterConfig']['ZoneAwarenessEnabled'] = $_POST['availability_zones'] > 1 ? true : false;
+            if($_POST['availability_zones'] > 1) {
+                $request['ElasticsearchClusterConfig']['ZoneAwarenessConfig'] = [
+                    'AvailabilityZoneCount' => (int) $_POST['availability_zones']
+                ];
+            }
 
             if($_POST['ebs_volume_type'] == 'io1') {
                 $request['EBSOptions']['Iops'] = (int) $_POST['provisioned_iops'];

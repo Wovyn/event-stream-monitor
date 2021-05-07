@@ -40,7 +40,7 @@
             <?php endif; ?>
             <div class="form-group">
                 <label class="control-label text-bold">Availability Zones:</label>
-                <p class="form-control-static display-value"><?php echo $domain['ElasticsearchClusterConfig']['ZoneAwarenessConfig']['AvailabilityZoneCount'] ?></p>
+                <p class="form-control-static display-value"><?php echo $domain['ElasticsearchClusterConfig']['ZoneAwarenessEnabled'] ? $domain['ElasticsearchClusterConfig']['ZoneAwarenessConfig']['AvailabilityZoneCount'] : '1'; ?></p>
             </div>
         </fieldset>
     </div>
