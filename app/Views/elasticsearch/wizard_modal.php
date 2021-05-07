@@ -510,11 +510,12 @@
                                 Allow open access to the domain
                             </label>
                         </div>
-                        <div id="access_policy_container" class="form-group">
+                        <div class="form-group">
                             <!-- <label class="control-label" for="access_policy">JSON defined access policy</label> -->
                             <div id="access_policy_json" style="height: 300px"></div>
                             <input type="hidden" id="access_policy" name="access_policy">
                             <input type="hidden" id="aws_account" value="<?php echo $aws_account ?>">
+                            <input type="hidden" id="ip_address">
                         </div>
                     </fieldset>
                 </div>

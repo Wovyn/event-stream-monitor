@@ -7,6 +7,54 @@ var Elasticsearch = function() {
             wizard = $('#smartwizard', form);
             lastStep = $('.nav li', wizard).length - 1;
 
+            var updatePolicy = function() {
+                let aws_account = $('#aws_account', form).val(),
+                    region = $('#region option:selected', form).val(),
+                    domain_name = $('#domain_name', form).val(),
+                    ip_address = $('#ip_address', form).val()
+
+                if(!$('#allow_open_access', form).is(':checked')) {
+                    editor.setValue(JSON.stringify({
+                        "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Principal": {
+                                        "AWS": "*"
+                                    },
+                                    "Action": [
+                                        "es:*"
+                                    ],
+                                    "Resource": 'arn:aws:es:' + region + ':' + aws_account + ':domain/' + domain_name + '/*',
+                                    "Condition": {
+                                        "IpAddress": {
+                                            "aws:SourceIp": ip_address
+                                        }
+                                    }
+                                }
+                            ]
+                        }, null, 2)
+                    );
+                } else {
+                    editor.setValue(JSON.stringify({
+                        "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Principal": {
+                                        "AWS": "*"
+                                    },
+                                    "Action": [
+                                        "es:*"
+                                    ],
+                                    "Resource": 'arn:aws:es:' + region + ':' + aws_account + ':domain/' + domain_name + '/*',
+                                }
+                            ]
+                        }, null, 2)
+                    );
+                }
+            }
+
             wizard.smartWizard({
                 selected: 0,
                 justified: true,
@@ -115,38 +163,8 @@ var Elasticsearch = function() {
 
                 // set access policy json after step 2
                 if(nextStepIndex == 2) {
-                    fetch('https://api.ipify.org/?format=json')
-                        .then(response => response.json())
-                        .then(data => {
-                            // generate default access_policy json
-                            let aws_account = $('#aws_account', form).val(),
-                                region = $('#region option:selected', form).val(),
-                                domain_name = $('#domain_name', form).val(),
-                                default_policy = {
-                                    "Version": "2012-10-17",
-                                      "Statement": [
-                                        {
-                                          "Effect": "Allow",
-                                          "Principal": {
-                                            "AWS": "*"
-                                          },
-                                          "Action": [
-                                            "es:*"
-                                          ],
-                                          "Condition": {
-                                            "IpAddress": {
-                                              "aws:SourceIp": [
-                                                data.ip
-                                              ]
-                                            }
-                                          },
-                                          "Resource":"arn:aws:es:" + region + ":" + aws_account + ":domain/" + domain_name + "/*",
-                                        }
-                                      ]
-                                    };
-
-                            editor.setValue(JSON.stringify(default_policy, null, 2));
-                        });
+                    // generate access_policy json
+                    updatePolicy();
                 }
 
                 if(nextStepIndex == 3) {
@@ -261,14 +279,10 @@ var Elasticsearch = function() {
                 callback: function(btn, elements) {
                     if(!btn.is(':checked') && $('#allow_open_access', form).is(':checked')) {
                         $('#allow_open_access', form).prop('checked', false);
-                        $('#access_policy_container', form).show();
+
+                        updatePolicy();
                     }
                 }
-            });
-
-            App.customs.activeToggle({
-                btn: $('#allow_open_access', form),
-                elements: [ $('#access_policy_container', form) ]
             });
 
             $('#fine_grain_access_control', form).on('click', function() {
@@ -289,6 +303,18 @@ var Elasticsearch = function() {
             editor.session.on('change', function(delta) {
                 $('#access_policy', form).val(editor.getValue());
             });
+
+            // get IP address
+            fetch('https://api.ipify.org/?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    $('#ip_address', form).val(data.ip);
+                });
+
+            // init allow open access
+            $('#allow_open_access', form).on('click', function() {
+                updatePolicy();
+            })
         }
 
         var animateBar = function(step) {
