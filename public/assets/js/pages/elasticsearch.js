@@ -442,26 +442,24 @@ var Elasticsearch = function() {
                 if(_.findIndex(['access_policy', 'allow_open_access'], d => d == data.name) != -1) {
                     let toAppend = true;
 
-                    if(data.name == 'access_policy' && $('#allow_open_access', form).is(':checked')) {
+                    if(data.name == 'access_policy') {
+                        accessPolicyField.append(
+                            prefieldTemplate({
+                                name: _.startCase(data.name),
+                                value: data.value
+                            })
+                        );
+
                         toAppend = false;
                     }
 
                     if(toAppend) {
-                        if(data.name == 'access_policy') {
-                            accessPolicyField.append(
-                                prefieldTemplate({
-                                    name: _.startCase(data.name),
-                                    value: data.value
-                                })
-                            );
-                        } else {
-                            accessPolicyField.append(
-                                fieldTemplate({
-                                    name: _.startCase(data.name),
-                                    value: data.value
-                                })
-                            );
-                        }
+                        accessPolicyField.append(
+                            fieldTemplate({
+                                name: _.startCase(data.name),
+                                value: data.value
+                            })
+                        );
                     }
                 }
             });

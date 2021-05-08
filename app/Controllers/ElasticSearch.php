@@ -182,10 +182,6 @@ class ElasticSearch extends BaseController
                     'MasterUserName' => $_POST['master_username'],
                     'MasterUserPassword' => $_POST['master_password']
                 ];
-
-                if(isset($_POST['allow_open_access'])) {
-                    unset($request['AccessPolicies']);
-                }
             }
 
             $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);
