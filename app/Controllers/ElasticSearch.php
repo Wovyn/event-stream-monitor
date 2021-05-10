@@ -220,6 +220,21 @@ class ElasticSearch extends BaseController
         return view('elasticsearch/wizard_modal', $data);
     }
 
+    public function edit($id) {
+        $domain = $this->elasticsearchModel->where('id', $id)->first();
+
+        // $this->elasticsearch->setRegion($_POST['region']);
+        // $result['CreateElasticsearchDomain'] = $this->elasticsearch->CreateElasticsearchDomain($request);
+
+        $result['DescribeElasticsearchDomain'] = $this->elasticsearch->DescribeElasticsearchDomain([
+            'DomainName' => $domain->domain_name
+        ]);
+
+        $data['aws_account'] = $this->keys->aws_account;
+        $data['regions'] = GetAwsRegions($this->keys);
+        return view('elasticsearch/edit_modal', $data);
+    }
+
     public function delete($id) {
         $domain = $this->elasticsearchModel->where('id', $id)->first();
 

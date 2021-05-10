@@ -3,11 +3,287 @@ var Elasticsearch = function() {
         FormWizard = function() {
         let wizard, wizardForm, lastStep, editor;
 
-        var initWizard = function(form) {
-            wizard = $('#smartwizard', form);
-            lastStep = $('.nav li', wizard).length - 1;
+        return {
+            init: function(form, mode = null) {
+                wizard = $('#smartwizard', form);
+                lastStep = $('.nav li', wizard).length - 1;
 
-            var updatePolicy = function() {
+                let button = '<button type="button" class="btn btn-finish btn-success hidden">Create Elasticsearch</button>';
+
+                wizard.smartWizard({
+                    selected: 0,
+                    justified: true,
+                    enableURLhash: false,
+                    autoAdjustHeight: false,
+                    keyboardSettings: { keyNavigation: false },
+                    toolbarSettings: {
+                        toolbarExtraButtons: [
+                            $(button)
+                                .on('click', function() {
+                                    let $btn = $(this);
+
+                                    $btn.addClass('disabled');
+
+                                    Swal.fire({
+                                        title: 'Creating Elasticsearch',
+                                        allowOutsideClick: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+
+                                            $.ajax({
+                                                url: '/elasticsearch/add',
+                                                method: 'POST',
+                                                data: form.serialize(),
+                                                dataType: 'json',
+                                                success: function(response) {
+                                                    Swal.fire({
+                                                        icon: response.error !== true ? 'success' : 'error',
+                                                        text: response.message
+                                                    });
+
+                                                    if(!response.error) {
+                                                        appModal.modal('hide');
+                                                        $dtTables['elasticsearch-table'].ajax.reload();
+                                                    } else {
+                                                        $btn.removeClass('disabled');
+                                                        console.log(response);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                })
+                        ]
+                    }
+                });
+
+                FormWizard.initElements(form);
+            },
+            animateBar: function(step) {
+                if (_.isUndefined(step)) {
+                    step = 0;
+                };
+
+                numberOfSteps = $('.swMain > .nav > li').length;
+                var valueNow = Math.floor(100 / numberOfSteps * (step + 1));
+                $('.step-bar').css('width', valueNow + '%');
+            },
+            initElements(form) {
+                // html class fix
+                $('.toolbar', wizard).addClass('modal-footer');
+
+                // on leaveStep
+                wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+                    // validate current step
+                    if(!form.valid()) {
+                        return false;
+                    }
+
+                    // set prev button hidden on first step
+                    if(nextStepIndex == 0) {
+                        $('.sw-btn-prev', form).addClass('hidden');
+                    } else {
+                        $('.sw-btn-prev', form).removeClass('hidden');
+                    }
+
+                    // get certificates and setup custom domain endpoint
+                    if(nextStepIndex == 1) {
+                        let currentRegion = $('#aws_certificate', form).data('region');
+
+                        // check if region has been changed
+                        if($('#region option:selected', form).val() != currentRegion) {
+                            // set loading
+                            $('#aws_certificate', form).parent().addClass('loading');
+                            // reset options
+                            $('#aws_certificate', form)
+                                .empty()
+                                .append('<options></options>');
+
+                            // reset custom hostname
+                            $('#custom_hostname', form).val('');
+
+                            // set current region
+                            $('#aws_certificate', form).data('region', $('#region option:selected', form).val());
+
+                            // update options
+                            fetch('/elasticsearch/certificates/' + $('#region option:selected', form).val())
+                                .then(response => response.json())
+                                .then(data => {
+                                    let options = [];
+
+                                    if(data.certificates.length) {
+                                        _.forEach(data.certificates, function(certificate, key) {
+                                            options.push({ id: certificate.CertificateArn, text: certificate.DomainName, selected: false });
+                                        });
+                                    }
+
+                                    // update options
+                                    $('#aws_certificate', form).select2({
+                                        placeholder: 'Select an AWS Certificate',
+                                        data: options
+                                    });
+
+                                    $('#aws_certificate', form).parent().removeClass('loading');
+                                });
+                        }
+                    }
+
+                    // set access policy json after step 2
+                    if(nextStepIndex == 2) {
+                        // generate access_policy json
+                        FormWizard.updatePolicy();
+                    }
+
+                    if(nextStepIndex == 3) {
+                        // process access_policy
+                        // $('#access_policy', form).val(editor.getValue());
+                    }
+
+                    // show/hide create data stream btn and next button
+                    if(nextStepIndex == lastStep) {
+                        FormWizard.generateSummary(form);
+
+                        $('.sw-btn-next', form).addClass('hidden');
+                        $('.btn-finish', form).removeClass('hidden');
+                    } else {
+                        $('.sw-btn-next', form).removeClass('hidden');
+                        $('.btn-finish', form).addClass('hidden');
+                    }
+
+                    FormWizard.animateBar(nextStepIndex);
+                });
+
+                // on showStep
+                wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
+                    appModal.modal('layout');
+                });
+
+                // initialize animateBar
+                FormWizard.animateBar();
+
+                // set prev button hidden on first step
+                $('.sw-btn-prev', form).addClass('hidden');
+
+                // init elements
+                $('.form-select2', form).select2()
+                    .on('select2:select', function (e) {
+                        if($(this).val()) {
+                            $(this)
+                                .closest('.form-group')
+                                    .removeClass('has-error')
+                                    .addClass('has-success')
+                                .find('.symbol')
+                                    .removeClass('required')
+                                    .addClass('ok');
+                        }
+                    });
+
+                // enable custom domain
+                App.customs.activeToggle({
+                    btn: $('#custom_endpoint', form),
+                    elements: [ $('#custom_endpoint_container', form) ]
+                });
+
+                // dedicated master nodes
+                App.customs.activeToggle({
+                    btn: $('#dedicated_master_nodes', form),
+                    elements: [ $('#dedicated_container', form) ]
+                });
+
+                // ultrawarm data nodes
+                App.customs.activeToggle({
+                    btn: $('#ultrawarm_data_node', form),
+                    elements: [ $('#ulrawarm_container', form) ]
+                });
+
+                // update number of nodes validation rule when availability zone changes
+                $('.availability_zones', form).on('click', function() {
+                    $('#number_of_nodes', form).rules('remove', 'multiple-of');
+                    $('#number_of_nodes', form).rules('add', { 'multiple-of': $(this).val() });
+                });
+
+                $('#ebs_volume_type', form).select2()
+                    .on('select2:select', function (e) {
+                        $('#provisioned-iops-field', form).hide();
+
+                        switch($(this).val()) {
+                            case 'gp2':
+                                $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
+                                $('#ebs_storage_size_per_node', form).rules('add', {
+                                    min: 10,
+                                    max: 1024
+                                });
+
+                                break;
+
+                            case 'io1':
+                                $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
+                                $('#ebs_storage_size_per_node', form).rules('add', {
+                                    min: 35,
+                                    max: 1024
+                                });
+
+                                $('#provisioned-iops-field', form).show();
+
+                                break;
+
+                            case 'standard':
+                                $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
+                                $('#ebs_storage_size_per_node', form).rules('add', {
+                                    min: 10,
+                                    max: 100
+                                });
+
+                                break;
+
+                        }
+                    });
+
+                // fine grained access control
+                App.customs.activeToggle({
+                    btn: $('#fine_grain_access_control', form),
+                    elements: [ $('#fine_grain_options_container', form), $('#allow_open_access_container', form) ],
+                    callback: function(btn, elements) {
+                        if(!btn.is(':checked') && $('#allow_open_access', form).is(':checked')) {
+                            $('#allow_open_access', form).prop('checked', false);
+
+                            FormWizard.updatePolicy();
+                        }
+                    }
+                });
+
+                $('#fine_grain_access_control', form).on('click', function() {
+                    if($(this).is(':checked')) {
+                        $('#note_to_node_encryption', form).rules('add', 'required');
+                        $('#enable_encryption_of_data_at_rest   ', form).rules('add', 'required');
+                    } else {
+                        $('#note_to_node_encryption', form).rules('remove', 'required');
+                        $('#enable_encryption_of_data_at_rest   ', form).rules('remove', 'required');
+                    }
+                });
+
+                // init access policy
+                editor = ace.edit($('#access_policy_json', form)[0]);
+                editor.setTheme("ace/theme/xcode");
+                editor.session.setMode("ace/mode/json");
+
+                editor.session.on('change', function(delta) {
+                    $('#access_policy', form).val(editor.getValue());
+                });
+
+                // get IP address
+                fetch('https://api.ipify.org/?format=json')
+                    .then(response => response.json())
+                    .then(data => {
+                        $('#ip_address', form).val(data.ip);
+                    });
+
+                // init allow open access
+                $('#allow_open_access', form).on('click', function() {
+                    FormWizard.updatePolicy();
+                })
+            },
+            updatePolicy: function(form) {
                 let aws_account = $('#aws_account', form).val(),
                     region = $('#region option:selected', form).val(),
                     domain_name = $('#domain_name', form).val(),
@@ -38,464 +314,145 @@ var Elasticsearch = function() {
                 }
 
                 editor.setValue(JSON.stringify(policy, null, 2));
-            }
+            },
+            generateSummary: function(form) {
+                // console.log(form.serializeArray());
+                let formValues = form.serializeArray(),
+                    summary = '',
+                    fieldTemplate = _.template('<div class="form-group">' +
+                        '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
+                        '<p class="form-control-static display-value"><%= value %></p>' +
+                        '</div>'),
+                    prefieldTemplate = _.template('<div class="form-group">' +
+                        '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
+                        '<pre class="form-control-static display-value"><%= value %></pre>' +
+                        '</div>');
 
-            wizard.smartWizard({
-                selected: 0,
-                justified: true,
-                enableURLhash: false,
-                autoAdjustHeight: false,
-                keyboardSettings: { keyNavigation: false },
-                toolbarSettings: {
-                    toolbarExtraButtons: [
-                        $('<button type="button" class="btn btn-finish btn-success hidden">Create Elasticsearch</button>')
-                            .on('click', function() {
-                                let $btn = $(this);
+                let detailsField = $('#details-field', form),
+                    dataNodesField = $('#data-nodes-field', form),
+                    dedicatedInstancesField = $('#dedicated-instances-field', form),
+                    networkConfigField = $('#network-confi-field', form),
+                    accessPolicyField = $('#access-policy-field', form);
 
-                                $btn.addClass('disabled');
+                detailsField.empty().append('<legend class="border-0">Details:</legend>');
+                dataNodesField.empty().append('<legend class="border-0">Data Nodes:</legend>');
+                dedicatedInstancesField.empty().append('<legend class="border-0">Dedicated Instances:</legend>');
+                networkConfigField.empty().append('<legend class="border-0">Network Configuration:</legend>');
+                accessPolicyField.empty().append('<legend class="border-0">Access Policy:</legend>');
 
-                                Swal.fire({
-                                    title: 'Creating Elasticsearch',
-                                    allowOutsideClick: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
+                _.forEach(formValues, function(data) {
 
-                                        $.ajax({
-                                            url: '/elasticsearch/add',
-                                            method: 'POST',
-                                            data: form.serialize(),
-                                            dataType: 'json',
-                                            success: function(response) {
-                                                Swal.fire({
-                                                    icon: response.error !== true ? 'success' : 'error',
-                                                    text: response.message
-                                                });
+                    // append detail fields
+                    if(_.findIndex(['region', 'domain_name', 'aws_certificate', 'custom_hostname', 'auto_tune'], d => d == data.name) != -1) {
+                        let toAppend = true;
 
-                                                if(!response.error) {
-                                                    appModal.modal('hide');
-                                                    $dtTables['elasticsearch-table'].ajax.reload();
-                                                } else {
-                                                    $btn.removeClass('disabled');
-                                                    console.log(response);
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            })
-                    ]
-                }
-            });
+                        if(data.name == 'region') {
+                            data.value = $('#region option:selected', form).html() + ' | ' + data.value;
+                        }
 
-            // html class fix
-            $('.toolbar', wizard).addClass('modal-footer');
+                        if(data.name == 'aws_certificate' && !$('#custom_endpoint', form).is(':checked')) {
+                            toAppend = false;
+                        }
 
-            // on leaveStep
-            wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
-                // validate current step
-                if(!form.valid()) {
-                    return false;
-                }
+                        if(data.name == 'custom_hostname' && !$('#custom_endpoint', form).is(':checked')) {
+                            toAppend = false;
+                        }
 
-                // set prev button hidden on first step
-                if(nextStepIndex == 0) {
-                    $('.sw-btn-prev', form).addClass('hidden');
-                } else {
-                    $('.sw-btn-prev', form).removeClass('hidden');
-                }
-
-                // get certificates and setup custom domain endpoint
-                if(nextStepIndex == 1) {
-                    let currentRegion = $('#aws_certificate', form).data('region');
-
-                    // check if region has been changed
-                    if($('#region option:selected', form).val() != currentRegion) {
-                        // set loading
-                        $('#aws_certificate', form).parent().addClass('loading');
-                        // reset options
-                        $('#aws_certificate', form)
-                            .empty()
-                            .append('<options></options>');
-
-                        // reset custom hostname
-                        $('#custom_hostname', form).val('');
-
-                        // set current region
-                        $('#aws_certificate', form).data('region', $('#region option:selected', form).val());
-
-                        // update options
-                        fetch('/elasticsearch/certificates/' + $('#region option:selected', form).val())
-                            .then(response => response.json())
-                            .then(data => {
-                                let options = [];
-
-                                if(data.certificates.length) {
-                                    _.forEach(data.certificates, function(certificate, key) {
-                                        options.push({ id: certificate.CertificateArn, text: certificate.DomainName, selected: false });
-                                    });
-                                }
-
-                                // update options
-                                $('#aws_certificate', form).select2({
-                                    placeholder: 'Select an AWS Certificate',
-                                    data: options
-                                });
-
-                                $('#aws_certificate', form).parent().removeClass('loading');
-                            });
+                        if(toAppend) {
+                            detailsField.append(
+                                fieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        }
                     }
-                }
 
-                // set access policy json after step 2
-                if(nextStepIndex == 2) {
-                    // generate access_policy json
-                    updatePolicy();
-                }
+                    // append data node fields
+                    if(_.findIndex(['availability_zones', 'instance_type', 'number_of_nodes', 'ebs_volume_type', 'ebs_storage_size_per_node', 'provisioned_iops'], d => d == data.name) != -1) {
+                        let toAppend = true;
 
-                if(nextStepIndex == 3) {
-                    // process access_policy
-                    // $('#access_policy', form).val(editor.getValue());
-                }
+                        if(data.name == 'provisioned_iops' && $('#ebs_volume_type', form).val() != 'io1') {
+                            toAppend = false;
+                        }
 
-                // show/hide create data stream btn and next button
-                if(nextStepIndex == lastStep) {
-                    generateSummary(form);
+                        if(toAppend) {
+                            dataNodesField.append(
+                                fieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        }
+                    }
 
-                    $('.sw-btn-next', form).addClass('hidden');
-                    $('.btn-finish', form).removeClass('hidden');
-                } else {
-                    $('.sw-btn-next', form).removeClass('hidden');
-                    $('.btn-finish', form).addClass('hidden');
-                }
+                    // dedicated instances fields
+                    if(_.findIndex(['dedicated_master_nodes', 'dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes', 'ultrawarm_data_node', 'ultrawarm_instance_type', 'number_of_warm_data_nodes'], d => d == data.name) != -1) {
+                        let toAppend = true;
 
-                animateBar(nextStepIndex);
-            });
+                        if(_.findIndex(['dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes'], d => d == data.name) != -1 && !$('#dedicated_master_nodes', form).is(':checked')) {
+                            toAppend = false;
+                        }
 
-            // on showStep
-            wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
-                appModal.modal('layout');
-            });
+                        if(_.findIndex(['ultrawarm_instance_type', 'number_of_warm_data_nodes'], d => d == data.name) != -1 && !$('#ultrawarm_data_node', form).is(':checked')) {
+                            toAppend = false;
+                        }
 
-            // initialize animateBar
-            animateBar();
+                        if(toAppend) {
+                            dedicatedInstancesField.append(
+                                fieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        }
+                    }
 
-            // set prev button hidden on first step
-            $('.sw-btn-prev', form).addClass('hidden');
+                    // network config fields
+                    if(_.findIndex(['network_configuration','fine_grain_access_control', 'master_username', 'require_https', 'note_to_node_encryption', 'enable_encryption_of_data_at_rest'], d => d == data.name) != -1) {
+                        let toAppend = true;
 
-            // init elements
-            $('.form-select2', form).select2()
-                .on('select2:select', function (e) {
-                    if($(this).val()) {
-                        $(this)
-                            .closest('.form-group')
-                                .removeClass('has-error')
-                                .addClass('has-success')
-                            .find('.symbol')
-                                .removeClass('required')
-                                .addClass('ok');
+                        if(data.name == 'master_username' && !$('#fine_grain_access_control', form).is(':checked')) {
+                            toAppend = false;
+                        }
+
+                        if(toAppend) {
+                            networkConfigField.append(
+                                fieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        }
+                    }
+
+                    // network config fields
+                    if(_.findIndex(['access_policy', 'allow_open_access'], d => d == data.name) != -1) {
+                        let toAppend = true;
+
+                        if(data.name == 'access_policy') {
+                            accessPolicyField.append(
+                                prefieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+
+                            toAppend = false;
+                        }
+
+                        if(toAppend) {
+                            accessPolicyField.append(
+                                fieldTemplate({
+                                    name: _.startCase(data.name),
+                                    value: data.value
+                                })
+                            );
+                        }
                     }
                 });
 
-            // enable custom domain
-            App.customs.activeToggle({
-                btn: $('#custom_endpoint', form),
-                elements: [ $('#custom_endpoint_container', form) ]
-            });
-
-            // dedicated master nodes
-            App.customs.activeToggle({
-                btn: $('#dedicated_master_nodes', form),
-                elements: [ $('#dedicated_container', form) ]
-            });
-
-            // ultrawarm data nodes
-            App.customs.activeToggle({
-                btn: $('#ultrawarm_data_node', form),
-                elements: [ $('#ulrawarm_container', form) ]
-            });
-
-            // update number of nodes validation rule when availability zone changes
-            $('.availability_zones', form).on('click', function() {
-                $('#number_of_nodes', form).rules('remove', 'multiple-of');
-                $('#number_of_nodes', form).rules('add', { 'multiple-of': $(this).val() });
-            });
-
-            $('#ebs_volume_type', form).select2()
-                .on('select2:select', function (e) {
-                    $('#provisioned-iops-field', form).hide();
-
-                    switch($(this).val()) {
-                        case 'gp2':
-                            $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
-                            $('#ebs_storage_size_per_node', form).rules('add', {
-                                min: 10,
-                                max: 1024
-                            });
-
-                            break;
-
-                        case 'io1':
-                            $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
-                            $('#ebs_storage_size_per_node', form).rules('add', {
-                                min: 35,
-                                max: 1024
-                            });
-
-                            $('#provisioned-iops-field', form).show();
-
-                            break;
-
-                        case 'standard':
-                            $('#ebs_storage_size_per_node', form).rules('remove', 'min max');
-                            $('#ebs_storage_size_per_node', form).rules('add', {
-                                min: 10,
-                                max: 100
-                            });
-
-                            break;
-
-                    }
-                });
-
-            // fine grained access control
-            App.customs.activeToggle({
-                btn: $('#fine_grain_access_control', form),
-                elements: [ $('#fine_grain_options_container', form), $('#allow_open_access_container', form) ],
-                callback: function(btn, elements) {
-                    if(!btn.is(':checked') && $('#allow_open_access', form).is(':checked')) {
-                        $('#allow_open_access', form).prop('checked', false);
-
-                        updatePolicy();
-                    }
-                }
-            });
-
-            $('#fine_grain_access_control', form).on('click', function() {
-                if($(this).is(':checked')) {
-                    $('#note_to_node_encryption', form).rules('add', 'required');
-                    $('#enable_encryption_of_data_at_rest   ', form).rules('add', 'required');
-                } else {
-                    $('#note_to_node_encryption', form).rules('remove', 'required');
-                    $('#enable_encryption_of_data_at_rest   ', form).rules('remove', 'required');
-                }
-            });
-
-            // init access policy
-            editor = ace.edit($('#access_policy_json', form)[0]);
-            editor.setTheme("ace/theme/xcode");
-            editor.session.setMode("ace/mode/json");
-
-            editor.session.on('change', function(delta) {
-                $('#access_policy', form).val(editor.getValue());
-            });
-
-            // get IP address
-            fetch('https://api.ipify.org/?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    $('#ip_address', form).val(data.ip);
-                });
-
-            // init allow open access
-            $('#allow_open_access', form).on('click', function() {
-                updatePolicy();
-            })
-        }
-
-        var animateBar = function(step) {
-            if (_.isUndefined(step)) {
-                step = 0;
-            };
-
-            numberOfSteps = $('.swMain > .nav > li').length;
-            var valueNow = Math.floor(100 / numberOfSteps * (step + 1));
-            $('.step-bar').css('width', valueNow + '%');
-        };
-
-        var generateSummary = function(form) {
-            // console.log(form.serializeArray());
-            let formValues = form.serializeArray(),
-                summary = '',
-                fieldTemplate = _.template('<div class="form-group">' +
-                    '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
-                    '<p class="form-control-static display-value"><%= value %></p>' +
-                    '</div>'),
-                prefieldTemplate = _.template('<div class="form-group">' +
-                    '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
-                    '<pre class="form-control-static display-value"><%= value %></pre>' +
-                    '</div>');
-
-            let detailsField = $('#details-field', form),
-                dataNodesField = $('#data-nodes-field', form),
-                dedicatedInstancesField = $('#dedicated-instances-field', form),
-                networkConfigField = $('#network-confi-field', form),
-                accessPolicyField = $('#access-policy-field', form);
-
-            detailsField.empty().append('<legend class="border-0">Details:</legend>');
-            dataNodesField.empty().append('<legend class="border-0">Data Nodes:</legend>');
-            dedicatedInstancesField.empty().append('<legend class="border-0">Dedicated Instances:</legend>');
-            networkConfigField.empty().append('<legend class="border-0">Network Configuration:</legend>');
-            accessPolicyField.empty().append('<legend class="border-0">Access Policy:</legend>');
-
-            _.forEach(formValues, function(data) {
-
-                // append detail fields
-                if(_.findIndex(['region', 'domain_name', 'aws_certificate', 'custom_hostname', 'auto_tune'], d => d == data.name) != -1) {
-                    let toAppend = true;
-
-                    if(data.name == 'region') {
-                        data.value = $('#region option:selected', form).html() + ' | ' + data.value;
-                    }
-
-                    if(data.name == 'aws_certificate' && !$('#custom_endpoint', form).is(':checked')) {
-                        toAppend = false;
-                    }
-
-                    if(data.name == 'custom_hostname' && !$('#custom_endpoint', form).is(':checked')) {
-                        toAppend = false;
-                    }
-
-                    if(toAppend) {
-                        detailsField.append(
-                            fieldTemplate({
-                                name: _.startCase(data.name),
-                                value: data.value
-                            })
-                        );
-                    }
-                }
-
-                // append data node fields
-                if(_.findIndex(['availability_zones', 'instance_type', 'number_of_nodes', 'ebs_volume_type', 'ebs_storage_size_per_node', 'provisioned_iops'], d => d == data.name) != -1) {
-                    let toAppend = true;
-
-                    if(data.name == 'provisioned_iops' && $('#ebs_volume_type', form).val() != 'io1') {
-                        toAppend = false;
-                    }
-
-                    if(toAppend) {
-                        dataNodesField.append(
-                            fieldTemplate({
-                                name: _.startCase(data.name),
-                                value: data.value
-                            })
-                        );
-                    }
-                }
-
-                // dedicated instances fields
-                if(_.findIndex(['dedicated_master_nodes', 'dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes', 'ultrawarm_data_node', 'ultrawarm_instance_type', 'number_of_warm_data_nodes'], d => d == data.name) != -1) {
-                    let toAppend = true;
-
-                    if(_.findIndex(['dedicated_master_node_instance_type', 'dedicated_master_node_number_of_nodes'], d => d == data.name) != -1 && !$('#dedicated_master_nodes', form).is(':checked')) {
-                        toAppend = false;
-                    }
-
-                    if(_.findIndex(['ultrawarm_instance_type', 'number_of_warm_data_nodes'], d => d == data.name) != -1 && !$('#ultrawarm_data_node', form).is(':checked')) {
-                        toAppend = false;
-                    }
-
-                    if(toAppend) {
-                        dedicatedInstancesField.append(
-                            fieldTemplate({
-                                name: _.startCase(data.name),
-                                value: data.value
-                            })
-                        );
-                    }
-                }
-
-                // network config fields
-                if(_.findIndex(['network_configuration','fine_grain_access_control', 'master_username', 'require_https', 'note_to_node_encryption', 'enable_encryption_of_data_at_rest'], d => d == data.name) != -1) {
-                    let toAppend = true;
-
-                    if(data.name == 'master_username' && !$('#fine_grain_access_control', form).is(':checked')) {
-                        toAppend = false;
-                    }
-
-                    if(toAppend) {
-                        networkConfigField.append(
-                            fieldTemplate({
-                                name: _.startCase(data.name),
-                                value: data.value
-                            })
-                        );
-                    }
-                }
-
-                // network config fields
-                if(_.findIndex(['access_policy', 'allow_open_access'], d => d == data.name) != -1) {
-                    let toAppend = true;
-
-                    if(data.name == 'access_policy') {
-                        accessPolicyField.append(
-                            prefieldTemplate({
-                                name: _.startCase(data.name),
-                                value: data.value
-                            })
-                        );
-
-                        toAppend = false;
-                    }
-
-                    if(toAppend) {
-                        accessPolicyField.append(
-                            fieldTemplate({
-                                name: _.startCase(data.name),
-                                value: data.value
-                            })
-                        );
-                    }
-                }
-            });
-
-            // _.forEach(formValues, function(data) {
-            //     switch(data.name) {
-            //         case 'region':
-            //             data.value = $('#region option:selected', form).html() + ' | ' + data.value;
-
-            //             summary += fieldTemplate({
-            //                 name: _.startCase(data.name),
-            //                 value: data.value
-            //             });
-
-            //             break;
-
-            //         case 'access_policy':
-            //             summary += prefieldTemplate({
-            //                 name: _.startCase(data.name),
-            //                 value: data.value
-            //             });
-
-            //             break;
-
-            //         default:
-            //             summary += fieldTemplate({
-            //                 name: _.startCase(data.name),
-            //                 value: data.value
-            //             });
-
-            //             break;
-            //     }
-            // });
-
-            $('.summary', form).append(summary);
-        }
-
-        return {
-            init: function(form) {
-                initWizard(form);
-
-                // $('#shards', form).on('change', function() {
-                //     let shards = $(this).val(),
-                //         writeMiB = shards * 1,
-                //         writeData = shards * 1000,
-                //         readMiB = shards * 2;
-
-                //     $('.write-calculated-mib', form).html(writeMiB);
-                //     $('.write-calculated-data', form).html(writeData);
-                //     $('.read-calculated-mib', form).html(readMiB);
-                // });
+                $('.summary', form).append(summary);
             }
         };
     }();
@@ -529,7 +486,7 @@ var Elasticsearch = function() {
                     // end loading phase
                     Swal.close();
 
-                    FormWizard.init(form);
+                    FormWizard.init(form, 'create');
                 },
                 width: '1060',
                 footer: false,
@@ -537,6 +494,43 @@ var Elasticsearch = function() {
             });
         });
     }
+
+    var handleEdit = function() {
+        console.log('init handleEdit');
+        $(document).on('click', '.edit-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this),
+                $row = $btn.parents('tr').get(0),
+                data = $dtTables['elasticsearch-table'].row($row).data();
+
+            // add loading phase
+            Swal.fire({
+                title: 'Loading Elasticsearch Wizard',
+                allowOutsideClick: false
+            });
+
+            Swal.showLoading();
+
+            App.modal({
+                title: 'Edit ' + data.domain_name + ' Domain Configuration',
+                ajax: {
+                    url: $btn.attr('href')
+                },
+                onShown: function(form) {
+                    console.log('initialize wizard');
+
+                    // end loading phase
+                    Swal.close();
+
+                    FormWizard.init(form, 'update');
+                },
+                width: '1060',
+                footer: false,
+                others: { backdrop: 'static', keyboard: false }
+            })
+        });
+    };
 
     var handleView = function() {
         console.log('init handleView');
@@ -690,7 +684,8 @@ var Elasticsearch = function() {
                             render: function(data, type, full, meta) {
                                 let options =
                                     '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/elasticsearch/view/' +  data + '" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
+                                        '<a href="/elasticsearch/edit/' +  data + '" class="btn btn-primary edit-btn tip" title="Edit"><i class="fa fa-pencil"></i></a>' +
+                                        // '<a href="/elasticsearch/view/' +  data + '" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
                                         '<a href="/elasticsearch/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>';
 
@@ -715,6 +710,7 @@ var Elasticsearch = function() {
 
             handleAdd();
             handleDelete();
+            handleEdit();
             handleView();
         }
     }
