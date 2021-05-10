@@ -512,7 +512,7 @@ var Elasticsearch = function() {
 
             Swal.showLoading();
 
-            App.modal({
+            appModal = App.modal({
                 title: 'Edit ' + data.domain_name + ' Domain Configuration',
                 ajax: {
                     url: $btn.attr('href')
@@ -528,7 +528,7 @@ var Elasticsearch = function() {
                 width: '1060',
                 footer: false,
                 others: { backdrop: 'static', keyboard: false }
-            })
+            });
         });
     };
 
@@ -682,14 +682,18 @@ var Elasticsearch = function() {
                             targets: 5,
                             width: '10%',
                             render: function(data, type, full, meta) {
-                                let options =
-                                    '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/elasticsearch/edit/' +  data + '" class="btn btn-primary edit-btn tip" title="Edit"><i class="fa fa-pencil"></i></a>' +
-                                        // '<a href="/elasticsearch/view/' +  data + '" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
-                                        '<a href="/elasticsearch/delete/' +  data + '" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
-                                    '</div>';
+                                let options = _.template(
+                                     '<div class="btn-group btn-group-sm">' +
+                                        '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
+                                        // '<a href="/elasticsearch/view/<%= id %>" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
+                                        '<a href="/elasticsearch/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
+                                    '</div>'
+                                );
 
-                                return options;
+                                return options({
+                                    id: data,
+                                    disabled: (full.status == 'loading' ? true : false)
+                                });
                             }
                         }
                     ],

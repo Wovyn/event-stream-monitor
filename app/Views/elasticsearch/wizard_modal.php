@@ -75,10 +75,10 @@
                     <h3 class="StepTitle">Step 1</h3>
                     <div class="form-group">
                         <label class="control-label" for="region">Region</label>
-                        <select name="region" id="region" class="form-control form-select2" required data-placeholder="Select a Region" style="width: 100%">
+                        <select name="region" id="region" class="form-control form-select2" required data-placeholder="Select a Region" style="width: 100%" <?php echo isset($db_config) ? 'readonly' : '' ?>>
                             <option></option>
                             <?php foreach ($regions as $key => $value): ?>
-                                <option value="<?php echo $key ?>"><?php echo $value ?></option>
+                                <option value="<?php echo $key ?>" <?php echo (isset($db_config) && $db_config->region == $key) ? 'selected="selected"' : '' ?>><?php echo $value ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -94,12 +94,12 @@
                         <legend>Configure Domain</legend>
                         <div class="form-group">
                             <label class="control-label" for="domain_name">Elasticsearch Domain Name</label>
-                            <input type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Elasticsearch Domain Name" data-rule-domain-name required>
+                            <input type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Elasticsearch Domain Name" data-rule-domain-name required value="<?php echo isset($db_config) ? $db_config->domain_name : '' ?>" <?php echo isset($db_config) ? 'readonly' : '' ?>>
                             <p class="help-block">The name must start with a lowercase letter and must be between 3 and 28 characters. Valid characters are a-z (lowercase only), 0-9, and - (hyphen).</p>
                         </div>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="custom_endpoint" id="custom_endpoint" />
+                                <input type="checkbox" value="enable" name="custom_endpoint" id="custom_endpoint" <?php echo (isset($aws_config) && $aws_config['DomainEndpointOptions']['CustomEndpointEnabled']) ? 'checked="checked"' : '' ?> />
                                 Enable custom endpoint
                             </label>
                         </div>
@@ -113,7 +113,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="custom_hostname">Custom hostname</label>
-                                <input type="text" class="form-control" id="custom_hostname" name="custom_hostname" placeholder="example.yourdomain.com" data-rule-valid-url required>
+                                <input type="text" class="form-control" id="custom_hostname" name="custom_hostname" placeholder="example.yourdomain.com" data-rule-valid-url required value="<?php echo (isset($aws_config) && $aws_config['DomainEndpointOptions']['CustomEndpointEnabled']) ? $aws_config['DomainEndpointOptions']['CustomEndpoint'] : '' ?>">
                             </div>
                         </div>
                     </fieldset>
