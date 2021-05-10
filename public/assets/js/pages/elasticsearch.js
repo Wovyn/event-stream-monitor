@@ -11,48 +11,33 @@ var Elasticsearch = function() {
                 let aws_account = $('#aws_account', form).val(),
                     region = $('#region option:selected', form).val(),
                     domain_name = $('#domain_name', form).val(),
-                    ip_address = $('#ip_address', form).val()
+                    ip_address = $('#ip_address', form).val(),
+                    default_policy = {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Principal": {
+                                    "AWS": "*"
+                                },
+                                "Action": [
+                                    "es:*"
+                                ],
+                                "Resource": 'arn:aws:es:' + region + ':' + aws_account + ':domain/' + domain_name + '/*',
+                            }
+                        ]
+                    },
+                    policy = {... default_policy};
 
                 if(!$('#allow_open_access', form).is(':checked')) {
-                    editor.setValue(JSON.stringify({
-                        "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Effect": "Allow",
-                                    "Principal": {
-                                        "AWS": "*"
-                                    },
-                                    "Action": [
-                                        "es:*"
-                                    ],
-                                    "Resource": 'arn:aws:es:' + region + ':' + aws_account + ':domain/' + domain_name + '/*',
-                                    "Condition": {
-                                        "IpAddress": {
-                                            "aws:SourceIp": ip_address
-                                        }
-                                    }
-                                }
-                            ]
-                        }, null, 2)
-                    );
-                } else {
-                    editor.setValue(JSON.stringify({
-                        "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Effect": "Allow",
-                                    "Principal": {
-                                        "AWS": "*"
-                                    },
-                                    "Action": [
-                                        "es:*"
-                                    ],
-                                    "Resource": 'arn:aws:es:' + region + ':' + aws_account + ':domain/' + domain_name + '/*',
-                                }
-                            ]
-                        }, null, 2)
-                    );
+                    policy.Statement[0].Condition = {
+                            "IpAddress": {
+                                "aws:SourceIp": ip_address
+                            }
+                        };
                 }
+
+                editor.setValue(JSON.stringify(policy, null, 2));
             }
 
             wizard.smartWizard({
