@@ -504,7 +504,7 @@
                 <div class="col-md-6">
                     <fieldset>
                         <legend>Access policy</legend>
-                        <div id="allow_open_access_container" class="form-group" style="display: none">
+                        <div id="allow_open_access_container" class="form-group" <?php echo (isset($aws_config) && $aws_config['AdvancedSecurityOptions']['Enabled']) ? '' : 'style="display: none"' ?>>
                             <label class="checkbox">
                                 <input type="checkbox" value="enable" name="allow_open_access" id="allow_open_access" />
                                 Allow open access to the domain
@@ -513,7 +513,7 @@
                         <div class="form-group">
                             <!-- <label class="control-label" for="access_policy">JSON defined access policy</label> -->
                             <div id="access_policy_json" style="height: 300px"></div>
-                            <input type="hidden" id="access_policy" name="access_policy">
+                            <input type="hidden" id="access_policy" name="access_policy" value="<?php echo isset($aws_config) ? $aws_config['AccessPolicies'] : '' ?>">
                             <input type="hidden" id="aws_account" value="<?php echo $aws_account ?>">
                             <input type="hidden" id="ip_address">
                         </div>
