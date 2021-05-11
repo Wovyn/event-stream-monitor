@@ -95,7 +95,7 @@ class ElasticSearch extends BaseController
                     ]);
 
                     if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
-                        $settings['Endpoint'] = $describe['response']['DomainStatus']['Endpoint'];
+                        $settings->Endpoint = $describe['response']['DomainStatus']['Endpoint'];
 
                         $this->elasticsearchModel
                             ->update($domain->id, [
