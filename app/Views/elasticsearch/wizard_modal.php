@@ -463,7 +463,7 @@
                             <div id="create_master_user_fields">
                                 <div class="form-group">
                                     <label class="control-label" for="master_username">Master username</label>
-                                    <input type="text" class="form-control" id="master_username" name="master_username" placeholder="Master username" data-rule-minlength="1" data-rule-maxlength="16" required <?php echo (isset($aws_config) && $aws_config['AdvancedSecurityOptions']['Enabled']) ? 'value="' . $db_config_settings['MasterUserName'] . '"' : '' ?>>
+                                    <input type="text" class="form-control" id="master_username" name="master_username" placeholder="Master username" data-rule-minlength="1" data-rule-maxlength="16" required <?php echo (isset($aws_config) && $aws_config['AdvancedSecurityOptions']['Enabled']) ? 'value="' . $db_config_settings->MasterUserName . '"' : '' ?>>
                                     <p class="help-block">Must be between 1 and 16 characters.</p>
                                 </div>
                                 <div class="form-group">
