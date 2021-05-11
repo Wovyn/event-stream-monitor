@@ -103,32 +103,32 @@
                                 Enable custom endpoint
                             </label>
                         </div>
-                        <div id="custom_endpoint_container" style="display: none">
+                        <div id="custom_endpoint_container" <?php echo (isset($aws_config) && $aws_config['DomainEndpointOptions']['CustomEndpointEnabled']) ? '' : 'style="display: none"' ?>>
                             <div class="form-group">
                                 <label class="control-label" for="aws_certificate">AWS Certificate</label>
-                                <select name="aws_certificate" id="aws_certificate" class="form-control form-select2" required data-placeholder="Select an AWS Certificate" data-region="" style="width: 100%">
+                                <select name="aws_certificate" id="aws_certificate" class="form-control form-select2" required data-placeholder="Select an AWS Certificate" data-region="<?php echo (isset($db_config) && $db_config->region) ? $db_config->region : '' ?>" style="width: 100%" <?php echo (isset($aws_config) && $aws_config['DomainEndpointOptions']['CustomEndpointEnabled']) ? 'data-selected="' . $aws_config['DomainEndpointOptions']['CustomEndpointCertificateArn'] . '"'  : '' ?>>
                                     <option></option>
                                 </select>
                                 <p class="help-block">Certified Domains on AWS Certificate Manager.</p>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="custom_hostname">Custom hostname</label>
-                                <input type="text" class="form-control" id="custom_hostname" name="custom_hostname" placeholder="example.yourdomain.com" data-rule-valid-url required value="<?php echo (isset($aws_config) && $aws_config['DomainEndpointOptions']['CustomEndpointEnabled']) ? $aws_config['DomainEndpointOptions']['CustomEndpoint'] : '' ?>">
+                                <input type="text" class="form-control" id="custom_hostname" name="custom_hostname" value="<?php echo (isset($aws_config) && $aws_config['DomainEndpointOptions']['CustomEndpointEnabled']) ? $aws_config['DomainEndpointOptions']['CustomEndpoint'] : '' ?>" placeholder="example.yourdomain.com" data-rule-valid-url required>
                             </div>
                         </div>
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset class="hidden">
                         <legend>Auto-Tune</legend>
                         <div class="form-group">
                             <label class="control-label" for="auto_tune">Auto-Tune</label>
                             <label class="radio">
-                                <input type="radio" value="DISABLED" name="auto_tune" />
+                                <input type="radio" value="disabled" name="auto_tune" />
                                 Disable
                                 <p class="help-block">No automated changes to your cluster. Amazon ES will still send occasional recommendations for how to optimize cluster performance.</p>
                             </label>
                             <label class="radio">
-                                <input type="radio" value="ENABLED" name="auto_tune" checked="checked" />
+                                <input type="radio" value="enabled" name="auto_tune" checked="checked" />
                                 Enable
                                 <p class="help-block">Automatically makes node-level changes that require no downtime, such as tuning queues and cache sizes.</p>
                             </label>
@@ -150,20 +150,20 @@
                             <label class="control-label" for="availability_zones">Availability Zones</label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="3" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="3" name="availability_zones" class="availability_zones" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['ZoneAwarenessEnabled'] && $aws_config['ElasticsearchClusterConfig']['ZoneAwarenessConfig']['AvailabilityZoneCount'] == 3) ? 'checked="checked"' : '' ?> />
                                     3-AZ (Recommended for production workloads with higher availability requirements)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" />
+                                    <input type="radio" value="2" name="availability_zones" class="availability_zones" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['ZoneAwarenessEnabled'] && $aws_config['ElasticsearchClusterConfig']['ZoneAwarenessConfig']['AvailabilityZoneCount'] == 2) ? 'checked="checked"' : '' ?> />
                                     2-AZ (Suitable for production workloads)
                                 </label>
                             </div>
 
                             <div class="radio">
                                 <label>
-                                    <input type="radio" value="1" name="availability_zones" class="availability_zones" checked="checked" />
+                                    <input type="radio" value="1" name="availability_zones" class="availability_zones" <?php echo isset($aws_config) ? '' : 'checked="checked"' ?> <?php echo (isset($aws_config) && !$aws_config['ElasticsearchClusterConfig']['ZoneAwarenessEnabled']) ? 'checked="checked"' : '' ?> />
                                     1-AZ (Suitable for non-critical workloads)
                                 </label>
                             </div>
@@ -171,7 +171,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="instance_type">Instance type</label>
-                            <select name="instance_type" id="instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
+                            <select name="instance_type" id="instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%" <?php echo isset($aws_config) ? 'data-selected="' . $aws_config['ElasticsearchClusterConfig']['InstanceType'] . '"' : '' ?>>
                                 <option></option>
                                 <optgroup label="C4 (Compute optimized)">
                                     <option value="c4.large.elasticsearch">c4.large.elasticsearch</option>
