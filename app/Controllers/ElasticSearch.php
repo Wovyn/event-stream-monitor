@@ -86,6 +86,8 @@ class ElasticSearch extends BaseController
     public function sync() {
         $domains = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
         foreach ($domains as $domain) {
+            $settings = json_decode($domain->settings);
+
             switch ($domain->status) {
                 case 'loading':
                     $describe = $this->elasticsearch->DescribeElasticsearchDomain([
@@ -93,12 +95,12 @@ class ElasticSearch extends BaseController
                     ]);
 
                     if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
+                        $settings['Endpoint'] = $describe['response']['DomainStatus']['Endpoint'];
+
                         $this->elasticsearchModel
                             ->update($domain->id, [
                                 'status' => 'active',
-                                'settings' => json_encode([
-                                    'Endpoint' => $describe['response']['DomainStatus']['Endpoint'],
-                                ])
+                                'settings' => json_encode($settings)
                             ]);
                     }
 
@@ -116,6 +118,7 @@ class ElasticSearch extends BaseController
     public function add() {
         if($_POST) {
             // compile create elasticsearch domain request
+            $settings = [];
             $request = [
                 'ElasticsearchVersion' => '7.10',
                 'DomainName' => $_POST['domain_name'],
@@ -182,6 +185,9 @@ class ElasticSearch extends BaseController
                     'MasterUserName' => $_POST['master_username'],
                     'MasterUserPassword' => $_POST['master_password']
                 ];
+
+                $settings['MasterUserName'] = $_POST['master_username'];
+                // $settings['MasterUserPassword'] = $_POST['master_password'];
             }
 
             $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);
@@ -204,7 +210,8 @@ class ElasticSearch extends BaseController
                     'user_id' => $this->data['user']->id,
                     'region' => $_POST['region'],
                     'domain_name' => $_POST['domain_name'],
-                    'status' => 'loading'
+                    'status' => 'loading',
+                    'settings' => json_encode($settings)
                 ]);
             }
 
@@ -228,6 +235,7 @@ class ElasticSearch extends BaseController
         ]);
 
         $data['db_config'] = $domain;
+        $data['db_config_settings'] = json_decode($domain->settings);
         $data['aws_config'] = $result['DescribeElasticsearchDomain']['response']['DomainStatus'];
         $data['aws_account'] = $this->keys->aws_account;
         $data['regions'] = GetAwsRegions($this->keys);

@@ -123,12 +123,12 @@
                         <div class="form-group">
                             <label class="control-label" for="auto_tune">Auto-Tune</label>
                             <label class="radio">
-                                <input type="radio" value="disabled" name="auto_tune" />
+                                <input type="radio" value="DISABLED" name="auto_tune" />
                                 Disable
                                 <p class="help-block">No automated changes to your cluster. Amazon ES will still send occasional recommendations for how to optimize cluster performance.</p>
                             </label>
                             <label class="radio">
-                                <input type="radio" value="enabled" name="auto_tune" checked="checked" />
+                                <input type="radio" value="ENABLED" name="auto_tune" checked="checked" />
                                 Enable
                                 <p class="help-block">Automatically makes node-level changes that require no downtime, such as tuning queues and cache sizes.</p>
                             </label>
@@ -445,11 +445,11 @@
                         <legend>Fine-grained access control</legend>
                         <div class="form-group">
                             <label class="checkbox" for="fine_grain_access_control">
-                                <input type="checkbox" value="enable" name="fine_grain_access_control" id="fine_grain_access_control" />
+                                <input type="checkbox" value="enable" name="fine_grain_access_control" id="fine_grain_access_control" <?php echo (isset($aws_config) && $aws_config['AdvancedSecurityOptions']['Enabled']) ? 'checked="checked"' : '' ?> />
                                 Enable fine-grained access control
                             </label>
                         </div>
-                        <div id="fine_grain_options_container" style="display: none">
+                        <div id="fine_grain_options_container" <?php echo (isset($aws_config) && $aws_config['AdvancedSecurityOptions']['Enabled']) ? '' : 'style="display: none"' ?>>
                             <div class="form-group">
                                 <div class="radio">
                                     <label>
@@ -463,12 +463,12 @@
                             <div id="create_master_user_fields">
                                 <div class="form-group">
                                     <label class="control-label" for="master_username">Master username</label>
-                                    <input type="text" class="form-control" id="master_username" name="master_username" placeholder="Master username" data-rule-minlength="1" data-rule-maxlength="16" required>
+                                    <input type="text" class="form-control" id="master_username" name="master_username" placeholder="Master username" data-rule-minlength="1" data-rule-maxlength="16" required <?php echo (isset($aws_config) && $aws_config['AdvancedSecurityOptions']['Enabled']) ? 'value="' . $db_config_settings['MasterUserName'] . '"' : '' ?>>
                                     <p class="help-block">Must be between 1 and 16 characters.</p>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="master_password">Master password</label>
-                                    <input type="password" class="form-control" id="master_password" name="master_password" placeholder="Master password" data-rule-minlength="8" data-rule-passwordExt required>
+                                    <input type="password" class="form-control" id="master_password" name="master_password" placeholder="Master password" data-rule-minlength="8" data-rule-passwordExt <?php echo (isset($aws_config) && $aws_config['AdvancedSecurityOptions']['Enabled']) ? '' : 'required' ?> >
                                     <p class="help-block">Must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
                                 </div>
                                 <div class="form-group">
@@ -483,19 +483,19 @@
                         <legend>Encryption</legend>
                         <div class="form-group">
                             <label class="checkbox" for="require_https">
-                                <input type="checkbox" value="enable" name="require_https" id="require_https" checked="checked" />
+                                <input type="checkbox" value="enable" name="require_https" id="require_https" <?php echo !isset($aws_config) ? 'checked="checked"' : '' ?> <?php echo isset($aws_config) && $aws_config['DomainEndpointOptions']['EnforceHTTPS'] ? 'checked="checked"' : '' ?> />
                                 Require HTTPS for all traffic to the domain
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="checkbox" for="note_to_node_encryption">
-                                <input type="checkbox" value="enable" name="note_to_node_encryption" id="note_to_node_encryption" />
+                                <input type="checkbox" value="enable" name="note_to_node_encryption" id="note_to_node_encryption" <?php echo isset($aws_config) && $aws_config['NodeToNodeEncryptionOptions']['Enabled'] ? 'checked="checked"' : '' ?> />
                                 Node-to-node encryption
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="checkbox" for="enable_encryption_of_data_at_rest">
-                                <input type="checkbox" value="enable" name="enable_encryption_of_data_at_rest" id="enable_encryption_of_data_at_rest" />
+                                <input type="checkbox" value="enable" name="enable_encryption_of_data_at_rest" id="enable_encryption_of_data_at_rest" <?php echo isset($aws_config) && $aws_config['EncryptionAtRestOptions']['Enabled'] ? 'checked="checked"' : '' ?> />
                                 Enable encryption of data at rest
                             </label>
                         </div>
