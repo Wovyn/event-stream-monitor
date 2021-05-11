@@ -28,6 +28,8 @@ class Elasticsearch extends Aws {
 
     public function CreateElasticsearchDomain($args = []) {
         $result['error'] = false;
+        $result['args'] = $args;
+
         try {
             $result['response'] = $this->elasticsearch->createElasticsearchDomain($args);
         } catch (ElasticsearchServiceException $e) {
@@ -63,6 +65,20 @@ class Elasticsearch extends Aws {
             $result['message'] = $e->getAwsErrorMessage();
 
             log_message('debug', 'DescribeElasticsearchDomain: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    public function DescribeElasticsearchDomainConfig($args = []) {
+        $result['error'] = false;
+        try {
+            $result['response'] = $this->elasticsearch->describeElasticsearchDomainConfig($args);
+        } catch (ElasticsearchServiceException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'DescribeElasticsearchDomainConfig: ' . $e->getMessage());
         }
 
         return $result;

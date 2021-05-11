@@ -254,7 +254,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="number_of_nodes">Number of nodes</label>
-                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="1" required data-rule-multiple-of="1">
+                            <input type="number" class="form-control" id="number_of_nodes" name="number_of_nodes" placeholder="Number of nodes" value="<?php echo isset($aws_config) ? $aws_config['ElasticsearchClusterConfig']['InstanceCount'] : '1' ?>" required data-rule-multiple-of="<?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['ZoneAwarenessEnabled']) ? $aws_config['ElasticsearchClusterConfig']['ZoneAwarenessConfig']['AvailabilityZoneCount'] : '1' ?>" >
                             <p class="help-block">For three Availability Zones, we recommend instances in multiples of three for equal distribution across the Availability Zones.</p>
                         </div>
                     </fieldset>
@@ -268,7 +268,7 @@
                         -->
                         <div class="form-group">
                             <label class="control-label" for="ebs_volume_type">EBS Volume type</label>
-                            <select name="ebs_volume_type" id="ebs_volume_type" class="form-control form-select2" required data-placeholder="Select an EBS volume type" style="width: 100%">
+                            <select name="ebs_volume_type" id="ebs_volume_type" class="form-control form-select2" required data-placeholder="Select an EBS volume type" style="width: 100%" <?php echo isset($aws_config) ? 'data-selected="' . $aws_config['EBSOptions']['VolumeType'] . '"' : '' ?>>
                                 <option></option>
                                 <option value="gp2" selected="selected">General Purpose (SSD)</option>
                                 <option value="io1">Provisioned IOPS (SSD)</option>
@@ -277,10 +277,10 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="ebs_storage_size_per_node">EBS storage size per node</label>
-                            <input type="number" class="form-control" id="ebs_storage_size_per_node" name="ebs_storage_size_per_node" placeholder="EBS storage size per node" value="10" required data-rule-min="10" data-rule-max="1024">
+                            <input type="number" class="form-control" id="ebs_storage_size_per_node" name="ebs_storage_size_per_node" placeholder="EBS storage size per node" value="<?php echo isset($aws_config) ? $aws_config['EBSOptions']['VolumeSize'] : '10' ?>" required data-rule-min="10" data-rule-max="1024">
                             <p class="help-block">Total cluster size is EBS volume size x Instance count.</p>
                         </div>
-                        <div id="provisioned-iops-field" class="form-group" style="display: none;">
+                        <div id="provisioned-iops-field" class="form-group" <?php echo (isset($aws_config) && $aws_config['EBSOptions']['VolumeType'] == 'io1') ? '' : 'style="display: none"'?>>
                             <label class="control-label" for="provisioned_iops">Provisioned IOPS</label>
                             <input type="number" class="form-control" id="provisioned_iops" name="provisioned_iops" placeholder="Provisioned IOPS" value="1000" required data-rule-min="1000" data-rule-max="16000">
                             <p class="help-block">The provisioned IOPS value must be an integer between 1000 and 16000.</p>
@@ -292,14 +292,14 @@
                         <legend>Dedicated master nodes</legend>
                         <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" value="enable" name="dedicated_master_nodes" id="dedicated_master_nodes" />
+                                <input type="checkbox" value="enable" name="dedicated_master_nodes" id="dedicated_master_nodes" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['DedicatedMasterEnabled']) ? 'checked="checked"' : '' ?>/>
                                 Enable Dedicated master nodes
                             </label>
                         </div>
-                        <div id="dedicated_container" style="display: none">
+                        <div id="dedicated_container" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['DedicatedMasterEnabled']) ? '' : 'style="display: none"' ?>>
                             <div class="form-group">
                                 <label class="control-label" for="dedicated_master_node_instance_type">Instance type</label>
-                                <select name="dedicated_master_node_instance_type" id="dedicated_master_node_instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
+                                <select name="dedicated_master_node_instance_type" id="dedicated_master_node_instance_type" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['DedicatedMasterEnabled']) ? 'data-selected="' . $aws_config['ElasticsearchClusterConfig']['DedicatedMasterType'] . '"' : '' ?>>
                                     <option></option>
                                     <optgroup label="C4 (Compute optimized)">
                                         <option value="c4.large.elasticsearch">c4.large.elasticsearch</option>
@@ -382,7 +382,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="dedicated_master_node_number_of_nodes">Number of nodes</label>
-                                <select name="dedicated_master_node_number_of_nodes" id="dedicated_master_node_number_of_nodes" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%">
+                                <select name="dedicated_master_node_number_of_nodes" id="dedicated_master_node_number_of_nodes" class="form-control form-select2" required data-placeholder="Select an Instance type" style="width: 100%" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['DedicatedMasterEnabled']) ? 'data-selected="' . $aws_config['ElasticsearchClusterConfig']['DedicatedMasterCount'] . '"' : '' ?>>
                                     <option value="3" selected="selected">3</option>
                                     <option value="5">5</option>
                                 </select>
@@ -392,14 +392,14 @@
                                 <legend>UltraWarm data nodes</legend>
                                 <div class="form-group">
                                     <label class="checkbox">
-                                        <input type="checkbox" value="enable" name="ultrawarm_data_node" id="ultrawarm_data_node" />
+                                        <input type="checkbox" value="enable" name="ultrawarm_data_node" id="ultrawarm_data_node" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['WarmEnabled']) ? 'checked="checked"' : '' ?> />
                                         Enable UltraWarm data nodes
                                     </label>
                                 </div>
-                                <div id="ulrawarm_container" style="display: none">
+                                <div id="ulrawarm_container" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['WarmEnabled']) ? '' : 'style="display: none"' ?>>
                                     <div class="form-group">
                                         <label class="control-label" for="ultrawarm_instance_type">Instance type</label>
-                                        <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%">
+                                        <select name="ultrawarm_instance_type" id="ultrawarm_instance_type" class="form-control form-select2" required data-placeholder="Select an UltraWarm Instance type" style="width: 100%" <?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['DedicatedMasterEnabled']) ? 'data-selected="' . $aws_config['ElasticsearchClusterConfig']['WarmType'] . '"' : '' ?>>
                                             <option></option>
                                             <option value="ultrawarm1.medium.elasticsearch" selected="selected">ultrawarm1.medium.elasticsearch</option>
                                             <option value="ultrawarm1.large.elasticsearch">ultrawarm1.large.elasticsearch</option>
@@ -407,7 +407,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label" for="number_of_warm_data_nodes">Number of warm data nodes</label>
-                                        <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="2" data-rule-min="2" required>
+                                        <input type="number" class="form-control" id="number_of_warm_data_nodes" name="number_of_warm_data_nodes" placeholder="Number of nodes" value="<?php echo (isset($aws_config) && $aws_config['ElasticsearchClusterConfig']['WarmEnabled']) ? $aws_config['ElasticsearchClusterConfig']['WarmCount'] : '2' ?>" data-rule-min="2" required>
                                         <p class="help-block">UltraWarm requires a minimum of two warm nodes.</p>
                                     </div>
                                 </div>

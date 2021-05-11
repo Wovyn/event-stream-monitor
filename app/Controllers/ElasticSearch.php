@@ -285,6 +285,14 @@ class ElasticSearch extends BaseController
         echo '<pre>' , var_dump($result['response']['DomainStatus']) , '</pre>';
     }
 
+    public function DescribeElasticsearchDomainConfig($domain) {
+        $result = $this->elasticsearch->DescribeElasticsearchDomainConfig([
+            'DomainName' => $domain
+        ]);
+
+        echo '<pre>' , var_dump($result['response']['DomainConfig']) , '</pre>';
+    }
+
     public function ListCertificates() {
         $this->acm->setRegion('us-east-2');
         $result = $this->acm->listCertificates();
