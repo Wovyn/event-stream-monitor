@@ -70,7 +70,7 @@ var Elasticsearch = function() {
                 var valueNow = Math.floor(100 / numberOfSteps * (step + 1));
                 $('.step-bar').css('width', valueNow + '%');
             },
-            initElements(form) {
+            initElements: function(form) {
                 // html class fix
                 $('.toolbar', wizard).addClass('modal-footer');
 
@@ -357,7 +357,6 @@ var Elasticsearch = function() {
             generateSummary: function(form) {
                 // console.log(form.serializeArray());
                 let formValues = form.serializeArray(),
-                    summary = '',
                     fieldTemplate = _.template('<div class="form-group">' +
                         '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
                         '<p class="form-control-static display-value"><%= value %></p>' +
@@ -490,8 +489,6 @@ var Elasticsearch = function() {
                         }
                     }
                 });
-
-                $('.summary', form).append(summary);
             }
         };
     }();

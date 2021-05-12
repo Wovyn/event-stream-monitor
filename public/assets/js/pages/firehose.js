@@ -3,167 +3,153 @@ var Firehose = function() {
     var FormWizard = function() {
         let wizard, wizardForm, lastStep;
 
-        var initWizard = function(form) {
-            wizard = $('#smartwizard', form);
-            lastStep = $('.nav li', wizard).length - 1;
-
-            wizard.smartWizard({
-                selected: 0,
-                justified: true,
-                enableURLhash: false,
-                autoAdjustHeight: false,
-                keyboardSettings: { keyNavigation: false },
-                toolbarSettings: {
-                    toolbarExtraButtons: [
-                        $('<button type="button" class="btn btn-finish btn-success hidden">Create Delivery Stream</button>')
-                            .on('click', function() {
-                                let $btn = $(this);
-
-                                $btn.addClass('disabled');
-
-                                Swal.fire({
-                                    title: 'Creating Delivery Stream',
-                                    allowOutsideClick: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
-
-                                        $.ajax({
-                                            url: '/firehose/add',
-                                            method: 'POST',
-                                            data: form.serialize(),
-                                            dataType: 'json',
-                                            success: function(response) {
-                                                Swal.fire({
-                                                    icon: response.error !== true ? 'success' : 'error',
-                                                    text: response.message
-                                                });
-
-                                                if(!response.error) {
-                                                    appModal.modal('hide');
-                                                    $dtTables['firehose-table'].ajax.reload();
-                                                } else {
-                                                    $btn.removeClass('disabled');
-                                                    console.log(response);
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            })
-                    ]
-                }
-            });
-
-            // html class fix
-            $('.toolbar', wizard).addClass('modal-footer');
-
-            // on leaveStep
-            wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
-                // validate current step
-                if(!form.valid()) {
-                    return false;
-                }
-
-                // set prev button hidden on first step
-                if(nextStepIndex == 0) {
-                    $('.sw-btn-prev', form).addClass('hidden');
-                } else {
-                    $('.sw-btn-prev', form).removeClass('hidden');
-                }
-
-                // show/hide create data stream btn and next button
-                if(nextStepIndex == lastStep) {
-                    generateSummary(form);
-
-                    $('.sw-btn-next', form).addClass('hidden');
-                    $('.btn-finish', form).removeClass('hidden');
-                } else {
-                    $('.sw-btn-next', form).removeClass('hidden');
-                    $('.btn-finish', form).addClass('hidden');
-                }
-
-                animateBar(nextStepIndex);
-            });
-
-            // on showStep
-            wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
-                appModal.modal('layout');
-            });
-
-            // initialize animateBar
-            animateBar();
-
-            // set prev button hidden on first step
-            $('.sw-btn-prev', form).addClass('hidden');
-
-            // init elements
-            $('.form-select2', form).select2()
-                .on('select2:select', function (e) {
-                    if($(this).val()) {
-                        $(this)
-                            .closest('.form-group')
-                                .removeClass('has-error')
-                                .addClass('has-success')
-                            .find('.symbol')
-                                .removeClass('required')
-                                .addClass('ok');
-                    }
-                });
-        }
-
-        var animateBar = function(step) {
-            if (_.isUndefined(step)) {
-                step = 0;
-            };
-
-            numberOfSteps = $('.swMain > .nav > li').length;
-            var valueNow = Math.floor(100 / numberOfSteps * (step + 1));
-            $('.step-bar').css('width', valueNow + '%');
-        };
-
-        var generateSummary = function(form) {
-            let summaryEl = $('.summary', form),
-                formValues = form.serializeArray(),
-                summary = '',
-                fieldTemplate = _.template('<div class="form-group">' +
-                    '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
-                    '<p class="form-control-static display-value"><%= value %></p>' +
-                    '</div>');
-
-            summaryEl.empty();
-
-            _.forEach(formValues, function(data) {
-
-                switch(data.name) {
-                    case 'region':
-                        data.value = $('#region option:selected', form).html() + ' | ' + data.value;
-
-                        break;
-                }
-
-                summary += fieldTemplate({
-                    name: _.startCase(data.name),
-                    value: data.value
-                });
-            });
-
-            summaryEl.append(summary);
-        }
-
         return {
             init: function(form) {
-                initWizard(form);
+                wizard = $('#smartwizard', form);
+                lastStep = $('.nav li', wizard).length - 1;
 
-                $('#shards', form).on('change keyup', function() {
-                    let shards = $(this).val(),
-                        writeMiB = shards * 1,
-                        writeData = shards * 1000,
-                        readMiB = shards * 2;
+                wizard.smartWizard({
+                    selected: 0,
+                    justified: true,
+                    enableURLhash: false,
+                    autoAdjustHeight: false,
+                    keyboardSettings: { keyNavigation: false },
+                    toolbarSettings: {
+                        toolbarExtraButtons: [
+                            $('<button type="button" class="btn btn-finish btn-success hidden">Create Delivery Stream</button>')
+                                .on('click', function() {
+                                    let $btn = $(this);
 
-                    $('.write-calculated-mib', form).html(writeMiB);
-                    $('.write-calculated-data', form).html(writeData);
-                    $('.read-calculated-mib', form).html(readMiB);
+                                    $btn.addClass('disabled');
+
+                                    Swal.fire({
+                                        title: 'Creating Delivery Stream',
+                                        allowOutsideClick: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+
+                                            $.ajax({
+                                                url: '/firehose/add',
+                                                method: 'POST',
+                                                data: form.serialize(),
+                                                dataType: 'json',
+                                                success: function(response) {
+                                                    Swal.fire({
+                                                        icon: response.error !== true ? 'success' : 'error',
+                                                        text: response.message
+                                                    });
+
+                                                    if(!response.error) {
+                                                        appModal.modal('hide');
+                                                        $dtTables['firehose-table'].ajax.reload();
+                                                    } else {
+                                                        $btn.removeClass('disabled');
+                                                        console.log(response);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                })
+                        ]
+                    }
                 });
+
+                FormWizard.initElements(form);
+            },
+            animateBar: function(step) {
+                if (_.isUndefined(step)) {
+                    step = 0;
+                };
+
+                numberOfSteps = $('.swMain > .nav > li').length;
+                var valueNow = Math.floor(100 / numberOfSteps * (step + 1));
+                $('.step-bar').css('width', valueNow + '%');
+            },
+            initElements: function(form) {
+                // html class fix
+                $('.toolbar', wizard).addClass('modal-footer');
+
+                // on leaveStep
+                wizard.on('leaveStep', function(e, anchorObject, currentStepIndex, nextStepIndex, stepDirection) {
+                    // validate current step
+                    if(!form.valid()) {
+                        return false;
+                    }
+
+                    // set prev button hidden on first step
+                    if(nextStepIndex == 0) {
+                        $('.sw-btn-prev', form).addClass('hidden');
+                    } else {
+                        $('.sw-btn-prev', form).removeClass('hidden');
+                    }
+
+                    // show/hide create data stream btn and next button
+                    if(nextStepIndex == lastStep) {
+                        FormWizard.generateSummary(form);
+
+                        $('.sw-btn-next', form).addClass('hidden');
+                        $('.btn-finish', form).removeClass('hidden');
+                    } else {
+                        $('.sw-btn-next', form).removeClass('hidden');
+                        $('.btn-finish', form).addClass('hidden');
+                    }
+
+                    FormWizard.animateBar(nextStepIndex);
+                });
+
+                // on showStep
+                wizard.on('showStep', function(e, anchorObject, stepIndex, stepDirection) {
+                    appModal.modal('layout');
+                });
+
+                // initialize animateBar
+                FormWizard.animateBar();
+
+                // set prev button hidden on first step
+                $('.sw-btn-prev', form).addClass('hidden');
+
+                // init elements
+                $('.form-select2', form).select2()
+                    .on('select2:select', function (e) {
+                        if($(this).val()) {
+                            $(this)
+                                .closest('.form-group')
+                                    .removeClass('has-error')
+                                    .addClass('has-success')
+                                .find('.symbol')
+                                    .removeClass('required')
+                                    .addClass('ok');
+                        }
+                    });
+            },
+            generateSummary: function(form) {
+                let summaryEl = $('.summary', form),
+                    formValues = form.serializeArray(),
+                    summary = '',
+                    fieldTemplate = _.template('<div class="form-group">' +
+                        '<label class="control-label text-capitalize text-bold"><%= name %>:</label>' +
+                        '<p class="form-control-static display-value"><%= value %></p>' +
+                        '</div>');
+
+                summaryEl.empty();
+
+                _.forEach(formValues, function(data) {
+
+                    switch(data.name) {
+                        case 'region':
+                            data.value = $('#region option:selected', form).html() + ' | ' + data.value;
+
+                            break;
+                    }
+
+                    summary += fieldTemplate({
+                        name: _.startCase(data.name),
+                        value: data.value
+                    });
+                });
+
+                summaryEl.append(summary);
             }
         };
     }();
@@ -277,7 +263,7 @@ var Firehose = function() {
             });
 
             App.validationSetDefault();
-            // handleAdd();
+            handleAdd();
             // handleDelete();
             // handleView();
         }
