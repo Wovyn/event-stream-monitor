@@ -561,7 +561,7 @@ var App = function () {
                         checkuser.twilio();
                     }
 
-                    if($.inArray(window.location.pathname, ['/kinesis', '/elasticsearch']) > -1) {
+                    if($.inArray(window.location.pathname, ['/kinesis', '/elasticsearch', '/firehose']) > -1) {
                         checkuser.aws();
                     }
                 }
@@ -575,7 +575,7 @@ var App = function () {
             }
         }
 
-        if($.inArray(window.location.pathname, ['/kinesis', '/elasticsearch']) > -1) {
+        if($.inArray(window.location.pathname, ['/kinesis', '/elasticsearch', '/firehose']) > -1) {
             // check if user has updated defaults and has aws keys
             if(!_.isNull(window.localStorage.getItem('HasUpdatedDefaults')) && _.isNull(window.localStorage.getItem('HasAwsKeys'))) {
                 checkuser.aws();

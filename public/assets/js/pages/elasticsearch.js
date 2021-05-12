@@ -318,6 +318,8 @@ var Elasticsearch = function() {
                             $(element).trigger('change');
                         }
                     });
+
+                    editor.setValue(JSON.stringify($('#access_policy', form).val(), null, 2));
                 }
             },
             updatePolicy: function(form) {
