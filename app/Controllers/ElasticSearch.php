@@ -86,7 +86,7 @@ class ElasticSearch extends BaseController
     public function sync() {
         $domains = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
         foreach ($domains as $domain) {
-            $settings = json_decode($domain->settings);
+            $settings = json_decode($domain->settings, true);
 
             switch ($domain->status) {
                 case 'loading':
@@ -95,7 +95,7 @@ class ElasticSearch extends BaseController
                     ]);
 
                     if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
-                        $settings->Endpoint = $describe['response']['DomainStatus']['Endpoint'];
+                        $settings['Endpoint'] = $describe['response']['DomainStatus']['Endpoint'];
 
                         $this->elasticsearchModel
                             ->update($domain->id, [
@@ -235,7 +235,7 @@ class ElasticSearch extends BaseController
         ]);
 
         $data['db_config'] = $domain;
-        $data['db_config_settings'] = json_decode($domain->settings);
+        $data['db_config_settings'] = json_decode($domain->settings, true);
         $data['aws_config'] = $result['DescribeElasticsearchDomain']['response']['DomainStatus'];
         $data['aws_account'] = $this->keys->aws_account;
         $data['regions'] = GetAwsRegions($this->keys);

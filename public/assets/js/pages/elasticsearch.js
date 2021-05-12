@@ -1,10 +1,12 @@
 var Elasticsearch = function() {
     var appModal,
         FormWizard = function() {
-        let wizard, wizardForm, lastStep, editor;
+        let wizard, wizardForm, lastStep, editor, mode;
 
         return {
-            init: function(form, mode = null) {
+            init: function(form, submitUrl, action) {
+                mode = action;
+
                 wizard = $('#smartwizard', form);
                 lastStep = $('.nav li', wizard).length - 1;
 
@@ -25,13 +27,13 @@ var Elasticsearch = function() {
                                     $btn.addClass('disabled');
 
                                     Swal.fire({
-                                        title: 'Creating Elasticsearch',
+                                        title: (mode == 'create' ? 'Creating Elasticsearch' : 'Updating Elasticsearch'),
                                         allowOutsideClick: false,
                                         didOpen: () => {
                                             Swal.showLoading();
 
                                             $.ajax({
-                                                url: '/elasticsearch/add',
+                                                url: submitUrl,
                                                 method: 'POST',
                                                 data: form.serialize(),
                                                 dataType: 'json',
@@ -164,7 +166,7 @@ var Elasticsearch = function() {
                 // set prev button hidden on first step
                 $('.sw-btn-prev', form).addClass('hidden');
 
-                // init elements
+                // init select2 elements
                 $('.form-select2', form).select2()
                     .on('select2:select', function (e) {
                         if($(this).val()) {
@@ -281,7 +283,42 @@ var Elasticsearch = function() {
                 // init allow open access
                 $('#allow_open_access', form).on('click', function() {
                     FormWizard.updatePolicy();
-                })
+                });
+
+                if(mode == 'update') {
+                    // update options
+                    fetch('/elasticsearch/certificates/' + $('#region option:selected', form).val())
+                        .then(response => response.json())
+                        .then(data => {
+                            let options = [];
+
+                            if(data.certificates.length) {
+                                _.forEach(data.certificates, function(certificate, key) {
+                                    options.push({ id: certificate.CertificateArn, text: certificate.DomainName, selected: false });
+                                });
+                            }
+
+                            // update options
+                            $('#aws_certificate', form).select2({
+                                placeholder: 'Select an AWS Certificate',
+                                data: options
+                            });
+
+                            $('#aws_certificate', form).parent().removeClass('loading');
+
+                            $('#aws_certificate', form).val($('#aws_certificate', form).data('selected'));
+                            $('#aws_certificate', form).trigger('change');
+                        });
+
+                    _.forEach($('.form-select2', form), function(element, key) {
+                        let selected = element.data('selected');
+
+                        if(!_.isEmpty(selected)) {
+                            element.val(selected);
+                            element.trigger('change');
+                        }
+                    });
+                }
             },
             updatePolicy: function(form) {
                 let aws_account = $('#aws_account', form).val(),
@@ -486,7 +523,7 @@ var Elasticsearch = function() {
                     // end loading phase
                     Swal.close();
 
-                    FormWizard.init(form, 'create');
+                    FormWizard.init(form, $btn.attr('href'), 'create');
                 },
                 width: '1060',
                 footer: false,
@@ -523,7 +560,7 @@ var Elasticsearch = function() {
                     // end loading phase
                     Swal.close();
 
-                    FormWizard.init(form, 'update');
+                    FormWizard.init(form, $btn.attr('href'), 'update');
                 },
                 width: '1060',
                 footer: false,
