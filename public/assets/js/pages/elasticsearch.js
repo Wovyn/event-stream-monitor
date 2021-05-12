@@ -310,12 +310,12 @@ var Elasticsearch = function() {
                             $('#aws_certificate', form).trigger('change');
                         });
 
-                    _.forEach($('.form-select2', form), function(element, key) {
-                        let selected = element.data('selected');
+                    _.forEach($('.form-select2'), function(element, key) {
+                        let selected = $(element).data('selected');
 
                         if(!_.isEmpty(selected)) {
-                            element.val(selected);
-                            element.trigger('change');
+                            $(element).val(selected);
+                            $(element).trigger('change');
                         }
                     });
                 }
