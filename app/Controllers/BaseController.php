@@ -26,7 +26,7 @@ class BaseController extends Controller
 	 *
 	 * @var array
 	 */
-	protected $helpers = ['form', 'url', 'aws'];
+	protected $helpers = ['form', 'url', 'aws', 'hx'];
 
 	/**
 	 * IonAuth library

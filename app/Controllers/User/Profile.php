@@ -160,4 +160,27 @@ class Profile extends \App\Controllers\BaseController
         return $this->response->setJSON(json_encode($result));
     }
 
+    public function news() {
+        $xml = xml2array('http://www.eventstreammonitor.com/feed/atom/?email=' . $this->data['user']->email);
+
+        $result = [];
+        if(strtotime($xml['feed']['updated']) > $this->data['user']->last_news_update) {
+
+            // $update = $this->usersModel->update($this->data['user']->id, [
+            //     'last_news_update' => strtotime($xml['feed']['updated'])
+            // ]);
+
+            foreach ($xml['feed']['entry'] as $entry) {
+                $result[] = [
+                    'title' => $entry['title'],
+                    'link' => $entry['content_attr']['xml:base'],
+                    'published' => $entry['published'],
+                    'content' => $entry['content']
+                ];
+            }
+        }
+
+        return $this->response->setJSON(json_encode($result));
+    }
+
 }
