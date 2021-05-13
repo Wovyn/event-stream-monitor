@@ -29,7 +29,7 @@
                 </ol>
                 <div class="page-header">
                     <div class="toolbar">
-                        <a class="btn btn-primary add-btn" href="/firehose/add">Create Data Delivery Stream</a>
+                        <a class="btn btn-primary add-btn" href="/firehose/add">Create Delivery Stream</a>
                     </div>
 
                     <?php echo view('includes/page_header') ?>

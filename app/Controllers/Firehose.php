@@ -85,7 +85,7 @@ class Firehose extends BaseController
 
     public function add() {
         $data['regions'] = GetAwsRegions($this->keys);
-        return view('kinesis/wizard_modal', $data);
+        return view('firehose/wizard_modal', $data);
     }
 
 }

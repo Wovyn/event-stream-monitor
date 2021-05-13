@@ -79,12 +79,18 @@
                 <div class="col-md-6 col-md-offset-3">
                     <h3 class="StepTitle">Step 2</h3>
                     <div class="form-group">
-                        <label class="control-label" for="name">Data Stream Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Data Stream Name" data-rule-nospace required>
+                        <label class="control-label" for="name">Delivery Stream Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Delivery Stream Name" data-rule-nospace required>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="description">Description</label>
                         <textarea name="description" id="description" class="form-control" cols="30" rows="5" placeholder="Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="kinesis_id">Kinesis Data Stream</label>
+                        <select name="kinesis_id" id="kinesis_id" class="form-control form-select2" required data-placeholder="Select a Kinesis Data Stream" style="width: 100%">
+                            <option></option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -95,20 +101,36 @@
                 <div class="col-md-6 col-md-offset-3">
                     <h3 class="StepTitle">Step 3</h3>
                     <div class="form-group">
-                        <label class="control-label" for="shards">Number of open shards</label>
-                        <input type="number" class="form-control" id="shards" name="shards" placeholder="Number of open shards" value="1" min="1" max="500" required>
-                        <span class="help-block">Minimum: 1, Maximum: 500, Account limit: 500.</span>
+                        <label class="control-label" for="elasticsearch_id">Amazon Elasticsearch</label>
+                        <select name="elasticsearch_id" id="elasticsearch_id" class="form-control form-select2" required data-placeholder="Select a Domain" style="width: 100%">
+                            <option></option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="description">Calculated Rates:</label>
-                        <span class="help-block">Total data stream capacity is calculated based on the number of shards entered above.</span>
-                        <p>
-                            <b>Write</b><br>
-                            <span class="write-calculated-mib">1</span> MiB/second, <span class="write-calculated-data">1000</span> Data records/second
-                            <br><br>
-                            <b>Read</b><br>
-                            <span class="read-calculated-mib">2</span> MiB/second
-                        </p>
+                        <label class="control-label" for="index">Index</label>
+                        <input type="text" class="form-control" id="index" name="index" placeholder="Enter an Index name" required>
+                        <p class="help-block">A new index will be created if the the specified index name does not exist.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="index_rotation">Index Rotation</label>
+                        <select name="index_rotation" id="index_rotation" class="form-control form-select2" required data-placeholder="Select a Domain" style="width: 100%">
+                            <option value="no_rotation">No rotation</option>
+                            <option value="hour">Every Hour</option>
+                            <option value="day">Every Day</option>
+                            <option value="week">Every Week</option>
+                            <option value="month">Every Month</option>
+                        </select>
+                        <p class="help-block">Select how often to rotate the Elasticsearch index. Kinesis Data Firehose appends a corresponding timestamp to the index and rotates it.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type">Type</label>
+                        <input type="text" class="form-control" id="type" name="type" placeholder="Enter a type name" required>
+                        <p class="help-block">A new type will be created if the specified type name does not exist.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="retry_duration">Retry duration (in seconds)</label>
+                        <input type="number" class="form-control" id="retry_duration" name="retry_duration" placeholder="Enter a retry duration from 0 - 7200 seconds" data-rule-min="0" data-rule-max="7200" required >
+                        <p class="help-block">Select how long a failed index request should be retried. Failed documents are delivered to the backup S3 bucket.</p>
                     </div>
                 </div>
             </div>
