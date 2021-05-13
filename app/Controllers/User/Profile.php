@@ -166,12 +166,13 @@ class Profile extends \App\Controllers\BaseController
         $result = [];
         if(strtotime($xml['feed']['updated']) > $this->data['user']->last_news_update) {
 
-            // $update = $this->usersModel->update($this->data['user']->id, [
-            //     'last_news_update' => strtotime($xml['feed']['updated'])
-            // ]);
+            $update = $this->usersModel->update($this->data['user']->id, [
+                'last_news_update' => strtotime($xml['feed']['updated'])
+            ]);
 
             foreach ($xml['feed']['entry'] as $entry) {
                 $result[] = [
+                    'id' => str_replace('http://www.eventstreammonitor.com/?p=', '', $entry['id']),
                     'title' => $entry['title'],
                     'link' => $entry['content_attr']['xml:base'],
                     'published' => $entry['published'],

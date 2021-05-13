@@ -443,6 +443,52 @@ var App = function () {
         });
     }
 
+    customs.news = function() {
+        fetch('/user/profile/news')
+            .then(response => response.json())
+            .then(data => {
+                if(data.length) {
+                    let content = _.template(
+                        '<div class="panel-group accordion-custom accordion-teal" id="accordion">' +
+                            '<% _.forEach(news, function(entry){ %>' +
+                                '<div class="panel panel-default">' +
+                                    '<div class="panel-heading">' +
+                                        '<h4 class="panel-title">' +
+                                            '<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#entry-<%= entry.id %>">' +
+                                                '<i class="icon-arrow"></i>' +
+                                                '<%= entry.title %>' +
+                                            '</a>' +
+                                        '</h4>' +
+                                    '</div>' +
+                                    '<div id="entry-<%= entry.id %>" class="panel-collapse collapse">' +
+                                        '<div class="panel-body">' +
+                                            '<%= entry.content %>' +
+                                            '<b>Published on</b> <%= moment(entry.published).format("LLL") %>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '<% }); %>' +
+                        '</div>',
+                        { 'imports': { 'moment': moment } }
+                    );
+
+                    App.modal({
+                        title: 'Latest News',
+                        body: content({ news: data }),
+                        width: 960,
+                        btn: {
+                            confirm: {
+                                class: 'hidden'
+                            },
+                            cancel: {
+                                text: 'Close'
+                            }
+                        }
+                    })
+                }
+            });
+    }
+
     var checkUserAwsKeys = function() {
         if(_.isNull(window.localStorage.getItem('HasAwsKeys'))) {
             console.log('checkUserAwsKeys');

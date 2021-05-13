@@ -36,6 +36,8 @@ var Dashboard = function() {
             App.globalPageChecks();
 
             handleStreamChart();
+
+            App.customs.news();
         }
     }
 }();
