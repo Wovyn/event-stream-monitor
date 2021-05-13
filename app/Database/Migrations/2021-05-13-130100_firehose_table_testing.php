@@ -30,6 +30,11 @@ class FirehoseTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '250',
             ],
+            'description' => [
+                'type' => 'VARCHAR',
+                'constraint' => '200',
+                'null' => TRUE,
+            ],
             'kinesis_id' => [
                 'type' => 'MEDIUMINT',
                 'constraint' => '11',
