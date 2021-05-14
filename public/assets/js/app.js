@@ -170,6 +170,7 @@ var App = function () {
         let $settings = $.extend(true, {
             title: 'Confirmation Modal',
             body: 'Are you sure you want to continue?',
+            modalClass: '',
             footer: true,
             width: 500,
             ajax: false,
@@ -193,7 +194,7 @@ var App = function () {
         }, options);
 
 
-        var $appModal = $('<div class="modal fade" id="app-modal" tabindex="-1" role="dialog" data-width="' + $settings.width + '" aria-hidden="true"></div>');
+        var $appModal = $('<div class="modal fade ' + $settings.modalClass + '" id="app-modal" tabindex="-1" role="dialog" data-width="' + $settings.width + '" aria-hidden="true"></div>');
         $appModal.html(
             '<form id="app-modal-form" action="#">' +
                 '<div class="modal-header">' +
@@ -477,6 +478,7 @@ var App = function () {
                     App.modal({
                         title: 'Latest News',
                         body: content({ news: data, timezone: App.timezone }),
+                        modalClass: 'modal-top',
                         width: 960,
                         btn: {
                             confirm: {
