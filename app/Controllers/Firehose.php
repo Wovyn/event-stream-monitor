@@ -7,6 +7,7 @@ class Firehose extends BaseController
         $firehoseModel,
         $kinesisDataStreamsModel,
         $elasticsearchModel,
+        $s3,
         $awsconfig,
         $keys;
 
@@ -20,12 +21,7 @@ class Firehose extends BaseController
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
-            $this->twilio = new \App\Libraries\Twilio(
-                $this->keys->twilio_sid,
-                $this->keys->twilio_secret
-            );
-
-            $this->kinesis = new \App\Libraries\Kinesis([
+            $this->s3 = new \App\Libraries\S3([
                 'access' => $this->keys->aws_access,
                 'secret' => $this->keys->aws_secret
             ]);
@@ -118,4 +114,13 @@ class Firehose extends BaseController
         return $result;
     }
 
+    public function CreateBucket() {
+        $this->s3->setRegion('us-east-2');
+        $result = $this->s3->CreateBucket([
+            // 'ACL' => 'private',
+            'Bucket' => 'esm-bucket-test-01'
+        ]);
+
+        echo '<pre>' , var_dump($result) , '</pre>';
+    }
 }
