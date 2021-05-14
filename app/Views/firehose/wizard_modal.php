@@ -91,6 +91,7 @@
                         <select name="kinesis_id" id="kinesis_id" class="form-control form-select2" required data-placeholder="Select a Kinesis Data Stream" style="width: 100%">
                             <option></option>
                         </select>
+                        <input type="hidden" id="kinesis" value='<?php echo json_encode($kinesis) ?>'>
                     </div>
                 </div>
             </div>
@@ -105,6 +106,7 @@
                         <select name="elasticsearch_id" id="elasticsearch_id" class="form-control form-select2" required data-placeholder="Select a Domain" style="width: 100%">
                             <option></option>
                         </select>
+                        <input type="hidden" id="domains" value='<?php echo json_encode($domains) ?>'>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="index">Index</label>

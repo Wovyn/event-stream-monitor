@@ -96,10 +96,9 @@ var Elasticsearch = function() {
                         if($('#region option:selected', form).val() != currentRegion) {
                             // set loading
                             $('#aws_certificate', form).parent().addClass('loading');
+
                             // reset options
-                            $('#aws_certificate', form)
-                                .empty()
-                                .append('<options></options>');
+                            $('#aws_certificate', form).html('').select2({data: [{id: '', text: ''}]});
 
                             // reset custom hostname
                             $('#custom_hostname', form).val('');
@@ -111,7 +110,7 @@ var Elasticsearch = function() {
                             fetch('/elasticsearch/certificates/' + $('#region option:selected', form).val())
                                 .then(response => response.json())
                                 .then(data => {
-                                    let options = [];
+                                    let options = [ { id: '', text: '' } ];
 
                                     if(data.certificates.length) {
                                         _.forEach(data.certificates, function(certificate, key) {
@@ -720,7 +719,7 @@ var Elasticsearch = function() {
                             render: function(data, type, full, meta) {
                                 let options = _.template(
                                      '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
+                                        // '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
                                         // '<a href="/elasticsearch/view/<%= id %>" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
                                         '<a href="/elasticsearch/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>'

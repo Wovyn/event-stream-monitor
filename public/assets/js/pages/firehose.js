@@ -122,6 +122,30 @@ var Firehose = function() {
                                     .addClass('ok');
                         }
                     });
+
+                // custom inits
+                $('#region', form).select2()
+                    .on('select2:select', function (e) {
+                        let kinesis = JSON.parse($('#kinesis').val()),
+                            domains = JSON.parse($('#domains').val());
+
+                        // console.log($(this).val());
+                        // console.log(kinesis[$(this).val()]);
+                        // console.log(domains[$(this).val()]);
+                        // {id: null, text: null}
+
+                        $('#kinesis_id', form).html('').select2({data: [{id: '', text: ''}]});
+                        $('#kinesis_id', form).select2({
+                            placeholder: 'Select a Kinesis Data Stream',
+                            data: (_.isUndefined(kinesis[$(this).val()]) ? [{id: null, text: null}] : kinesis[$(this).val()])
+                        });
+
+                        $('#elasticsearch_id', form).html('').select2({data: [{id: '', text: ''}]});
+                        $('#elasticsearch_id', form).select2({
+                            placeholder: 'Select a Domain',
+                            data: (_.isUndefined(domains[$(this).val()]) ? [{id: null, text: null}] : domains[$(this).val()])
+                        });
+                    });
             },
             generateSummary: function(form) {
                 let summaryEl = $('.summary', form),

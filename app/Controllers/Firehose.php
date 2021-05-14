@@ -5,6 +5,8 @@ class Firehose extends BaseController
 {
     protected $authKeysModel,
         $firehoseModel,
+        $kinesisDataStreamsModel,
+        $elasticsearchModel,
         $awsconfig,
         $keys;
 
@@ -13,6 +15,8 @@ class Firehose extends BaseController
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->firehoseModel = new \App\Models\FirehoseModel();
+        $this->elasticsearchModel = new \App\Models\ElasticsearchModel();
+        $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
@@ -84,8 +88,31 @@ class Firehose extends BaseController
     }
 
     public function add() {
+        $kinesis = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
+        $data['kinesis'] = $this->format_data('kinesis', $kinesis);
+
+        $domains = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
+        $data['domains'] = $this->format_data('elasticsearch', $domains);
+
         $data['regions'] = GetAwsRegions($this->keys);
         return view('firehose/wizard_modal', $data);
+    }
+
+    public function format_data($type, $data) {
+        $result = [];
+        foreach ($data as $item) {
+            // check if region exist
+            if(!isset($result[$item->region])) {
+                $result[$item->region] = [];
+            }
+
+            array_push($result[$item->region], [
+                'id' => $item->id,
+                'text' => ( $type == 'kinesis' ? $item->name : $item->domain_name )
+            ]);
+        }
+
+        return $result;
     }
 
 }
