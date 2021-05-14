@@ -457,13 +457,15 @@ var App = function () {
                                             '<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#entry-<%= entry.id %>">' +
                                                 '<i class="icon-arrow"></i>' +
                                                 '<%= entry.title %>' +
+                                                '<span class="pull-right">' +
+                                                    '<b>Published on</b> <%= moment(entry.published).format("LLL") %>' +
+                                                '</span>' +
                                             '</a>' +
                                         '</h4>' +
                                     '</div>' +
                                     '<div id="entry-<%= entry.id %>" class="panel-collapse collapse">' +
                                         '<div class="panel-body">' +
                                             '<%= entry.content %>' +
-                                            '<b>Published on</b> <%= moment(entry.published).format("LLL") %>' +
                                         '</div>' +
                                     '</div>' +
                                 '</div>' +
