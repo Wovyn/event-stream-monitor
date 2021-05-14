@@ -8,6 +8,7 @@ class Firehose extends BaseController
         $kinesisDataStreamsModel,
         $elasticsearchModel,
         $s3,
+        $firehose,
         $awsconfig,
         $keys;
 
@@ -22,6 +23,11 @@ class Firehose extends BaseController
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
             $this->s3 = new \App\Libraries\S3([
+                'access' => $this->keys->aws_access,
+                'secret' => $this->keys->aws_secret
+            ]);
+
+            $this->firehose = new \App\Libraries\Firehose([
                 'access' => $this->keys->aws_access,
                 'secret' => $this->keys->aws_secret
             ]);

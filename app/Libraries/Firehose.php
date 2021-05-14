@@ -1,11 +1,11 @@
 <?php
 namespace App\Libraries;
 
-use \Aws\S3\Exception\S3Exception;
+use \Aws\Firehose\Exception\FirehoseException;
 
-class S3 extends Aws {
+class Firehose extends Aws {
 
-    protected $s3, $version = '2006-03-01';
+    protected $firehose, $version = '2015-08-04';
 
     public function __construct($args) {
         parent::__construct($args);
@@ -14,7 +14,7 @@ class S3 extends Aws {
             'version' => $this->version
         ];
 
-        $this->s3 = $this->aws->createS3($config);
+        $this->firehose = $this->aws->createFirehose($config);
     }
 
     public function setRegion($region) {
@@ -23,18 +23,18 @@ class S3 extends Aws {
             'region' => $region
         ];
 
-        $this->s3 = $this->aws->createS3($config);
+        $this->firehose = $this->aws->createFirehose($config);
     }
 
-    public function CreateBucket($args = []) {
+    public function CreateDeliveryStream($args = []) {
         $result['error'] = false;
         try {
-            $result['response'] = $this->s3->createBucket($args);
-        } catch (S3Exception $e) {
+            $result['response'] = $this->firehose->createDeliveryStream($args);
+        } catch (FirehoseException $e) {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'CreateBucket: ' . $e->getMessage());
+            log_message('debug', 'CreateDeliveryStream: ' . $e->getMessage());
         }
 
         return $result;
