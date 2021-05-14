@@ -7,7 +7,7 @@ function xml2array($url, $get_attributes = 1, $priority = 'tag') {
         return array ();
     }
     $parser = xml_parser_create('');
-    if (!($fp = @ fopen($url, 'rb')))
+    if (!($fp = @ fopen($url, 'r')))
     {
         return array ();
     }

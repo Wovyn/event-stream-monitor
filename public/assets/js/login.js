@@ -272,6 +272,7 @@ var Login = function () {
                                 text: 'Close'
                             }
                         },
+                        others: { backdrop: 'static', keyboard: false }
                     });
                 }
 

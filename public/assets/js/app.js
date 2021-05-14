@@ -450,7 +450,7 @@ var App = function () {
                 if(data.length) {
                     let content = _.template(
                         '<div class="panel-group accordion-custom accordion-teal" id="accordion">' +
-                            '<% _.forEach(news, function(entry){ %>' +
+                            '<% _.forEach(news, function(entry, key) { %>' +
                                 '<div class="panel panel-default">' +
                                     '<div class="panel-heading">' +
                                         '<h4 class="panel-title">' +
@@ -463,7 +463,7 @@ var App = function () {
                                             '</a>' +
                                         '</h4>' +
                                     '</div>' +
-                                    '<div id="entry-<%= entry.id %>" class="panel-collapse collapse">' +
+                                    '<div id="entry-<%= entry.id %>" class="panel-collapse collapse <% if(key == 0) { %>in<% } %>">' +
                                         '<div class="panel-body">' +
                                             '<%= entry.content %>' +
                                         '</div>' +
@@ -485,8 +485,9 @@ var App = function () {
                             cancel: {
                                 text: 'Close'
                             }
-                        }
-                    })
+                        },
+                        others: { backdrop: 'static', keyboard: false }
+                    });
                 }
             });
     }
