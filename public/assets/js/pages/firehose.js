@@ -165,6 +165,18 @@ var Firehose = function() {
                             data.value = $('#region option:selected', form).html() + ' | ' + data.value;
 
                             break;
+
+                        case 'kinesis_id':
+                            data.name = 'Kinesis Data Stream';
+                            data.value = $('#kinesis_id option:selected', form).html();
+
+                            break;
+
+                        case 'elasticsearch_id':
+                            data.name = 'Elasticsearch Domain';
+                            data.value = $('#elasticsearch_id option:selected', form).html();
+
+                            break;
                     }
 
                     summary += fieldTemplate({

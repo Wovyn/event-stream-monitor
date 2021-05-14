@@ -131,7 +131,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="retry_duration">Retry duration (in seconds)</label>
-                        <input type="number" class="form-control" id="retry_duration" name="retry_duration" placeholder="Enter a retry duration from 0 - 7200 seconds" data-rule-min="0" data-rule-max="7200" required >
+                        <input type="number" class="form-control" id="retry_duration" name="retry_duration" placeholder="Enter a retry duration from 0 - 7200 seconds" value="300" data-rule-min="0" data-rule-max="7200" required >
                         <p class="help-block">Select how long a failed index request should be retried. Failed documents are delivered to the backup S3 bucket.</p>
                     </div>
                 </div>

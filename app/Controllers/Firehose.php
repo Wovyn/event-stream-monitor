@@ -91,7 +91,10 @@ class Firehose extends BaseController
         $kinesis = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
         $data['kinesis'] = $this->format_data('kinesis', $kinesis);
 
-        $domains = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
+        $domains = $this->elasticsearchModel->where([
+            'user_id' => $this->data['user']->id,
+            'status' => 'active'
+        ])->findAll();
         $data['domains'] = $this->format_data('elasticsearch', $domains);
 
         $data['regions'] = GetAwsRegions($this->keys);
