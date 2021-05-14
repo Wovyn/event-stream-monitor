@@ -458,7 +458,7 @@ var App = function () {
                                                 '<i class="icon-arrow"></i>' +
                                                 '<%= entry.title %>' +
                                                 '<span class="pull-right">' +
-                                                    '<b>Published on</b> <%= moment(entry.published).format("LLL") %>' +
+                                                    '<b>Published on</b> <%= moment.tz(entry.published, "UTC").tz(timezone).format("LLL") %>' +
                                                 '</span>' +
                                             '</a>' +
                                         '</h4>' +
@@ -476,7 +476,7 @@ var App = function () {
 
                     App.modal({
                         title: 'Latest News',
-                        body: content({ news: data }),
+                        body: content({ news: data, timezone: App.timezone }),
                         width: 960,
                         btn: {
                             confirm: {
