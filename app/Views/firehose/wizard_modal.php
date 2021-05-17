@@ -116,11 +116,11 @@
                     <div class="form-group">
                         <label class="control-label" for="index_rotation">Index Rotation</label>
                         <select name="index_rotation" id="index_rotation" class="form-control form-select2" required data-placeholder="Select a Domain" style="width: 100%">
-                            <option value="no_rotation">No rotation</option>
-                            <option value="hour">Every Hour</option>
-                            <option value="day">Every Day</option>
-                            <option value="week">Every Week</option>
-                            <option value="month">Every Month</option>
+                            <option value="NoRotation">No rotation</option>
+                            <option value="OneHour">Every Hour</option>
+                            <option value="OneDay">Every Day</option>
+                            <option value="OneWeek">Every Week</option>
+                            <option value="OneMonth">Every Month</option>
                         </select>
                         <p class="help-block">Select how often to rotate the Elasticsearch index. Kinesis Data Firehose appends a corresponding timestamp to the index and rotates it.</p>
                     </div>

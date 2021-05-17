@@ -45,6 +45,11 @@ class FirehoseTable extends Migration
                 'constraint' => '11',
                 'unsigned' => true,
             ],
+            's3_bucket' => [
+                'type' => 'VARCHAR',
+                'constraint' => '200',
+                'null' => TRUE,
+            ],
             'created_at' => [
                 'type' => 'TIMESTAMP'
             ],

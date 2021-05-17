@@ -90,13 +90,61 @@ class Firehose extends BaseController
     }
 
     public function add() {
-        $kinesis = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
+        if($_POST) {
+            // create bucket request
+            $bucket_name = str_format('%name-bucket', [ '%name' => $_POST['name'] ]);
+
+            $this->s3->setRegion($_POST['region']);
+            $result['CreateBucket'] = $this->s3->CreateBucket([
+                'Bucket' => str_format('%name-bucket', [ '%name' => $_POST['name'] ])
+            ]);
+
+            $bucket_arn = str_format('arn:aws:s3:::%bucket', [ '%bucket' => $bucket_name ]);
+
+            // create delivery stream request
+            $this->firehose->setRegion($_POST['region']);
+            $result['CreateDeliveryStream'] = $this->firehose->CreateDeliveryStream([
+                'DeliveryStreamName' => $_POST['name'],
+                'DeliveryStreamType' => 'KinesisStreamAsSource',
+                'KinesisStreamSourceConfiguration' => [
+                    'KinesisStreamARN' => GetKinesisArnFromID($this->data['user']->id, $_POST['kinesis_id']), // REQUIRED
+                    'RoleARN' => $this->keys->event_stream_role_arn, // REQUIRED
+                ],
+                'ElasticsearchDestinationConfiguration' => [
+                    'DomainARN' => GetDomainArnFromID($this->data['user']->id, $_POST['elasticsearch_id']),
+                    'RoleARN' => $this->keys->event_stream_role_arn, // REQUIRED
+                    'IndexName' => $_POST['index'],
+                    'IndexRotationPeriod' => $_POST['index_rotation'],
+                    'RetryOptions' => [
+                        'DurationInSeconds' => (int) $_POST['retry_duration'],
+                    ],
+                    'S3BackupMode' => 'FailedDocumentsOnly',
+                    'S3Configuration' => [ // REQUIRED
+                        'BucketARN' => $bucket_arn, // REQUIRED
+                        'RoleARN' => $this->keys->event_stream_role_arn, // REQUIRED
+                        // ...
+                    ]
+                ],
+            ]);
+
+            var_dump($result);
+
+            exit();
+        }
+
+        $kinesis = $this->kinesisDataStreamsModel
+            ->where('user_id', $this->data['user']->id)
+            ->findAll();
+
         $data['kinesis'] = $this->format_data('kinesis', $kinesis);
 
-        $domains = $this->elasticsearchModel->where([
-            'user_id' => $this->data['user']->id,
-            'status' => 'active'
-        ])->findAll();
+        $domains = $this->elasticsearchModel
+            ->where([
+                'user_id' => $this->data['user']->id,
+                'status' => 'active'
+            ])
+            ->findAll();
+
         $data['domains'] = $this->format_data('elasticsearch', $domains);
 
         $data['regions'] = GetAwsRegions($this->keys);
@@ -123,10 +171,14 @@ class Firehose extends BaseController
     public function CreateBucket() {
         $this->s3->setRegion('us-east-2');
         $result = $this->s3->CreateBucket([
-            // 'ACL' => 'private',
-            'Bucket' => 'esm-bucket-test-01'
+            'ACL' => 'private',
+            'Bucket' => 'esm-bucket-test-03'
         ]);
 
         echo '<pre>' , var_dump($result) , '</pre>';
+    }
+
+    public function test() {
+        // echo GetKinesisArnFromID($this->data['user'], 2);
     }
 }

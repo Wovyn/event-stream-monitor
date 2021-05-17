@@ -138,4 +138,8 @@ function xml2array($url, $get_attributes = 1, $priority = 'tag') {
     return ($xml_array);
 }
 
+function str_format($string, $data) {
+    return str_replace(array_keys($data), array_values($data), $string);
+}
+
 ?>
