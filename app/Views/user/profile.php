@@ -186,6 +186,12 @@
                                                     <span class="input-group-addon add-on toggle"><i class="clip-eye"></i></span>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    S3 - Firehose Role ARN
+                                                </label>
+                                                <input type="text" placeholder="S3 - Firehose Role ARN" class="form-control" id="s3_firehose_role_arn" name="s3_firehose_role_arn" value="<?php echo isset($auth_keys->s3_firehose_role_arn) ? $auth_keys->s3_firehose_role_arn : '' ?>">
+                                            </div>
                                         </fieldset>
 
                                         <div class="row">

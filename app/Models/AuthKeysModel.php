@@ -12,6 +12,7 @@ class AuthKeysModel extends BaseModel {
         'aws_access',
         'aws_secret',
         'event_stream_role_arn',
+        's3_firehose_role_arn',
         'external_id',
         'aws_account'
     ];

@@ -99,6 +99,15 @@ class Firehose extends BaseController
                 'Bucket' => str_format('%name-bucket', [ '%name' => $_POST['name'] ])
             ]);
 
+            // check if CreateBucket has an error
+            if($result['CreateBucket']['error']) {
+                return $this->response->setJSON(json_encode([
+                    'error' => $result['CreateBucket']['error'],
+                    'message' => $result['CreateBucket']['message'],
+                    'result' => $result['CreateBucket']
+                ]));
+            }
+
             $bucket_arn = str_format('arn:aws:s3:::%bucket', [ '%bucket' => $bucket_name ]);
 
             // create delivery stream request
@@ -108,11 +117,11 @@ class Firehose extends BaseController
                 'DeliveryStreamType' => 'KinesisStreamAsSource',
                 'KinesisStreamSourceConfiguration' => [
                     'KinesisStreamARN' => GetKinesisArnFromID($this->data['user']->id, $_POST['kinesis_id']), // REQUIRED
-                    'RoleARN' => 'arn:aws:iam::' . $this->keys->aws_account . ':role/firehose-role-test', // REQUIRED
+                    'RoleARN' => $this->keys->s3_firehose_role_arn, // REQUIRED
                 ],
                 'ElasticsearchDestinationConfiguration' => [
                     'DomainARN' => GetDomainArnFromID($this->data['user']->id, $_POST['elasticsearch_id']),
-                    'RoleARN' => 'arn:aws:iam::' . $this->keys->aws_account . ':role/firehose-role-test', // REQUIRED
+                    'RoleARN' => $this->keys->s3_firehose_role_arn, // REQUIRED
                     'IndexName' => $_POST['index'],
                     'IndexRotationPeriod' => $_POST['index_rotation'],
                     'RetryOptions' => [
@@ -121,16 +130,20 @@ class Firehose extends BaseController
                     'S3BackupMode' => 'FailedDocumentsOnly',
                     'S3Configuration' => [ // REQUIRED
                         'BucketARN' => $bucket_arn, // REQUIRED
-                        'RoleARN' => 'arn:aws:iam::' . $this->keys->aws_account . ':role/firehose-role-test', // REQUIRED
+                        'RoleARN' => $this->keys->s3_firehose_role_arn, // REQUIRED
                     ]
                 ],
             ]);
 
-            return $this->response->setJSON(json_encode([
-                'error' => $result['CreateDeliveryStream']['error'],
-                'message' => ($result['CreateDeliveryStream']['error'] ? $result['CreateDeliveryStream']['message'] : 'Successfully created Data Delivery Stream!'),
-                'result' => $result['CreateDeliveryStream']
-            ]));
+            if($result['CreateDeliveryStream']['error']) {
+                return $this->response->setJSON(json_encode([
+                    'error' => $result['CreateDeliveryStream']['error'],
+                    'message' => $result['CreateDeliveryStream']['message'],
+                    'result' => $result['CreateDeliveryStream']
+                ]));
+            }
+
+            // hook to DB
         }
 
         $kinesis = $this->kinesisDataStreamsModel

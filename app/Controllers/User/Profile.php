@@ -69,6 +69,7 @@ class Profile extends \App\Controllers\BaseController
                 'aws_access' => $this->request->getPost('aws_access'),
                 'aws_secret' => $this->request->getPost('aws_secret'),
                 'event_stream_role_arn' => $this->request->getPost('event_stream_role_arn'),
+                's3_firehose_role_arn' => $this->request->getPost('s3_firehose_role_arn'),
                 'external_id' => $this->request->getPost('external_id'),
                 'aws_account' => null
             ];
@@ -165,7 +166,6 @@ class Profile extends \App\Controllers\BaseController
 
         $result = [];
         if(strtotime($xml['feed']['updated']) > $this->data['user']->last_news_update) {
-
             $update = $this->usersModel->update($this->data['user']->id, [
                 'last_news_update' => strtotime($xml['feed']['updated'])
             ]);
