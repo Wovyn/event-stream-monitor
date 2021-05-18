@@ -99,29 +99,7 @@ class Firehose extends BaseController
                 'Bucket' => str_format('%name-bucket', [ '%name' => $_POST['name'] ])
             ]);
 
-            // check if CreateBucket has an error
-            if($result['CreateBucket']['error']) {
-                return $this->response->setJSON(json_encode([
-                    'error' => $result['CreateBucket']['error'],
-                    'message' => $result['CreateBucket']['message'],
-                    'result' => $result['CreateBucket']
-                ]));
-            }
-
             $bucket_arn = str_format('arn:aws:s3:::%bucket', [ '%bucket' => $bucket_name ]);
-
-            // create role iam
-            $kinesis = $this->kinesisDataStreamsModel->where('id', $_POST['kinesis_id'])->first();
-            $domain = $this->elasticsearchModel->where('id', $_POST['elasticsearch_id'])->first();
-
-            $policy_json = json_encode($this->awsconfig->firehose_role_policy);
-            $policy_json = str_format($policy_json, [
-                '%region' => $_POST['region'],
-                '%account' => $this->keys->aws_account,
-                '%domain' => $domain->domain_name,
-                '%delivery' => $_POST['name'],
-                '%stream' => $kinesis->name
-            ]);
 
             // create delivery stream request
             $this->firehose->setRegion($_POST['region']);
@@ -130,11 +108,11 @@ class Firehose extends BaseController
                 'DeliveryStreamType' => 'KinesisStreamAsSource',
                 'KinesisStreamSourceConfiguration' => [
                     'KinesisStreamARN' => GetKinesisArnFromID($this->data['user']->id, $_POST['kinesis_id']), // REQUIRED
-                    'RoleARN' => $this->keys->event_stream_role_arn, // REQUIRED
+                    'RoleARN' => 'arn:aws:iam::' . $this->keys->aws_account . ':role/firehose-role-test', // REQUIRED
                 ],
                 'ElasticsearchDestinationConfiguration' => [
                     'DomainARN' => GetDomainArnFromID($this->data['user']->id, $_POST['elasticsearch_id']),
-                    'RoleARN' => $this->keys->event_stream_role_arn, // REQUIRED
+                    'RoleARN' => 'arn:aws:iam::' . $this->keys->aws_account . ':role/firehose-role-test', // REQUIRED
                     'IndexName' => $_POST['index'],
                     'IndexRotationPeriod' => $_POST['index_rotation'],
                     'RetryOptions' => [
@@ -143,8 +121,7 @@ class Firehose extends BaseController
                     'S3BackupMode' => 'FailedDocumentsOnly',
                     'S3Configuration' => [ // REQUIRED
                         'BucketARN' => $bucket_arn, // REQUIRED
-                        'RoleARN' => $this->keys->event_stream_role_arn, // REQUIRED
-                        // ...
+                        'RoleARN' => 'arn:aws:iam::' . $this->keys->aws_account . ':role/firehose-role-test', // REQUIRED
                     ]
                 ],
             ]);
