@@ -99,7 +99,29 @@ class Firehose extends BaseController
                 'Bucket' => str_format('%name-bucket', [ '%name' => $_POST['name'] ])
             ]);
 
+            // check if CreateBucket has an error
+            if($result['CreateBucket']['error']) {
+                return $this->response->setJSON(json_encode([
+                    'error' => $result['CreateBucket']['error'],
+                    'message' => $result['CreateBucket']['message'],
+                    'result' => $result['CreateBucket']
+                ]));
+            }
+
             $bucket_arn = str_format('arn:aws:s3:::%bucket', [ '%bucket' => $bucket_name ]);
+
+            // create role iam
+            $kinesis = $this->kinesisDataStreamsModel->where('id', $_POST['kinesis_id'])->first();
+            $domain = $this->elasticsearchModel->where('id', $_POST['elasticsearch_id'])->first();
+
+            $policy_json = json_encode($this->awsconfig->firehose_role_policy);
+            $policy_json = str_format($policy_json, [
+                '%region' => $_POST['region'],
+                '%account' => $this->keys->aws_account,
+                '%domain' => $domain->domain_name,
+                '%delivery' => $_POST['name'],
+                '%stream' => $kinesis->name
+            ]);
 
             // create delivery stream request
             $this->firehose->setRegion($_POST['region']);
@@ -127,9 +149,11 @@ class Firehose extends BaseController
                 ],
             ]);
 
-            var_dump($result);
-
-            exit();
+            return $this->response->setJSON(json_encode([
+                'error' => $result['CreateDeliveryStream']['error'],
+                'message' => ($result['CreateDeliveryStream']['error'] ? $result['CreateDeliveryStream']['message'] : 'Successfully created Data Delivery Stream!'),
+                'result' => $result['CreateDeliveryStream']
+            ]));
         }
 
         $kinesis = $this->kinesisDataStreamsModel
