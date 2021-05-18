@@ -134,7 +134,7 @@
                             <span class="selected"></span>
                         </a>
                     </li>
-                    <li class="secret" style="display: none">
+                    <li>
                         <a href="/firehose">
                             <i class="fa fa-fire"></i>
                             <span class="title"> Kinesis Data Firehose </span>
