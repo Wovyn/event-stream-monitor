@@ -68,7 +68,7 @@ class Firehose extends BaseController
         // $search = $_POST['search']['value'];
 
         $rows = $this->firehoseModel
-            ->select('*, kinesis_data_streams.name AS kinesis_name, elasticsearch.domain_name AS elasticsearch_name')
+            ->select('*, firehose.name AS firehose_name, kinesis_data_streams.name AS kinesis_name, elasticsearch.domain_name AS elasticsearch_name')
             ->where('firehose.user_id', $this->data['user']->id)
             ->join('kinesis_data_streams', 'kinesis_data_streams.id = firehose.kinesis_id')
             ->join('elasticsearch', 'elasticsearch.id = firehose.elasticsearch_id')
@@ -144,6 +144,21 @@ class Firehose extends BaseController
             }
 
             // hook to DB
+            $result['save'] = $this->firehoseModel->save([
+                'user_id' => $this->data['user']->id,
+                'region' => $_POST['region'],
+                'name' => $_POST['name'],
+                'description' => $_POST['description'],
+                'kinesis_id' => $_POST['kinesis_id'],
+                'elasticsearch_id' => $_POST['elasticsearch_id'],
+                's3_bucket' => $bucket_name
+            ]);
+
+            return $this->response->setJSON(json_encode([
+                'error' => ($result['save'] ? false : true),
+                'message' => 'Successfully created Delivery Stream!',
+                'result' => $result
+            ]));
         }
 
         $kinesis = $this->kinesisDataStreamsModel

@@ -247,7 +247,7 @@ var Firehose = function() {
                     },
                     columns: [
                         { name: 'region', data: 'region_name' },
-                        { name: 'name', data: 'name' },
+                        { name: 'firehose_name', data: 'firehose_name' },
                         { name: 'kinesis_name', data: 'kinesis_name' },
                         { name: 'elasticsearch_name', data: 'elasticsearch_name' },
                         { name: 'created_at', data: 'created_at' },
