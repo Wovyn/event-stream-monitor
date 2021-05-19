@@ -228,6 +228,44 @@ var Firehose = function() {
         });
     }
 
+    var handleDelete = function() {
+        console.log('init handleDelete');
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this);
+
+            Swal.fire({
+                icon: 'warning',
+                text: 'Are you sure you want to delete the Delivery Stream?',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+                preConfirm: () => {
+                    return fetch($btn.attr('href')).
+                        then(response => {
+                            return response.json();
+                        });
+                }
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        icon: result.value.error !== true ? 'success' : 'error',
+                        text: result.value.message
+                    });
+
+                    if(!result.value.error) {
+                        $dtTables['firehose-table'].ajax.reload();
+                    } else {
+                        console.log(result.value);
+                    }
+                }
+            });
+        });
+    }
+
     return {
         init: function() {
             console.log('Firehose.init');
@@ -250,9 +288,9 @@ var Firehose = function() {
                         { name: 'firehose_name', data: 'firehose_name' },
                         { name: 'kinesis_name', data: 'kinesis_name' },
                         { name: 'elasticsearch_name', data: 'elasticsearch_name' },
-                        { name: 'created_at', data: 'created_at' },
-                        { name: 'updated_at', data: 'updated_at' },
-                        { name: 'options', data: 'id', searchable: false, sortable: false }
+                        { name: 'firehose_created_at', data: 'firehose_created_at' },
+                        { name: 'firehose_updated_at', data: 'firehose_updated_at' },
+                        { name: 'options', data: 'firehose_id', searchable: false, sortable: false }
                     ],
                     columnDefs: [
                         {
@@ -281,7 +319,7 @@ var Firehose = function() {
                                      '<div class="btn-group btn-group-sm">' +
                                         // '<a href="/firehose/edit/<%= id %>" class="btn btn-primary edit-btn tip" title="Edit"><i class="fa fa-pencil"></i></a>' +
                                         // '<a href="/firehose/view/<%= id %>" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
-                                        // '<a href="/firehose/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
+                                        '<a href="/firehose/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>'
                                 );
 
@@ -300,7 +338,7 @@ var Firehose = function() {
 
             App.validationSetDefault();
             handleAdd();
-            // handleDelete();
+            handleDelete();
             // handleView();
         }
     }

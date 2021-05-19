@@ -40,6 +40,20 @@ class Firehose extends Aws {
         return $result;
     }
 
+    public function DeleteDeliveryStream($args = []) {
+        $result['error'] = false;
+        try {
+            $result['response'] = $this->firehose->deleteDeliveryStream($args);
+        } catch (FirehoseException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'DeleteDeliveryStream: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
 }
 
 ?>

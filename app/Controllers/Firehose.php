@@ -68,7 +68,13 @@ class Firehose extends BaseController
         // $search = $_POST['search']['value'];
 
         $rows = $this->firehoseModel
-            ->select('*, firehose.name AS firehose_name, kinesis_data_streams.name AS kinesis_name, elasticsearch.domain_name AS elasticsearch_name')
+            ->select('*,
+                firehose.id AS firehose_id,
+                firehose.name AS firehose_name,
+                firehose.created_at AS firehose_created_at,
+                firehose.updated_at AS firehose_updated_at,
+                kinesis_data_streams.name AS kinesis_name,
+                elasticsearch.domain_name AS elasticsearch_name')
             ->where('firehose.user_id', $this->data['user']->id)
             ->join('kinesis_data_streams', 'kinesis_data_streams.id = firehose.kinesis_id')
             ->join('elasticsearch', 'elasticsearch.id = firehose.elasticsearch_id')
@@ -180,6 +186,38 @@ class Firehose extends BaseController
         return view('firehose/wizard_modal', $data);
     }
 
+    public function delete($id) {
+        $delivery = $this->firehoseModel->where('id', $id)->first();
+
+        $this->s3->setRegion($delivery->region);
+        $result['DeleteBucket'] = $this->s3->DeleteBucket([
+            'Bucket' => $delivery->s3_bucket
+        ]);
+
+        if($result['DeleteBucket']['error']) {
+            return $this->response->setJSON(json_encode([
+                'error' => $result['DeleteBucket']['error'],
+                'message' => $result['DeleteBucket']['message'],
+                'result' => $result['DeleteBucket']
+            ]));
+        }
+
+        $this->firehose->setRegion($delivery->region);
+        $result['DeleteDeliveryStream'] = $this->firehose->DeleteDeliveryStream([
+            'DeliveryStreamName' => $delivery->name
+        ]);
+
+        if(!$result['DeleteDeliveryStream']['error']) {
+            $result['delete'] = $this->firehoseModel->where('id', $id)->delete();
+        }
+
+        return $this->response->setJSON(json_encode([
+            'error' => $result['DeleteDeliveryStream']['error'],
+            'message' => ($result['DeleteDeliveryStream']['error'] ? $result['DeleteDeliveryStream']['message'] : 'Successfully deleted Delivery Stream!'),
+            'result' => $result
+        ]));
+    }
+
     public function format_data($type, $data) {
         $result = [];
         foreach ($data as $item) {
@@ -197,17 +235,4 @@ class Firehose extends BaseController
         return $result;
     }
 
-    public function CreateBucket() {
-        $this->s3->setRegion('us-east-2');
-        $result = $this->s3->CreateBucket([
-            'ACL' => 'private',
-            'Bucket' => 'esm-bucket-test-03'
-        ]);
-
-        echo '<pre>' , var_dump($result) , '</pre>';
-    }
-
-    public function test() {
-        // echo GetKinesisArnFromID($this->data['user'], 2);
-    }
 }

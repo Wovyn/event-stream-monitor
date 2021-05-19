@@ -40,6 +40,20 @@ class S3 extends Aws {
         return $result;
     }
 
+    public function DeleteBucket($args = []) {
+        $result['error'] = false;
+        try {
+            $result['response'] = $this->s3->deleteBucket($args);
+        } catch (S3Exception $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'DeleteBucket: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
 }
 
 ?>
