@@ -10,54 +10,64 @@ var Elasticsearch = function() {
                 wizard = $('#smartwizard', form);
                 lastStep = $('.nav li', wizard).length - 1;
 
-                let button = '<button type="button" class="btn btn-finish btn-success hidden">Create Elasticsearch</button>';
+                let button = '<button type="button" class="btn btn-finish btn-success hidden">' + (mode == 'create' ? 'Create Elasticsearch' : 'Update Elasticsearch') + '</button>',
+                    wSettings = {
+                        selected: 0,
+                        justified: true,
+                        enableURLhash: false,
+                        autoAdjustHeight: false,
+                        keyboardSettings: { keyNavigation: false },
+                        toolbarSettings: {
+                            toolbarExtraButtons: [
+                                $(button)
+                                    .on('click', function() {
+                                        let $btn = $(this);
 
-                wizard.smartWizard({
-                    selected: 0,
-                    justified: true,
-                    enableURLhash: false,
-                    autoAdjustHeight: false,
-                    keyboardSettings: { keyNavigation: false },
-                    toolbarSettings: {
-                        toolbarExtraButtons: [
-                            $(button)
-                                .on('click', function() {
-                                    let $btn = $(this);
+                                        $btn.addClass('disabled');
 
-                                    $btn.addClass('disabled');
+                                        Swal.fire({
+                                            title: (mode == 'create' ? 'Creating Elasticsearch' : 'Updating Elasticsearch'),
+                                            allowOutsideClick: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
 
-                                    Swal.fire({
-                                        title: (mode == 'create' ? 'Creating Elasticsearch' : 'Updating Elasticsearch'),
-                                        allowOutsideClick: false,
-                                        didOpen: () => {
-                                            Swal.showLoading();
+                                                $.ajax({
+                                                    url: submitUrl,
+                                                    method: 'POST',
+                                                    data: form.serialize(),
+                                                    dataType: 'json',
+                                                    success: function(response) {
+                                                        Swal.fire({
+                                                            icon: response.error !== true ? 'success' : 'error',
+                                                            text: response.message
+                                                        });
 
-                                            $.ajax({
-                                                url: submitUrl,
-                                                method: 'POST',
-                                                data: form.serialize(),
-                                                dataType: 'json',
-                                                success: function(response) {
-                                                    Swal.fire({
-                                                        icon: response.error !== true ? 'success' : 'error',
-                                                        text: response.message
-                                                    });
-
-                                                    if(!response.error) {
-                                                        appModal.modal('hide');
-                                                        $dtTables['elasticsearch-table'].ajax.reload();
-                                                    } else {
-                                                        $btn.removeClass('disabled');
-                                                        console.log(response);
+                                                        if(!response.error) {
+                                                            appModal.modal('hide');
+                                                            $dtTables['elasticsearch-table'].ajax.reload();
+                                                        } else {
+                                                            $btn.removeClass('disabled');
+                                                            console.log(response);
+                                                        }
                                                     }
-                                                }
-                                            });
-                                        }
-                                    });
-                                })
-                        ]
-                    }
-                });
+                                                });
+                                            }
+                                        });
+                                    })
+                            ]
+                        }
+                    };
+
+                if(mode == 'update') {
+                    wSettings.anchorSettings = {
+                            anchorClickable: true, // Enable/Disable anchor navigation
+                            enableAllAnchors: true, // Activates all anchors clickable all times
+                            markDoneStep: true, // add done css
+                            enableAnchorOnDoneStep: true // Enable/Disable the done steps navigation
+                        };
+                }
+
+                wizard.smartWizard(wSettings);
 
                 FormWizard.initElements(form);
             },
