@@ -244,13 +244,13 @@ var Elasticsearch = function() {
                 App.customs.activeToggle({
                     btn: $('#fine_grain_access_control', form),
                     elements: [ $('#fine_grain_options_container', form), $('#allow_open_access_container', form) ],
-                    callback: function(btn, elements) {
-                        if(!btn.is(':checked') && $('#allow_open_access', form).is(':checked')) {
-                            $('#allow_open_access', form).prop('checked', false);
+                    // callback: function(btn, elements) {
+                    //     if(!btn.is(':checked') && $('#allow_open_access', form).is(':checked')) {
+                    //         $('#allow_open_access', form).prop('checked', false);
 
-                            FormWizard.updatePolicy();
-                        }
-                    }
+                    //         FormWizard.updatePolicy();
+                    //     }
+                    // }
                 });
 
                 $('#fine_grain_access_control', form).on('click', function() {
@@ -280,9 +280,9 @@ var Elasticsearch = function() {
                     });
 
                 // init allow open access
-                $('#allow_open_access', form).on('click', function() {
-                    FormWizard.updatePolicy();
-                });
+                // $('#allow_open_access', form).on('click', function() {
+                //     FormWizard.updatePolicy();
+                // });
 
                 if(mode == 'update') {
                     // update options
@@ -326,7 +326,7 @@ var Elasticsearch = function() {
                     region = $('#region option:selected', form).val(),
                     domain_name = $('#domain_name', form).val(),
                     ip_address = $('#ip_address', form).val(),
-                    default_policy = {
+                    policy = {
                         "Version": "2012-10-17",
                         "Statement": [
                             {
@@ -338,18 +338,14 @@ var Elasticsearch = function() {
                                     "es:*"
                                 ],
                                 "Resource": 'arn:aws:es:' + region + ':' + aws_account + ':domain/' + domain_name + '/*',
+                                "Condition": {
+                                    "IpAddress": {
+                                        "aws:SourceIp": ip_address
+                                    }
+                                }
                             }
                         ]
-                    },
-                    policy = {... default_policy};
-
-                if(!$('#allow_open_access', form).is(':checked')) {
-                    policy.Statement[0].Condition = {
-                            "IpAddress": {
-                                "aws:SourceIp": ip_address
-                            }
-                        };
-                }
+                    };
 
                 editor.setValue(JSON.stringify(policy, null, 2));
             },
@@ -464,7 +460,7 @@ var Elasticsearch = function() {
                     }
 
                     // network config fields
-                    if(_.findIndex(['access_policy', 'allow_open_access'], d => d == data.name) != -1) {
+                    if(_.findIndex(['access_policy'], d => d == data.name) != -1) {
                         let toAppend = true;
 
                         if(data.name == 'access_policy') {
@@ -719,7 +715,7 @@ var Elasticsearch = function() {
                             render: function(data, type, full, meta) {
                                 let options = _.template(
                                      '<div class="btn-group btn-group-sm">' +
-                                        // '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
+                                        '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
                                         // '<a href="/elasticsearch/view/<%= id %>" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
                                         '<a href="/elasticsearch/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>'

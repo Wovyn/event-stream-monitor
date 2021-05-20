@@ -185,6 +185,10 @@ class Auth extends \IonAuth\Controllers\Auth {
     public function keepAlive() {
         // regenerate user session
         $this->session->regenerate();
+
+        // run background sync and updates
+        $elasticsearch = new \App\Controllers\ElasticSearch();
+        $elasticsearch->sync();
     }
 
     public function emailTest() {
