@@ -295,7 +295,10 @@ var Elasticsearch = function() {
                 // });
 
                 if(mode == 'update') {
-                    // update options
+                    // set region to readonly
+                    $("#region").select2({disabled: 'readonly'});
+
+                    // update certificate options
                     fetch('/elasticsearch/certificates/' + $('#region option:selected', form).val())
                         .then(response => response.json())
                         .then(data => {

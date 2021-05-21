@@ -62,6 +62,9 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 .sw-modal.sw-update > .nav .nav-link:before,
     .sw-modal.sw-update > .nav .nav-link .stepNumber { border-color: #5293c4; }
 
+.sw-modal.sw-update > ul li > a .stepNumber { background-color: #5293C4; color: #ffffff; text-indent: -9999px; }
+.sw-modal.sw-update > ul li > a .stepNumber:before { content: "\f00c"; display: inline; float: right; font-family: FontAwesome; font-weight: 300; height: auto; text-shadow: none; margin-right: 7px; text-indent: 0; }
+
 .summary .form-group { border-bottom: 1px solid #d5d5d5; }
 
 /*.swMain .toolbar .btn.disabled { display: none; }*/

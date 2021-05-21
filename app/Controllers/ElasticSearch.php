@@ -90,18 +90,21 @@ class ElasticSearch extends BaseController
 
             switch ($domain->status) {
                 case 'loading':
+                case 'updating':
                     $describe = $this->elasticsearch->DescribeElasticsearchDomain([
                         'DomainName' => $domain->domain_name
                     ]);
 
-                    if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
-                        $settings['Endpoint'] = $describe['response']['DomainStatus']['Endpoint'];
+                    if(!$describe['response']['DomainStatus']['Processing']) {
+                        if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
+                            $settings['Endpoint'] = $describe['response']['DomainStatus']['Endpoint'];
 
-                        $this->elasticsearchModel
-                            ->update($domain->id, [
-                                'status' => 'active',
-                                'settings' => json_encode($settings)
-                            ]);
+                            $this->elasticsearchModel
+                                ->update($domain->id, [
+                                    'status' => 'active',
+                                    'settings' => json_encode($settings)
+                                ]);
+                        }
                     }
 
                     break;
@@ -118,94 +121,20 @@ class ElasticSearch extends BaseController
     public function add() {
         if($_POST) {
             // compile create elasticsearch domain request
-            $settings = [];
-            $request = [
-                'ElasticsearchVersion' => '7.10',
-                'DomainName' => $_POST['domain_name'],
-                'AccessPolicies' => $_POST['access_policy'],
-                'AutoTuneOptions' => [
-                    'DesiredState' => $_POST['auto_tune'],
-                    // 'MaintenanceSchedules'
-                ],
-                'ElasticsearchClusterConfig' => [
-                    'InstanceType' => $_POST['instance_type'],
-                    'InstanceCount' => (int) $_POST['number_of_nodes']
-                ],
-                'EBSOptions' => [
-                    'EBSEnabled' => true,
-                    'VolumeSize' => (int) $_POST['ebs_storage_size_per_node'],
-                    'VolumeType' => $_POST['ebs_volume_type'],
-                ],
-                'EncryptionAtRestOptions' => [
-                    'Enabled' => isset($_POST['enable_encryption_of_data_at_rest']),
-                ],
-                'NodeToNodeEncryptionOptions' => [
-                    'Enabled' => isset($_POST['note_to_node_encryption']),
-                ],
-                // custom domain
-                'DomainEndpointOptions' => [
-                    'EnforceHTTPS' => isset($_POST['require_https']),
-                    'CustomEndpointEnabled' => false
-                    // 'TLSSecurityPolicy' => 'Policy-Min-TLS-1-0-2019-07|Policy-Min-TLS-1-2-2019-07',
-                ],
-
-                // Fine–grained access control
-                'AdvancedSecurityOptions' => [
-                    // 'SAMLOptions' => [
-                    //     'Enabled' => false,
-                    // ]
-                ],
-                // Amazon Cognito authentication
-                'CognitoOptions' => [
-                    'Enabled' => false
-                ]
-            ];
-
-            $request['ElasticsearchClusterConfig']['ZoneAwarenessEnabled'] = $_POST['availability_zones'] > 1 ? true : false;
-            if($_POST['availability_zones'] > 1) {
-                $request['ElasticsearchClusterConfig']['ZoneAwarenessConfig'] = [
-                    'AvailabilityZoneCount' => (int) $_POST['availability_zones']
-                ];
-            }
-
-            if($_POST['ebs_volume_type'] == 'io1') {
-                $request['EBSOptions']['Iops'] = (int) $_POST['provisioned_iops'];
-            }
-
-            $request['DomainEndpointOptions']['CustomEndpointEnabled'] = isset($_POST['custom_endpoint']);
-            if(isset($_POST['custom_endpoint'])) {
-                $request['DomainEndpointOptions']['CustomEndpoint'] = $_POST['custom_hostname'];
-                $request['DomainEndpointOptions']['CustomEndpointCertificateArn'] = $_POST['aws_certificate'];
-            }
-
-            $request['AdvancedSecurityOptions']['Enabled'] = isset($_POST['fine_grain_access_control']);
-            $request['AdvancedSecurityOptions']['InternalUserDatabaseEnabled'] = isset($_POST['fine_grain_access_control']);
-            if(isset($_POST['fine_grain_access_control'])) {
-                $request['AdvancedSecurityOptions']['MasterUserOptions'] = [
-                    'MasterUserName' => $_POST['master_username'],
-                    'MasterUserPassword' => $_POST['master_password']
-                ];
-
-                $settings['MasterUserName'] = $_POST['master_username'];
-                // $settings['MasterUserPassword'] = $_POST['master_password'];
-            }
-
-            $request['ElasticsearchClusterConfig']['DedicatedMasterEnabled'] = isset($_POST['dedicated_master_nodes']);
-            if(isset($_POST['dedicated_master_nodes'])) {
-                $request['ElasticsearchClusterConfig']['DedicatedMasterType'] = $_POST['dedicated_master_node_instance_type'];
-                $request['ElasticsearchClusterConfig']['DedicatedMasterCount'] = (int) $_POST['dedicated_master_node_number_of_nodes'];
-            }
-
-            $request['ElasticsearchClusterConfig']['WarmEnabled'] = isset($_POST['ultrawarm_data_node']);
-            if(isset($_POST['ultrawarm_data_node'])) {
-                $request['ElasticsearchClusterConfig']['WarmType'] = $_POST['ultrawarm_instance_type'];
-                $request['ElasticsearchClusterConfig']['WarmCount'] = (int) $_POST['number_of_warm_data_nodes'];
-            }
+            $request = $this->elasticsearch->formatRequest($_POST);
 
             $this->elasticsearch->setRegion($_POST['region']);
             $result['CreateElasticsearchDomain'] = $this->elasticsearch->CreateElasticsearchDomain($request);
 
+            // check if request has error
             if(!$result['CreateElasticsearchDomain']['error']) {
+                // compile settings field
+                $settings = [];
+                if(isset($_POST['fine_grain_access_control'])) {
+                    $settings['MasterUserName'] = $_POST['master_username'];
+                }
+
+                // save domain to db
                 $result['save'] = $this->elasticsearchModel->save([
                     'user_id' => $this->data['user']->id,
                     'region' => $_POST['region'],
@@ -236,6 +165,33 @@ class ElasticSearch extends BaseController
 
         $data['db_config'] = $domain;
         $data['db_config_settings'] = json_decode($domain->settings, true);
+
+        if($_POST) {
+            $request = $this->elasticsearch->formatRequest('update', $_POST);
+            $result['UpdateElasticsearchDomainConfig'] = $this->elasticsearch->UpdateElasticsearchDomainConfig($request);
+
+            // check if request has error
+            if(!$result['UpdateElasticsearchDomainConfig']['error']) {
+                // compile settings field
+                $settings = [];
+                if(isset($_POST['fine_grain_access_control'])) {
+                    $settings['MasterUserName'] = $_POST['master_username'];
+                }
+
+                // update domain
+                $result['update'] = $this->elasticsearchModel->update($id, [
+                    'status' => 'updating',
+                    'settings' => json_encode($settings)
+                ]);
+            }
+
+            return $this->response->setJSON(json_encode([
+                'error' => $result['UpdateElasticsearchDomainConfig']['error'],
+                'message' => ($result['UpdateElasticsearchDomainConfig']['error'] ? $result['UpdateElasticsearchDomainConfig']['message'] : 'Successfully updated Elasticsearch Domain!'),
+                'result' => $result
+            ]));
+        }
+
         $data['aws_config'] = $result['DescribeElasticsearchDomain']['response']['DomainStatus'];
         $data['aws_account'] = $this->keys->aws_account;
         $data['regions'] = GetAwsRegions($this->keys);
