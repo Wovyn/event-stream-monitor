@@ -1,4 +1,4 @@
-<div id="smartwizard" class="swMain sw-modal">
+<div id="smartwizard" class="swMain sw-modal <?php echo isset($db_config) ? 'sw-update' : '' ?>">
     <ul class="nav">
         <li>
             <a class="nav-link" href="#step-1">
@@ -513,7 +513,7 @@
                         <div class="form-group">
                             <!-- <label class="control-label" for="access_policy">JSON defined access policy</label> -->
                             <div id="access_policy_json" style="height: 300px"></div>
-                            <input type="hidden" id="access_policy" name="access_policy" value="<?php echo isset($aws_config) ? $aws_config['AccessPolicies'] : '' ?>">
+                            <input type="hidden" id="access_policy" name="access_policy" value='<?php echo isset($aws_config) ? $aws_config['AccessPolicies'] : "" ?>'>
                             <input type="hidden" id="aws_account" value="<?php echo $aws_account ?>">
                             <input type="hidden" id="ip_address">
                         </div>

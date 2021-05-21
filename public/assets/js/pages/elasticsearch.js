@@ -328,7 +328,7 @@ var Elasticsearch = function() {
                         }
                     });
 
-                    editor.setValue(JSON.stringify($('#access_policy', form).val(), null, 2));
+                    editor.setValue(JSON.stringify(JSON.parse($('#access_policy', form).val()), null, 2));
                 }
             },
             updatePolicy: function(form) {

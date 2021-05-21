@@ -58,6 +58,10 @@ table.dataTable thead th.select-checkbox.selected:after { content: '\2714'; marg
 .sw-theme-default > .nav .nav-link.active:before { border-color: #5293c4; }
 .sw-theme-default > .nav .nav-link.active .stepDesc { color: #2b3d53; }
 
+.sw-modal.sw-update > .nav .nav-link {  }
+.sw-modal.sw-update > .nav .nav-link:before,
+    .sw-modal.sw-update > .nav .nav-link .stepNumber { border-color: #5293c4; }
+
 .summary .form-group { border-bottom: 1px solid #d5d5d5; }
 
 /*.swMain .toolbar .btn.disabled { display: none; }*/
