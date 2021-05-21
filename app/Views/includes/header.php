@@ -64,7 +64,17 @@
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: USER DROPDOWN -->
-                    <li class="dropdown current-user">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+                            <i class="fa fa-question-circle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="http://www.eventstreammonitor.com/" target="_blank">ESM Website</a></li>
+                            <li><a href="https://github.com/Wovyn/event-stream-monitor" target="_blank">ESM Github / Support</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
                         <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#" id="lite-btn">
                             <img src="/assets/images/twilio-logo-30x30.png" class="circle-img" alt="<?php echo $user->first_name . ' ' . $user->last_name ?>" width="30" height="30">
                             <span class="username"><?php echo $user->first_name . ' ' . $user->last_name ?></span>
@@ -76,7 +86,6 @@
                                     <i class="clip-user-2"></i> My Profile
                                 </a>
                             </li>
-                            <li class="divider"></li>
                             <li>
                                 <a href="/auth/logout">
                                     <i class="clip-exit"></i> Log Out
