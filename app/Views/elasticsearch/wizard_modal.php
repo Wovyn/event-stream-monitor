@@ -441,7 +441,7 @@
                         </div>
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset <?php echo isset($db_config) ? 'disabled' : '' ?>>
                         <legend>Fine-grained access control</legend>
                         <div class="form-group">
                             <label class="checkbox" for="fine_grain_access_control">
