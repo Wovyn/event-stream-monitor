@@ -701,7 +701,23 @@ var Elasticsearch = function() {
                         {
                             targets: 2,
                             render: function(data, type, full, meta) {
-                                return '<span class="label label-' + (data == 'loading' ? 'warning' : 'success') + '">' + data + '</span>';
+                                let label;
+
+                                switch(data) {
+                                    case 'loading':
+                                        label = 'warning';
+                                        break;
+
+                                    case 'updating':
+                                        label = 'info';
+                                        break;
+
+                                    default:
+                                        label = 'success';
+                                        break;
+                                }
+
+                                return '<span class="label label-' + label + '">' + data + '</span>';
                             }
                         },
                         {
