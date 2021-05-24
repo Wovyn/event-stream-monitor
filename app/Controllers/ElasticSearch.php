@@ -121,7 +121,7 @@ class ElasticSearch extends BaseController
     public function add() {
         if($_POST) {
             // compile create elasticsearch domain request
-            $request = $this->elasticsearch->formatRequest($_POST);
+            $request = $this->elasticsearch->formatRequest('create', $_POST);
 
             $this->elasticsearch->setRegion($_POST['region']);
             $result['CreateElasticsearchDomain'] = $this->elasticsearch->CreateElasticsearchDomain($request);
