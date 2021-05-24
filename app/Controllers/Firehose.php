@@ -236,15 +236,29 @@ class Firehose extends BaseController
     }
 
     public function view($id) {
-        $delivery = $this->firehoseModel->where('id', $id)->first();
+        $delivery = $this->firehoseModel
+            ->select('*,
+                firehose.id AS firehose_id,
+                firehose.name AS firehose_name,
+                firehose.created_at AS firehose_created_at,
+                firehose.updated_at AS firehose_updated_at,
+                kinesis_data_streams.name AS kinesis_name,
+                elasticsearch.domain_name AS elasticsearch_name')
+            ->join('kinesis_data_streams', 'kinesis_data_streams.id = firehose.kinesis_id')
+            ->join('elasticsearch', 'elasticsearch.id = firehose.elasticsearch_id')
+            ->where('firehose.id', $id)->first();
 
         $this->firehose->setRegion($delivery->region);
         $result = $this->firehose->DescribeDeliveryStream([
-            'DeliveryStreamName' => $delivery->name
+            'DeliveryStreamName' => $delivery->firehose_name
         ]);
 
+        // echo '<pre>' , var_dump($result['response']) , '</pre>';
+
         if(!$result['error']) {
-            $data['delivery'] = $result['response'];
+            $data['aws'] = $result['response'];
+            $data['db'] = $delivery;
+
             return view('firehose/view_modal', $data);
         } else {
             return $result['message'];
