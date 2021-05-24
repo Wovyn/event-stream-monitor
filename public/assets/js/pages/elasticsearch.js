@@ -749,20 +749,12 @@ var Elasticsearch = function() {
                                             '<a href="/elasticsearch/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                         '</div>'
                                     ),
-                                    kibanaTemp = _.template('<%= protocol %><%= endpoint %>/_plugin/kibana/'),
-                                    settings = JSON.parse(full.settings),
-                                    kibanaUrl = false;
-
-                                if(!_.isEmpty(settings.Endpoint)) {
-                                    kibanaUrl = kibanaTemp({
-                                        protocol: (settings.EnforceHTTPS ? 'https://' : 'http://'),
-                                        endpoint: settings.Endpoint
-                                    });
-                                }
+                                    kibanaURL = _.template('//<%= endpoint %>/_plugin/kibana/'),
+                                    settings = JSON.parse(full.settings);
 
                                 return options({
                                     id: data,
-                                    kibana: kibanaUrl,
+                                    kibana: (_.isEmpty(settings.Endpoint) ? false : kibanaURL({ endpoint: settings.Endpoint })),
                                     disabled: (full.status != 'active' ? true : false)
                                 });
                             }
