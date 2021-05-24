@@ -130,6 +130,7 @@ class ElasticSearch extends BaseController
             if(!$result['CreateElasticsearchDomain']['error']) {
                 // compile settings field
                 $settings = [];
+                $settings['EnforceHTTPS'] = isset($_POST['require_https']);
                 if(isset($_POST['fine_grain_access_control'])) {
                     $settings['MasterUserName'] = $_POST['master_username'];
                 }
@@ -174,6 +175,7 @@ class ElasticSearch extends BaseController
             if(!$result['UpdateElasticsearchDomainConfig']['error']) {
                 // compile settings field
                 $settings = [];
+                $settings['EnforceHTTPS'] = isset($_POST['require_https']);
                 if(isset($_POST['fine_grain_access_control'])) {
                     $settings['MasterUserName'] = $_POST['master_username'];
                 }

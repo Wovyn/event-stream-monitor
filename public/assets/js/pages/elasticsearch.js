@@ -740,19 +740,30 @@ var Elasticsearch = function() {
                         },
                         {
                             targets: 5,
-                            width: '10%',
+                            width: '15%',
                             render: function(data, type, full, meta) {
                                 let options = _.template(
-                                     '<div class="btn-group btn-group-sm">' +
-                                        '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
-                                        // '<a href="/elasticsearch/view/<%= id %>" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
-                                        '<a href="/elasticsearch/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
-                                    '</div>'
-                                );
+                                         '<div class="btn-group btn-group-sm">' +
+                                            '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
+                                            '<a href="<%= kibana %>" class="btn btn-primary tip <% if(!kibana) { %> disabled <% } %>" title="Kibana" target="_blank"><i class="fa fa-external-link"></i></a>' +
+                                            '<a href="/elasticsearch/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
+                                        '</div>'
+                                    ),
+                                    kibanaTemp = _.template('<%= protocol %><%= endpoint %>/_plugin/kibana/'),
+                                    settings = JSON.parse(full.settings),
+                                    kibanaUrl = false;
+
+                                if(!_.isEmpty(settings.Endpoint)) {
+                                    kibanaUrl = kibanaTemp({
+                                        protocol: (settings.EnforceHTTPS ? 'https://' : 'http://'),
+                                        endpoint: settings.Endpoint
+                                    });
+                                }
 
                                 return options({
                                     id: data,
-                                    disabled: (full.status == 'loading' ? true : false)
+                                    kibana: kibanaUrl,
+                                    disabled: (full.status != 'active' ? true : false)
                                 });
                             }
                         }
