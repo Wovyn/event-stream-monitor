@@ -218,7 +218,7 @@ class Firehose extends BaseController
         ]));
     }
 
-    public function format_data($type, $data) {
+    private function format_data($type, $data) {
         $result = [];
         foreach ($data as $item) {
             // check if region exist
@@ -233,6 +233,22 @@ class Firehose extends BaseController
         }
 
         return $result;
+    }
+
+    public function view($id) {
+        $delivery = $this->firehoseModel->where('id', $id)->first();
+
+        $this->firehose->setRegion($delivery->region);
+        $result = $this->firehose->DescribeDeliveryStream([
+            'DeliveryStreamName' => $delivery->name
+        ]);
+
+        if(!$result['error']) {
+            $data['delivery'] = $result['response'];
+            return view('firehose/view_modal', $data);
+        } else {
+            return $result['message'];
+        }
     }
 
 }

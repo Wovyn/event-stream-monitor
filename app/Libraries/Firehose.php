@@ -54,6 +54,20 @@ class Firehose extends Aws {
         return $result;
     }
 
+    public function DescribeDeliveryStream($args = []) {
+        $result['error'] = false;
+        try {
+            $result['response'] = $this->firehose->describeDeliveryStream($args);
+        } catch (FirehoseException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            log_message('debug', 'DescribeDeliveryStream: ' . $e->getMessage());
+        }
+
+        return $result;
+    }
+
 }
 
 ?>

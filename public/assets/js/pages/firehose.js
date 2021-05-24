@@ -266,6 +266,32 @@ var Firehose = function() {
         });
     }
 
+    var handleView = function() {
+        console.log('init handleView');
+        $(document).on('click', '.view-btn', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this),
+                $row = $btn.parents('tr').get(0),
+                data = $dtTables['firehose-table'].row($row).data();
+
+            App.modal({
+                title: data.name + ' - Deliver Stream Summary',
+                ajax: {
+                    url: $btn.attr('href')
+                },
+                btn: {
+                    confirm: {
+                        class: 'hidden'
+                    },
+                    cancel: {
+                        text: 'Close'
+                    }
+                }
+            })
+        });
+    }
+
     return {
         init: function() {
             console.log('Firehose.init');
@@ -318,7 +344,7 @@ var Firehose = function() {
                                 let options = _.template(
                                      '<div class="btn-group btn-group-sm">' +
                                         // '<a href="/firehose/edit/<%= id %>" class="btn btn-primary edit-btn tip" title="Edit"><i class="fa fa-pencil"></i></a>' +
-                                        // '<a href="/firehose/view/<%= id %>" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
+                                        '<a href="/firehose/view/<%= id %>" class="btn btn-primary view-btn tip" title="View"><i class="fa fa-eye"></i></a>' +
                                         '<a href="/firehose/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                     '</div>'
                                 );
@@ -339,7 +365,7 @@ var Firehose = function() {
             App.validationSetDefault();
             handleAdd();
             handleDelete();
-            // handleView();
+            handleView();
         }
     }
 }();
