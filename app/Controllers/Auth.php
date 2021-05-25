@@ -186,9 +186,12 @@ class Auth extends \IonAuth\Controllers\Auth {
         // regenerate user session
         $this->session->regenerate();
 
-        // run background sync and updates
-        $elasticsearch = new \App\Controllers\ElasticSearch();
-        $elasticsearch->sync();
+        // skip sync if elasticsearch page
+        if(!strpos($_POST['path'], 'elasticsearch')) {
+            // run background sync and updates
+            $elasticsearch = new \App\Controllers\ElasticSearch();
+            $elasticsearch->sync(false);
+        }
     }
 
     public function emailTest() {

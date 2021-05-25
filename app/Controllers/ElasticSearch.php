@@ -83,7 +83,7 @@ class ElasticSearch extends BaseController
         return $this->response->setJSON(json_encode($tbl));
     }
 
-    public function sync() {
+    public function sync($do_event = true) {
         $domains = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
         foreach ($domains as $domain) {
             $settings = json_decode($domain->settings, true);
@@ -111,11 +111,13 @@ class ElasticSearch extends BaseController
             }
         }
 
-        $data = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
-        $es = new \App\Libraries\EventStream();
-        $es->event([
-            'data' => json_encode($data)
-        ]);
+        if($do_event) {
+            $data = $this->elasticsearchModel->where('user_id', $this->data['user']->id)->findAll();
+            $es = new \App\Libraries\EventStream();
+            $es->event([
+                'data' => json_encode($data)
+            ]);
+        }
     }
 
     public function add() {

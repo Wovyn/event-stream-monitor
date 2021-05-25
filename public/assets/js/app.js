@@ -734,7 +734,9 @@ var App = function () {
                 redirAfter: redirTime, // 2 hrs
                 countdownSmart: true,
                 countdownMessage: 'Redirecting in {timer}',
-                countdownBar: true
+                countdownBar: true,
+                ajaxType: 'POST',
+                ajaxData: 'path=' + window.location.pathname
             });
         }
     }
