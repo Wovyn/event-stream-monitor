@@ -173,6 +173,11 @@ class ElasticSearch extends BaseController
             'DomainName' => $domain->domain_name
         ]);
 
+        // check for error
+        if($result['DescribeElasticsearchDomain']['error']) {
+            return '<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> ' . $result['DescribeElasticsearchDomain']['message'] . '</div>';
+        }
+
         $data['db_config'] = $domain;
         $data['db_config_settings'] = json_decode($domain->settings, true);
 

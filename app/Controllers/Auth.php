@@ -8,7 +8,7 @@ class Auth extends \IonAuth\Controllers\Auth {
     {
         $this->ionAuth = new \App\Libraries\IonAuth();
         $this->validation = \Config\Services::validation();
-        helper(['form', 'url']);
+        helper(['form', 'url', 'hx']);
         $this->configIonAuth = config('IonAuth');
         $this->session = \Config\Services::session();
 

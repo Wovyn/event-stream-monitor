@@ -34,7 +34,7 @@ class Iam extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'ListRoles: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -48,12 +48,25 @@ class Iam extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'GetUser: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
     }
 
+    public function GetRolePolicy($args) {
+        $result['error'] = false;
+        try {
+            $result['response'] = $this->iam->GetRolePolicy();
+        } catch (IamException $e) {
+            $result['error'] = true;
+            $result['message'] = $e->getAwsErrorMessage();
+
+            debug($e->getMessage());
+        }
+
+        return $result;
+    }
 }
 
 ?>

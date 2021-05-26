@@ -255,14 +255,14 @@ class Firehose extends BaseController
 
         // echo '<pre>' , var_dump($result['response']) , '</pre>';
 
-        if(!$result['error']) {
-            $data['aws'] = $result['response'];
-            $data['db'] = $delivery;
-
-            return view('firehose/view_modal', $data);
-        } else {
-            return $result['message'];
+        if($result['error']) {
+            return '<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> ' . $result['message'] . '</div>';
         }
+
+        $data['aws'] = $result['response'];
+        $data['db'] = $delivery;
+
+        return view('firehose/view_modal', $data);
     }
 
 }

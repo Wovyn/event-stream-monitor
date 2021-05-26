@@ -34,7 +34,7 @@ class Ec2 extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DescribeRegions: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;

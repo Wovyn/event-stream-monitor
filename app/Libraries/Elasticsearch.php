@@ -36,7 +36,7 @@ class Elasticsearch extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'CreateElasticsearchDomain: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -50,7 +50,7 @@ class Elasticsearch extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DeleteElasticsearchDomain: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -64,7 +64,7 @@ class Elasticsearch extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DescribeElasticsearchDomain: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -78,7 +78,7 @@ class Elasticsearch extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DescribeElasticsearchDomainConfig: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -92,7 +92,7 @@ class Elasticsearch extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'UpdateElasticsearchDomainConfig: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;

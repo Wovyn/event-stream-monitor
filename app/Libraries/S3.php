@@ -34,7 +34,7 @@ class S3 extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'CreateBucket: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -48,7 +48,7 @@ class S3 extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DeleteBucket: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;

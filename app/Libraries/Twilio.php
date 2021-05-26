@@ -28,7 +28,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'CreateStream: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -45,7 +45,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'SinkTest: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -62,7 +62,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e;
 
-            log_message('debug', 'SinkValid: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -78,7 +78,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'DeleteSink: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -94,7 +94,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'FetchSink: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -112,7 +112,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'FetchSinkSubscriptions: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -128,7 +128,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'ReadSubscriptions: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -153,7 +153,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'CreateSubscription: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -169,7 +169,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'DeleteSubscription: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;
@@ -189,7 +189,7 @@ class Twilio {
             $result['error'] = true;
             $result['message'] = $e->getMessage();
 
-            log_message('debug', 'ReadEventTypes: ' . json_encode($e->getMessage()));
+            debug(json_encode($e->getMessage()));
         }
 
         return $result;

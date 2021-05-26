@@ -34,7 +34,7 @@ class Kinesis extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'CreateStream: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -48,7 +48,7 @@ class Kinesis extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DeleteStream: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -62,7 +62,7 @@ class Kinesis extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DescribeStreamSummary: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -76,7 +76,7 @@ class Kinesis extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'PutRecord: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -90,7 +90,7 @@ class Kinesis extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'GetRecords: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -104,7 +104,7 @@ class Kinesis extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'ListShards: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -118,7 +118,7 @@ class Kinesis extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'GetShardIterator: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;

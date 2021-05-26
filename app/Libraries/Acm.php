@@ -34,7 +34,7 @@ class Acm extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'ListCertificates: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;

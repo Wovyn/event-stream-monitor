@@ -197,6 +197,10 @@ class Kinesis extends BaseController
             'StreamName' => $stream->name
         ]);
 
+        if($result['error']) {
+            return '<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> ' . $result['message'] . '</div>';
+        }
+
         $data['stream'] = $result['describeStreamSummary']['StreamDescriptionSummary'];
         return view('kinesis/view_modal', $data);
     }

@@ -34,7 +34,7 @@ class Sts extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'GetCallerIdentity: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;

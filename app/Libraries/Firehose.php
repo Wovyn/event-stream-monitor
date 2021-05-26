@@ -34,7 +34,7 @@ class Firehose extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'CreateDeliveryStream: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -48,7 +48,7 @@ class Firehose extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DeleteDeliveryStream: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
@@ -62,7 +62,7 @@ class Firehose extends Aws {
             $result['error'] = true;
             $result['message'] = $e->getAwsErrorMessage();
 
-            log_message('debug', 'DescribeDeliveryStream: ' . $e->getMessage());
+            debug($e->getMessage());
         }
 
         return $result;
