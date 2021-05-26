@@ -1,5 +1,15 @@
 <?php
 
+function debug($message) {
+    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    $caller = $trace[1];
+    if( !isset($caller['class']) ) {
+        $caller['class'] = 'helpers';
+    }
+
+    log_message('debug', "{$caller['class']}/{$caller['function']} \n $message");
+}
+
 function xml2array($url, $get_attributes = 1, $priority = 'tag') {
     $contents = "";
     if (!function_exists('xml_parser_create'))

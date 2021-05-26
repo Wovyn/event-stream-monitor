@@ -88,12 +88,16 @@ class ElasticSearch extends BaseController
         foreach ($domains as $domain) {
             $settings = json_decode($domain->settings, true);
 
+            debug('Domain Name: ' . $domain->domain_name . ' DB Status: ' . $domain->status);
+
             switch ($domain->status) {
                 case 'loading':
                 case 'updating':
                     $describe = $this->elasticsearch->DescribeElasticsearchDomain([
                         'DomainName' => $domain->domain_name
                     ]);
+
+                    debug(json_encode($describe['response']['DomainStatus']));
 
                     if(!$describe['response']['DomainStatus']['Processing']) {
                         if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
@@ -265,5 +269,4 @@ class ElasticSearch extends BaseController
 
         echo '<pre>' , var_dump($result) , '</pre>';
     }
-
 }

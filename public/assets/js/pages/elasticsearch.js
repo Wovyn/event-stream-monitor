@@ -745,7 +745,7 @@ var Elasticsearch = function() {
                                 let options = _.template(
                                          '<div class="btn-group btn-group-sm">' +
                                             '<a href="/elasticsearch/edit/<%= id %>" class="btn btn-primary edit-btn tip <% if(disabled) { %> disabled <% } %>" title="Edit"><i class="fa fa-pencil"></i></a>' +
-                                            '<a href="<%= kibana %>" class="btn btn-primary tip <% if(!kibana) { %> disabled <% } %>" title="Kibana" target="_blank"><i class="fa fa-external-link"></i></a>' +
+                                            '<a href="<%= kibana %>" class="btn btn-primary tip <% if(!kibana) { %> disabled <% } %>" title="Kibana" target="_blank"><i class="fa fa-eye"></i></a>' +
                                             '<a href="/elasticsearch/delete/<%= id %>" class="btn btn-danger delete-btn tip" title="Delete"><i class="fa fa-trash-o"></i></a>' +
                                         '</div>'
                                     ),
