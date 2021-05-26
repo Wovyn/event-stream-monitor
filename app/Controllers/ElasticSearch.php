@@ -97,7 +97,7 @@ class ElasticSearch extends BaseController
                         'DomainName' => $domain->domain_name
                     ]);
 
-                    debug(json_encode($describe['response']['DomainStatus']));
+                    debug(json_encode($describe['response']['DomainStatus'], JSON_PRETTY_PRINT));
 
                     if(!$describe['response']['DomainStatus']['Processing']) {
                         debug('Domain finished processing.');
