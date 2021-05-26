@@ -100,7 +100,11 @@ class ElasticSearch extends BaseController
                     debug(json_encode($describe['response']['DomainStatus']));
 
                     if(!$describe['response']['DomainStatus']['Processing']) {
+                        debug('Domain finished processing.');
+
                         if(isset($describe['response']['DomainStatus']['Endpoint']) && !$describe['response']['DomainStatus']['Deleted']) {
+                            debug('Update domain status.');
+
                             $settings['Endpoint'] = $describe['response']['DomainStatus']['Endpoint'];
 
                             $this->elasticsearchModel
