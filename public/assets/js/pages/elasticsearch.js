@@ -120,19 +120,21 @@ var Elasticsearch = function() {
                             fetch('/elasticsearch/certificates/' + $('#region option:selected', form).val())
                                 .then(response => response.json())
                                 .then(data => {
-                                    let options = [ { id: '', text: '' } ];
+                                    if(!data.error) {
+                                        let options = [ { id: '', text: '', selected: true } ];
 
-                                    if(data.certificates.length) {
-                                        _.forEach(data.certificates, function(certificate, key) {
-                                            options.push({ id: certificate.CertificateArn, text: certificate.DomainName, selected: false });
+                                        if(data.certificates.length) {
+                                            _.forEach(data.certificates, function(certificate, key) {
+                                                options.push({ id: certificate.CertificateArn, text: certificate.DomainName, selected: false });
+                                            });
+                                        }
+
+                                        // update options
+                                        $('#aws_certificate', form).select2({
+                                            placeholder: 'Select an AWS Certificate',
+                                            data: options
                                         });
                                     }
-
-                                    // update options
-                                    $('#aws_certificate', form).select2({
-                                        placeholder: 'Select an AWS Certificate',
-                                        data: options
-                                    });
 
                                     $('#aws_certificate', form).parent().removeClass('loading');
                                 });
