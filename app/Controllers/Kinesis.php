@@ -6,6 +6,7 @@ class Kinesis extends BaseController
     protected $authKeysModel,
         $eventstreamSinksModel,
         $kinesisDataStreamsModel,
+        $firehoseModel,
         $ionAuth,
         $twilio,
         $kinesis,
@@ -18,6 +19,7 @@ class Kinesis extends BaseController
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->eventstreamSinksModel = new \App\Models\EventstreamSinksModel();
         $this->kinesisDataStreamsModel = new \App\Models\KinesisDataStreamsModel();
+        $this->firehoseModel = new \App\Models\FirehoseModel();
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
@@ -153,11 +155,18 @@ class Kinesis extends BaseController
                 continue;
             }
 
-            // fetch sinkconfiguration and get the kinesis data stream name
-            $fetchSink = $this->twilio->FetchSink($sink->sid);
-            $arn = explode('stream/', $fetchSink['response']->sinkConfiguration['arn']);
-            $streamName = $arn[1];
-            $activeStreams[] = $streamName;
+            $config = json_decode($sink->config);
+            if(isset($config->sink_configuration->arn)) {
+                $arn = explode('stream/', $config->sink_configuration->arn);
+                $streamName = $arn[1];
+                $activeStreams[] = $streamName;
+            } else {
+                // fetch sinkconfiguration and get the kinesis data stream name
+                $fetchSink = $this->twilio->FetchSink($sink->sid);
+                $arn = explode('stream/', $fetchSink['response']->sinkConfiguration['arn']);
+                $streamName = $arn[1];
+                $activeStreams[] = $streamName;
+            }
         }
 
         // get stream
@@ -167,7 +176,15 @@ class Kinesis extends BaseController
         if(in_array($stream->name, $activeStreams)) {
             return $this->response->setJSON(json_encode([
                 'error' => true,
-                'message' => 'Kinesis Data Stream is still being used by a Sink Instance'
+                'message' => 'Kinesis Data Stream is still being used by a Sink Instance.'
+            ]));
+        }
+
+        // check if stream is currently being used by firehose
+        if($this->firehoseModel->where('kinesis_id', $id)->countAllResults()) {
+            return $this->response->setJSON(json_encode([
+                'error' => true,
+                'message' => 'Kinesis Data Stream is still being used by a Firehose Instance.'
             ]));
         }
 
