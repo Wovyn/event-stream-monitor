@@ -6,6 +6,7 @@ class ElasticSearch extends BaseController
 
     protected $authKeysModel,
         $elasticsearchModel,
+        $firehoseModel,
         $elasticsearch,
         $acm,
         $awsconfig,
@@ -16,6 +17,7 @@ class ElasticSearch extends BaseController
 
         $this->authKeysModel = new \App\Models\AuthKeysModel();
         $this->elasticsearchModel = new \App\Models\ElasticsearchModel();
+        $this->firehoseModel = new \App\Models\FirehoseModel();
 
         $this->keys = $this->authKeysModel->where('user_id', $this->data['user']->id)->first();
         if($this->keys) {
@@ -214,6 +216,14 @@ class ElasticSearch extends BaseController
     }
 
     public function delete($id) {
+        // check if domain is currently being used by firehose
+        if($this->firehoseModel->where('elasticsearch_id', $id)->countAllResults()) {
+            return $this->response->setJSON(json_encode([
+                'error' => true,
+                'message' => 'Elasticsearch Domain is still being used by a Firehose Instance.'
+            ]));
+        }
+
         $domain = $this->elasticsearchModel->where('id', $id)->first();
 
         $this->elasticsearch->setRegion($domain->region);
