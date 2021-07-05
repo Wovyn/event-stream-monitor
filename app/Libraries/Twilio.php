@@ -177,14 +177,30 @@ class Twilio {
     // End Subscription API
 
     // Start EventTypes API
-    public function ReadEventTypes() {
+    // public function ReadEventTypes() {
+    //     $result['error'] = false;
+    //     try {
+    //         // log_message('debug', 'running ReadEventTypes');
+    //         $result['response'] = $this->client->events->v1
+    //             ->eventTypes
+    //             ->read(100); // temporary fix
+    //         // log_message('debug', 'done ReadEventTypes');
+    //     } catch (RestException $e) {
+    //         $result['error'] = true;
+    //         $result['message'] = $e->getMessage();
+
+    //         debug(json_encode($e->getMessage()));
+    //     }
+
+    //     return $result;
+    // }
+
+    public function StreamEventTypes() {
         $result['error'] = false;
         try {
-            // log_message('debug', 'running ReadEventTypes');
             $result['response'] = $this->client->events->v1
                 ->eventTypes
-                ->read(100); // temporary fix
-            // log_message('debug', 'done ReadEventTypes');
+                ->stream();
         } catch (RestException $e) {
             $result['error'] = true;
             $result['message'] = $e->getMessage();

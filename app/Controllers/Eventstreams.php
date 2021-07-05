@@ -151,7 +151,7 @@ class Eventstreams extends BaseController
         ];
         $data['kinesisDataStreams'] = $this->kinesisDataStreamsModel->where('user_id', $this->data['user']->id)->findAll();
 
-        $eventTypes = $this->twilio->ReadEventTypes();
+        $eventTypes = $this->twilio->StreamEventTypes();
         $data['eventTypes'] = $this->twilio->JSTreeFormat($eventTypes['response'], []);
         return view('eventstreams/wizard_modal', $data);
     }
@@ -214,52 +214,52 @@ class Eventstreams extends BaseController
         ]));
     }
 
-    public function sync() {
-        $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
-        foreach ($sinks as $sink) {
-            switch ($sink->status) {
-                case 'initialized':
-                    $result['SinkTest'] = $this->twilio->SinkTest($sink->sid);
+    // public function sync() {
+    //     $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
+    //     foreach ($sinks as $sink) {
+    //         switch ($sink->status) {
+    //             case 'initialized':
+    //                 $result['SinkTest'] = $this->twilio->SinkTest($sink->sid);
 
-                    break;
+    //                 break;
 
-                case 'validating':
-                    $config = json_decode($sink->config);
-                    $arn = explode(':', $config['sink_configuration']['arn']);
-                    $region = $arn[3];
-                    $streamName = str_replace('stream/', '', $arn[5]);
+    //             case 'validating':
+    //                 $config = json_decode($sink->config);
+    //                 $arn = explode(':', $config['sink_configuration']['arn']);
+    //                 $region = $arn[3];
+    //                 $streamName = str_replace('stream/', '', $arn[5]);
 
-                    $this->kinesis->setRegion($region);
-                    $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
-                    foreach ($result['GetAllRecords'] as $record) {
-                        $recordData = json_decode($record['Data'], true);
+    //                 $this->kinesis->setRegion($region);
+    //                 $result['GetAllRecords'] = $this->kinesis->GetAllRecords($streamName);
+    //                 foreach ($result['GetAllRecords'] as $record) {
+    //                     $recordData = json_decode($record['Data'], true);
 
-                        if(!is_null($recordData)) {
-                            if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
-                                $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
-                            }
-                        }
-                    }
+    //                     if(!is_null($recordData)) {
+    //                         if($recordData['type'] == 'com.twilio.eventstreams.test-event') {
+    //                             $result['SinkValid'] = $this->twilio->SinkValid($sink->sid, $recordData['data']['test_id']);
+    //                         }
+    //                     }
+    //                 }
 
-                    break;
-            }
+    //                 break;
+    //         }
 
-            if($sink->status != 'active') {
-                $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
-                $this->eventstreamSinksModel
-                    ->where('sid', $sink->sid)
-                    ->update(null, [
-                        'status' => $result['FetchSink']['response']->status
-                    ]);
-            }
-        }
+    //         if($sink->status != 'active') {
+    //             $result['FetchSink'] = $this->twilio->FetchSink($sink->sid);
+    //             $this->eventstreamSinksModel
+    //                 ->where('sid', $sink->sid)
+    //                 ->update(null, [
+    //                     'status' => $result['FetchSink']['response']->status
+    //                 ]);
+    //         }
+    //     }
 
-        $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
-        $es = new \App\Libraries\EventStream();
-        $es->event([
-            'data' => json_encode($sinks)
-        ]);
-    }
+    //     $sinks = $this->eventstreamSinksModel->where('user_id', $this->data['user']->id)->findAll();
+    //     $es = new \App\Libraries\EventStream();
+    //     $es->event([
+    //         'data' => json_encode($sinks)
+    //     ]);
+    // }
 
     public function sink_validate($sink_id) {
         $sink = $this->eventstreamSinksModel->where('id', $sink_id)->first();
@@ -383,5 +383,11 @@ class Eventstreams extends BaseController
 
         return $this->response->setJSON(json_encode($result['JSTreeFormat']));
     }
+
+    // public function test() {
+    //     $eventTypes = $this->twilio->StreamEventTypes();
+
+    //     echo '<pre>' , var_dump($eventTypes) , '</pre>';
+    // }
 
 }
